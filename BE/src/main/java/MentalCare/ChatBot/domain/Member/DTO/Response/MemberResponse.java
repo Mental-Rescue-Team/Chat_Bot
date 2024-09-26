@@ -1,0 +1,20 @@
+package MentalCare.ChatBot.domain.Member.DTO.Response;
+
+import MentalCare.ChatBot.domain.Member.Entity.Member;
+
+import java.time.LocalDate;
+
+public record MemberResponse(
+        String username,  // 사용자 이름
+        String email,     // 이메일
+        LocalDate birth      // 생년월일
+) {
+    // DTO에서 엔티티로 변환하는 메서드
+    public Member toEntity() {
+        return Member.builder()
+                .username(this.username)
+                .email(this.email)
+                .birth(this.birth)  // birth는 String 타입으로 가정
+                .build();
+    }
+}
