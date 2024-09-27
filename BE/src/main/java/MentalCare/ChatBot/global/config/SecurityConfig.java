@@ -25,10 +25,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    //private final CustomUserDetailsService userDetailsService;
-    //private final CustomAuthenticationProvider customAuthenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -53,7 +50,6 @@ public class SecurityConfig {
 
                         //(사용자 용)한 회원 정보 조회
                         requestMatchers(HttpMethod.GET,"/api/member").permitAll().
-
 
                         /*Swagger-무권한 접근 허용*/
                         requestMatchers("/swagger-ui/**").permitAll().
