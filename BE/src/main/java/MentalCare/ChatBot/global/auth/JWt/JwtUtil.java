@@ -51,9 +51,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    /*RTR 전략을 적용한 JWT 재발급 메서드 구현하기*/
-
-
     /* 밑에 extractUsername와 isTokenExpired에 사용는 클레임(즉, 정보를) 추출하는 역할  */
     public Claims extractClaims(String token) {
         return Jwts.parser()// JWT 파서 객체 생성
@@ -75,7 +72,7 @@ public class JwtUtil {
         return null; // 토큰이 없을 경우
     }
 
-    /* 토큰 말료 여부 확인 */
+    /* 토큰 만료 여부 확인 */
     public boolean isTokenExpired(String token) {
         return extractClaims(token).getExpiration().before(new Date());
     }
@@ -85,4 +82,24 @@ public class JwtUtil {
         String extractedUsername = extractUsername(token);
         return (extractedUsername.equals(username) && !isTokenExpired(token));
     }
+
+    /*리프레시 토큰 유효성 검사*/
+    public boolean validateRefreshToken(String refreshToken) {
+        try {
+
+            // 리프레시 토큰의 클레임을 추출하여 유효성을 검증
+            Claims claims = extractClaims(refreshToken);
+
+            // 만료 여부 확인
+            return !isTokenExpired(refreshToken);
+        }
+        catch (Exception e) {
+
+            // 토큰이 유효하지 않은 경우 예외 처리
+            return false;
+        }
+    }
+
+    /*RTR 전략을 적용한 JWT 재발급 메서드 구현하기*/
+
 }

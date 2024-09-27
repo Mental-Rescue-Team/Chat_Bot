@@ -30,17 +30,17 @@ import java.util.Optional;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-//    private final CustomUserDetailsService customUserDetailsService;
     private final MemberRepository memberRepository;
 
     /*http 요청이 들어올 때 마다, 요청 헤더에 포함 된 jwt 토큰을 확인하고 처리 */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        String authorizationHeader = request.getHeader("Authorization");
-        //requset에서 Authorization헤더를 추출-> 있으면 그 값을 반환, 없으면 NULL 값 반환
+
+        //requset에서 Authorization헤더를 추출 -> 있으면 그 값을 반환, 없으면 NULL 값 반환
         //JWT 인증에서는 Authorization 헤더에 "Bearer {token}" 형식으로 JWT 토큰을 포함
         //Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        String authorizationHeader = request.getHeader("Authorization");
 
         String username = null;
         String jwt = null;
