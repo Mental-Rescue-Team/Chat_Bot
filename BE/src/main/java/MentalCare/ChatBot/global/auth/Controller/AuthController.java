@@ -31,17 +31,12 @@ public class AuthController {
     private final AuthenticateAndGenerateToken authenticateAndGenerateToken;
     private final MemberRepository memberRepository;
 
-    //로그인-jwt불필요,jwt 발급 - access token,refreshtoken 모두 발급
-    //메서드 구현 o
-    //테스팅 o : postman
     @Operation(summary = "로그인 ", description = "로그인")
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
 
-        //인증이 성공하면 JWT 생성
         JwtTokenDto token = authenticateAndGenerateToken.authenticateAndGenerateToken(authRequest.username(), authRequest.password());
 
-        //jwt를 클라이언트에게 반환
         return ResponseEntity.ok(new AuthResponse(token));
     }
 
@@ -56,46 +51,33 @@ public class AuthController {
         return ResponseEntity.ok("Logged out successfully");
     }
 
-    //엑세스 토큰 만료시 자동 리프레스 토큰 발급 컨트롤러
-    //메서드 구현 o
-    //테스팅 o :postman
     @Operation(summary = "엑세스 토큰 만료시 자동 리프레시 토큰 발급 API ", description = "엑세스 토큰 만료시 자동 리프레시 토큰 발급 API")
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(HttpServletRequest request) {
 
-        //요청에서 jwt 토큰을 가져옴
         String refreshToken =jwtUtil.extractTokenFromRequest(request);
 
         if (refreshToken == null || refreshToken.isEmpty())
         {throw new IllegalArgumentException("JWT token cannot be null or empty");}
 
-        //만약 리프레시 토큰이 없거나 , 리프레시 토큰이 만료되면
-        //오류
         if (refreshToken == null || !jwtUtil.validateRefreshToken(refreshToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(null);
         }
 
-        //jwt에서 username 추출
         String username = jwtUtil.extractUsername(refreshToken);
 
-        //사용자 이름이 없으면
-        //오류
         if (username == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(null);
         }
 
-        // 사용자를 로드하여 실제 DB에 있는 member인지 확인
-        //없으면 오류
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
 
-        // 새로운 토큰 생성
         String newAccessToken = jwtUtil.generateAccessToken(username);
         String newRefreshToken = jwtUtil.generateRefreshToken(username);
 
-        // 응답으로 새로운 토큰을 반환
         JwtTokenDto token = new JwtTokenDto(newAccessToken, newRefreshToken);
         return ResponseEntity.ok(new AuthResponse(token));
     }
