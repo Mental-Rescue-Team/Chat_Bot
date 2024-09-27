@@ -30,31 +30,21 @@ public class MemberServiceImpl implements MemberService {
     public Long register(MemberRequest request) {
 
         Member member = request.toEntity();
-
-        //이메일 중복 확인
         if (memberRepository.existsByEmail(member.getEmail())) {
             throw new MemberException(ErrorCode.ALREADY_EXIST_MEMBER);
         }
-
-        //비밀번호 암호화
         member.encodePassword(passwordEncoder);
-
-        //멤버 저장 + 최종 반환값 =id
         return memberRepository.save(member).getMember_no();
     }
 
     //회원 정보 수정 메서드 구현
-    // FIXME : 엔티티에 set함수는 권장되지 않으니 시간 되면 수정할 것
     @Override
     public Long updateMember(String username , UpdateMemberDTO request) {
 
-        //사용자 이름으로 멤버 객체 찾기
         Optional<Member> optionalMember = memberRepository.findByUsername(username);
-
-        //Optional에서 Member 객체를 가져옴
         Member member = optionalMember.orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
 
-        // 새로운 정보로 업데이트
+        // FIXME : 엔티티에 set함수는 권장되지 않으니 시간 되면 수정할 것
         if (member.getUsername() != null) {
             member.setUsername(request.username());
         }
@@ -65,15 +55,14 @@ public class MemberServiceImpl implements MemberService {
             member.setBirth(request.birth());
         }
 
-        // 변경된 내용을 저장
         return memberRepository.save(member).getMember_no();
 
     }
 
     //회원 정보 삭제 메서드 구현
-    // FIXME : 모든 로직이 membercontroller에 전부 구현되어 있으니, 여기에 분담하여 관리할 것
     @Transactional
     @Override
+    // FIXME : 모든 로직이 membercontroller에 전부 구현되어 있으니, 여기에 분담하여 관리할 것
     public void deleteMember(Long member_no) {
         Member member = memberRepository.findById(member_no)
                 .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
@@ -81,8 +70,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     //회원 정보 조회 메서드 구현
-    // FIXME : 모든 로직이 membercontroller에 전부 구현되어 있으니, 여기에 분담하여 관리할 것
     @Override
+    // FIXME : 모든 로직이 membercontroller에 전부 구현되어 있으니, 여기에 분담하여 관리할 것
     public MemberResponse getMemberById(Long id) {
         return null;
     }
