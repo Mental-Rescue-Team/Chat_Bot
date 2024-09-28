@@ -46,14 +46,14 @@ public class AuthController {
     }
 
     //로그아웃-jwt 불필요,클라이언트 측에서 jwt 삭제
-    //메서드 구현 x
+    //메서드 구현 o
     //테스팅 x
     @Operation(summary = "로그아웃 ", description = "로그아웃")
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
 
         //클라이언트 주도 jwt 삭제이므로 서버 측에서는 특별한 처리 x
-        return ResponseEntity.ok("Logged out successfully");
+        return ResponseEntity.ok("Logged out successfully! Please delete your JWT tokens at Client Side.-클라이언트 측에서 엑세스 토큰과 리프레시 토큰을 모두 삭제해 주세요");
     }
 
     @Operation(summary = "엑세스 토큰 만료시 자동 리프레시 토큰 발급 API ", description = "엑세스 토큰 만료시 자동 리프레시 토큰 발급 API")
