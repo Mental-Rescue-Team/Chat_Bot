@@ -1,17 +1,23 @@
 package MentalCare.ChatBot.domain.FastAPIConnection.Client;
+
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 @Component
-@RequiredArgsConstructor
 public class ApiClient {
 
-    private final WebClient.Builder webClientBuilder;
-    private final WebClient webClient = webClientBuilder.baseUrl("http://localhost:8000").build();
+    private final WebClient webClient;
+
+    @Autowired
+    public ApiClient(WebClient.Builder webClientBuilder) {
+        this.webClient = webClientBuilder.baseUrl("http://localhost:8000").build();
+    }
 
     public String sendData(String text) {
         return webClient.post()
