@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 @EnableWebSecurity
@@ -113,6 +114,12 @@ public class SecurityConfig {
         DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
         expressionHandler.setRoleHierarchy(roleHierarchy()); //앞에서 설정한 권한 계층 설정
         return expressionHandler;
+    }
+
+    //WebClient 빈 등록
+    @Bean
+    public WebClient.Builder webClientBuilder() {
+        return WebClient.builder();
     }
 
 }
