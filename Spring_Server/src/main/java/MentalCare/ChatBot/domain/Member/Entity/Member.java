@@ -2,12 +2,15 @@ package MentalCare.ChatBot.domain.Member.Entity;
 
 //import MentalCare.ChatBot.domain.Entity.Diary;
 //import MentalCare.ChatBot.domain.Entity.Report;
+import MentalCare.ChatBot.domain.Diary.Entity.Diary;
 import MentalCare.ChatBot.domain.Member.Role.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -38,6 +41,10 @@ public class Member{
 
     @Column(updatable = false)
     private LocalDateTime registerDate;
+
+    //일기 데이터 테이블과의 관계 설정
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Diary> diaries = new ArrayList<>();
 
     @PrePersist  // 엔티티가 저장되기 전에 실행
     protected void onCreate() {
