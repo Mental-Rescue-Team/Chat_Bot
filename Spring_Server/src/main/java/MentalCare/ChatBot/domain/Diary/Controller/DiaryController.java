@@ -32,32 +32,35 @@ public class DiaryController {
 
         /*diaryEmotion 값을 바탕으로  weather 와 weatherEmoji 를 매칭하는 알고리즘 구현*/
         String weather;
-        String weatherEmoji = switch (diaryEmotion) {
+        String weatherEmoji;
+
+        //diaryEmotion 값을 바탕으로 날씨 및 이모지 결정
+        switch (diaryEmotion) {
             case "기쁨" -> {
                 weather = "Sunny";
-                yield "☀️";
+                weatherEmoji = "☀️";
             }
             case "슬픔" -> {
                 weather = "Rainy";
-                yield "🌧️";
+                weatherEmoji = "🌧️";
             }
             case "분노" -> {
                 weather = "Stormy";
-                yield "🌩️";
+                weatherEmoji = "🌩️";
             }
             case "평온" -> {
                 weather = "Cloudy";
-                yield "☁️";
+                weatherEmoji = "☁️";
             }
             case "불안" -> {
                 weather = "Windy";
-                yield "🌬️";
+                weatherEmoji = "🌬️";
             }
             default -> {
                 weather = "Unknown";
-                yield "❓";
+                weatherEmoji = "❓";
             }
-        };
+        }
 
         // Diary 엔티티 생성 및 필드 설정
         Diary diary = new Diary();
