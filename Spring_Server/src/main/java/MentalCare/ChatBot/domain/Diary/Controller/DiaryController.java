@@ -36,30 +36,12 @@ public class DiaryController {
 
         //diaryEmotion 값을 바탕으로 날씨 및 이모지 결정
         switch (diaryEmotion) {
-            case "기쁨" -> {
-                weather = "Sunny";
-                weatherEmoji = "☀️";
-            }
-            case "슬픔" -> {
-                weather = "Rainy";
-                weatherEmoji = "🌧️";
-            }
-            case "분노" -> {
-                weather = "Stormy";
-                weatherEmoji = "🌩️";
-            }
-            case "평온" -> {
-                weather = "Cloudy";
-                weatherEmoji = "☁️";
-            }
-            case "불안" -> {
-                weather = "Windy";
-                weatherEmoji = "🌬️";
-            }
-            default -> {
-                weather = "Unknown";
-                weatherEmoji = "❓";
-            }
+            case "기쁨" -> {weather = "Sunny";weatherEmoji = "☀️";}
+            case "슬픔" -> {weather = "Rainy";weatherEmoji = "🌧️";}
+            case "분노" -> {weather = "Stormy";weatherEmoji = "🌩️";}
+            case "평온" -> {weather = "Cloudy";weatherEmoji = "☁️";}
+            case "불안" -> {weather = "Windy";weatherEmoji = "🌬️";}
+            default -> {weather = "Unknown";weatherEmoji = "❓";}
         }
 
         // Diary 엔티티 생성 및 필드 설정
@@ -79,7 +61,6 @@ public class DiaryController {
                 "diaryText", diaryText,
                 "comicURL", comicURL
         ));
-
     }
 
     //클라이언트가 선택한 날짜를 기반으로 한 일기 조회 메서드
@@ -88,14 +69,11 @@ public class DiaryController {
     @GetMapping("/diary")
     public ResponseEntity<?> DiaryShow(@RequestParam("date") String date){
 
-        // 문자열을 LocalDate로 변환
-        LocalDate diaryDate = LocalDate.parse(date);
-
-        // 해당 날짜의 일기 조회
+        LocalDate diaryDate = LocalDate.parse(date); // 문자열을 LocalDate로 변환
         Diary diary = diaryService.getDiaryByDate(diaryDate);
 
         if (diary == null) {
-            return ResponseEntity.notFound().build(); // 일기가 없으면 404 Not Found 반환
+            return ResponseEntity.notFound().build(); // 일기가 없으면 404 Not Found 반환}
         }
 
         // 응답 데이터 생성
