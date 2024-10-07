@@ -17,4 +17,11 @@ public record MemberResponse(
                 .birth(this.birth)  // birth는 String 타입으로 가정
                 .build();
     }
+    public static MemberResponse from(Member member){
+        return new MemberResponse(
+                member.getUsername(),
+                member.getEmail(),
+                member.getBirth()
+        );
+    }
 }
