@@ -24,7 +24,9 @@ public record MemberRequest(
 
         //생일에 대한 유효성 검사는 notblank(문자열)가 될 수 없다.
         @NotNull
-        LocalDate birth
+        LocalDate birth,
+
+        String gender
 ) {
     public Member toEntity() {
         return Member.builder()
@@ -32,6 +34,7 @@ public record MemberRequest(
                 .password(this.password)
                 .email(this.email)
                 .birth(this.birth)
+                .gender(this.gender != null ? this.gender : "unknown") // gender가 null이면 "unknown"으로 설정
                 .build();
     }
 }

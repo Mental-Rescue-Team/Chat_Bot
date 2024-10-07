@@ -36,6 +36,9 @@ public class Member{
     //회원가입 시 기입-4
     private LocalDate birth;
 
+    //회원가입 시 기입-5
+    private String gender;
+
     @Enumerated(EnumType.STRING)  // ROLE을 문자열로 저장
     private Role role;
 
@@ -50,6 +53,10 @@ public class Member{
     protected void onCreate() {
         this.registerDate = LocalDateTime.now();  // 등록일을 현재 시간으로 설정
         this.role = Role.USER;  // 기본 ROLE을 USER로 설정
+
+        if (this.gender == null) {
+            this.gender = "unknown";  // gender 값이 null일 경우 "unknown"으로 설정
+        }
     }
 
     //비밀번호 인코딩 함수
