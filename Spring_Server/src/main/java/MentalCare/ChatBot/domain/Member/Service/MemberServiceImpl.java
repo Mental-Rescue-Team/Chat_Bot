@@ -4,6 +4,7 @@ import MentalCare.ChatBot.domain.Member.DTO.Request.MemberRequest;
 import MentalCare.ChatBot.domain.Member.DTO.Request.UpdateMemberDTO;
 import MentalCare.ChatBot.domain.Member.DTO.Response.EveryMemberResponse;
 import MentalCare.ChatBot.domain.Member.DTO.Response.MemberResponse;
+import MentalCare.ChatBot.domain.Member.DTO.Response.MyInfoResponse;
 import MentalCare.ChatBot.domain.Member.Entity.Member;
 import MentalCare.ChatBot.domain.Member.Repository.MemberRepository;
 import MentalCare.ChatBot.domain.Member.Role.Role;
@@ -15,6 +16,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -86,13 +89,34 @@ public class MemberServiceImpl implements MemberService {
     //회원 정보 조회 메서드 구현
     // FIXME : 모든 로직이 membercontroller에 전부 구현되어 있으니, 여기에 분담하여 관리할 것
     @Override
-    public MemberResponse getMemberById(Long id) {
-        return null;
+    public MemberResponse getmyinfo(String username) {
+        //사용자 이름으로 멤버 객체 찾기
+        Optional<Member> optionalMember = memberRepository.findByUsername(username);
+
+        //Optional에서 Member 객체를 가져옴
+        Member member = optionalMember.orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+
+        //MyInfoResponse로 변환하여 반환
+        MemberResponse response = MemberResponse.from(member);
+
+        return response;
     }
 
     //모든 회원 정보 조회 메서드 - 관리자 회원정보 관리 페이지 용
     @Override
-    public EveryMemberResponse getEveryMemberByrole(Role role) {
-        return null;
+    public List<EveryMemberResponse> geteveryinfo(String username) {
+
+        Optional<Member> optionalMember = memberRepository.findByUsername(username);
+        Member member = optionalMember.orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+
+        // 모든 회원 정보를 조회
+        List<Member> allMembers = memberRepository.findAll();
+
+        // 모든 회원 정보를 EveryMemberResponse로 변환
+        List<EveryMemberResponse> responseList = allMembers.stream()
+                .map(EveryMemberResponse::from)
+                .toList();
+
+        return responseList;
     }
 }
