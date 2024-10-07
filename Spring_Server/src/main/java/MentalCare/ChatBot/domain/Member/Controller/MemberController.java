@@ -40,7 +40,6 @@ public class MemberController {
     // FIXME : 현재 USER의 한 사용자 정보 조회와, ADMIN의 모든 사용자 정보 조회 시 jwt에서 role이 아니라 이름으로 추출한다.
     /*보안상 문제가 된다. username은 기본적으로 중복이 허용되는데, 관리자와 우연히 이름이 같은 사용자는 관리자 페이지로 접근이 가능하기 때문이다.*/
 
-
     //회원 가입 컨트롤러-jwt 불필요
     //메서드 구현 o
     //테스팅 o : postman

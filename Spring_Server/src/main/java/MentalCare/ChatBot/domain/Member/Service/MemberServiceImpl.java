@@ -64,6 +64,9 @@ public class MemberServiceImpl implements MemberService {
         if (member.getBirth() != null) {
             member.setBirth(request.birth());
         }
+        if (member.getGender() != null) {
+            member.setGender(request.gender());
+        }
 
         // 변경된 내용을 저장
         return memberRepository.save(member).getMember_no();
