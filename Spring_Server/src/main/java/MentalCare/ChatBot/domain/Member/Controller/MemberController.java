@@ -4,28 +4,21 @@ import MentalCare.ChatBot.domain.Member.DTO.Request.MemberRequest;
 import MentalCare.ChatBot.domain.Member.DTO.Request.UpdateMemberDTO;
 import MentalCare.ChatBot.domain.Member.DTO.Response.EveryMemberResponse;
 import MentalCare.ChatBot.domain.Member.DTO.Response.MemberResponse;
-import MentalCare.ChatBot.domain.Member.DTO.Response.MyInfoResponse;
-import MentalCare.ChatBot.domain.Member.Entity.Member;
 import MentalCare.ChatBot.domain.Member.Repository.MemberRepository;
 import MentalCare.ChatBot.domain.Member.Service.MemberService;
-import MentalCare.ChatBot.global.Exception.ErrorCode;
-import MentalCare.ChatBot.global.Exception.MemberException;
 import MentalCare.ChatBot.global.auth.DTO.Response.ResponseVO;
 import MentalCare.ChatBot.global.auth.JWt.JwtUtil;
-import io.jsonwebtoken.Jwt;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
 
 @Tag(name = "Member", description = "회원관리 API")
 @RestController
