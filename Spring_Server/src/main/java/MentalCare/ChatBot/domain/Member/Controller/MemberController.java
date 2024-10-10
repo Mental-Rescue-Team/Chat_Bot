@@ -34,9 +34,6 @@ public class MemberController {
     // FIXME : 현재 USER의 한 사용자 정보 조회와, ADMIN의 모든 사용자 정보 조회 시 jwt에서 role이 아니라 이름으로 추출한다.
     /*보안상 문제가 된다. username은 기본적으로 중복이 허용되는데, 관리자와 우연히 이름이 같은 사용자는 관리자 페이지로 접근이 가능하기 때문이다.*/
 
-    //회원 가입 컨트롤러-jwt 불필요
-    //메서드 구현 o
-    //테스팅 o : postman
     @Operation(summary = " 회원가입 ", description = " 회원가입 ")
     @PostMapping("member/register")
     public ResponseEntity<ResponseVO<String>> register(@RequestBody @Valid MemberRequest request) {
@@ -45,9 +42,6 @@ public class MemberController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    //(사용자 용)한 회원 정보 조회 컨트롤러 - jwt 필요
-    //메서드 구현 o
-    //테스팅 o : postman
     @Operation(summary = "(사용자 용)한 회원 정보 조회", description = "(사용자 용)한 회원 정보 조회")
     @GetMapping("/member")
     public ResponseEntity<ResponseVO<MemberResponse>> getmyinfo(HttpServletRequest request){
@@ -65,9 +59,6 @@ public class MemberController {
         return ResponseEntity.ok(new ResponseVO<>(response,"(사용자 용)한 회원 정보 조회"));
     }
 
-    //(관리자 용)모든 회원 정보 조회 컨트롤러- jwt 필요
-    //메서드 구현 o
-    //테스팅 o : postman
     @Operation(summary = "(관리자 용)모든 회원 정보 조회", description = "(관리자 용)모든 회원 정보 조회")
     @GetMapping("/admin")
     public ResponseEntity<ResponseVO<List<EveryMemberResponse>>> geteveryinfo(HttpServletRequest request){
@@ -83,9 +74,6 @@ public class MemberController {
         return ResponseEntity.ok(new ResponseVO<>(responseList,"(관리자 용)모든 회원 정보 조회"));
     }
 
-    //회원 정보 수정 컨트롤러- jwt 필요
-    //메서드 구현 o
-    //테스팅 o : postman
     @Operation(summary = "(사용자 용)회원 정보 수정", description = "(사용자 용)회원 정보 수정")
     @PutMapping("/member/edit")
     public ResponseEntity<ResponseVO<String>> updateMember(HttpServletRequest request,@RequestBody UpdateMemberDTO updateMemberDTO){
@@ -102,9 +90,6 @@ public class MemberController {
 
     }
 
-    //(관리자 용)회원 정보 삭제 메서드- jwt 필요
-    //메서드 구현 o
-    //테스팅 o : postman
     @Operation(summary = "(관리자 용)회원 정보 삭제", description = "(관리자 용) 회원 정보 삭제")
     @DeleteMapping("/members/{member_no}")
     @PreAuthorize("hasRole('ADMIN')")
