@@ -25,6 +25,13 @@ repositories {
 	maven { url 'https://repo.spring.io/snapshot' } //spring ai 저장소
 }
 
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.ai:spring-ai-bom:0.8.1"
+	}
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	/*spring security 버전에 따른 deprecated가 있으니 확인할 것 */
