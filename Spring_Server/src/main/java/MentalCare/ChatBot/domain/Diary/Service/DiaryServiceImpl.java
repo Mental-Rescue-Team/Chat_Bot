@@ -4,7 +4,6 @@ import MentalCare.ChatBot.domain.Diary.DTO.Request.DiaryRequest;
 import MentalCare.ChatBot.domain.Diary.Entity.Diary;
 import MentalCare.ChatBot.domain.Diary.Repository.DiaryRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,12 +14,13 @@ import java.util.Map;
 public class DiaryServiceImpl implements DiaryService {
 
     private final DiaryRepository diaryRepository;
-    private final OpenAiChatModel openAiChatModel;
+    //private final OpenAiChatModel openAiChatModel;
 
     @Override
     public String SummarizeDiary(DiaryRequest diaryRequest) {
         /*DTO.toStirng()후 AI연산 시행 결과값을 String type으로 return*/
-        return openAiChatModel.call(diaryRequest.toString());
+        //return openAiChatModel.call(diaryRequest.toString());
+        return null;
     }
 
     // TODO : 4컷 만화 생성 후 어떻게 저장하고 전송할지 확인
