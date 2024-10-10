@@ -33,4 +33,16 @@ public class Diary {
 
     /*member_no를 통해 member 엔티티와 일대다 연결*/
     /*private Long member_no 필드를 위 엔티티에 넣을 필요는 없음*/
+
+    // 생성자 추가
+    /*DiaryController에서 생성자를 사용하려고 여기에 생성자 추가 메서드 작성*/
+    public Diary(String diaryText, String diarySummary, String comicURL, String diaryEmotion, String weather, String weatherEmoji, LocalDate diaryDate) {
+        this.diaryText = diaryText;
+        this.diarySummary = diarySummary;
+        this.comicURL = comicURL;
+        this.diaryEmotion = diaryEmotion;
+        this.weather = weather;
+        this.weatherEmoji = weatherEmoji;
+        this.diaryDate = diaryDate;
+    }
 }
