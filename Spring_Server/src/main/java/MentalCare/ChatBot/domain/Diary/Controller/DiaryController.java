@@ -58,9 +58,7 @@ public class DiaryController {
         LocalDate diaryDate = LocalDate.parse(date); // 문자열을 LocalDate로 변환
         Diary diary = diaryService.getDiaryByDate(diaryDate);
 
-        if (diary == null) {
-            return ResponseEntity.notFound().build(); // 일기가 없으면 404 Not Found 반환}
-        }
+        if (diary == null) {return ResponseEntity.notFound().build();}
 
         Map<String, Object> response = Map.of(
                 "diaryText", diary.getDiaryText(),
@@ -78,6 +76,7 @@ public class DiaryController {
         return chatClient.call(message);
     }
 
+    //TODO : 리펙토링 요망
     @PostMapping("/diary/generate")
     public PromptResponse getImage(@RequestBody PromptRequest request) {
         final String prompt = request.prompt();
