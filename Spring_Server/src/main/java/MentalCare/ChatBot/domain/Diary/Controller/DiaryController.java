@@ -33,10 +33,10 @@ public class DiaryController {
     @PostMapping("/diary")
     public ResponseEntity<?> DiarySave(@RequestBody DiaryRequest diaryRequest) {
 
-        String diarySummary = diaryService.SummarizeDiary(diaryRequest);
-        String comicURL = diaryService.DrawComic(diaryRequest);
-        String diaryText = diaryService.SaveDiary(diaryRequest);
-        String diaryEmotion = diaryService.ClassifyEmotion(diaryRequest);
+        String diarySummary = diaryService.SummarizeDiary(diaryRequest); //complete
+        String comicURL = diaryService.DrawComic(diaryRequest); //complete
+        String diaryText = diaryService.SaveDiary(diaryRequest); //complete
+        String diaryEmotion = diaryService.ClassifyEmotion(diaryRequest); //replace it with GPT at Fast-API for now.
 
         Map<String,String> weatherMatch = diaryService.WeatherMatch(diaryEmotion);
         String weather = weatherMatch.get("weather");
@@ -69,28 +69,32 @@ public class DiaryController {
     }
 
 
+    /////////////////////
+    //                 //
+    // 아래는 TEST 코드  //
+    //                 //
+    /////////////////////
+
     // TODO : DTO을 받아서 ai 연산을 수행할 것인가? 아니면 String 값을 받아서 ai 연산을 수행할 것인가?
     @PostMapping("/diary/sumarize")
     public  String sumarizetest(@RequestBody String message){
-        //String openAiResponse = chatClient.call(message);
-        return chatClient.call(message);
+        String prompt = "다음 일기를 3줄 또는 4줄로 요약해 주세요.";
+        String fullMessage = prompt + message;
+        return chatClient.call(fullMessage);
     }
 
     //TODO : 리펙토링 요망
     @PostMapping("/diary/generate")
     public PromptResponse getImage(@RequestBody PromptRequest request) {
+
         final String prompt = request.prompt();
 
-        // input validation
         if (StringUtils.isEmpty(prompt)) {
             System.out.println("Prompt is required");
             throw new IllegalArgumentException("Prompt is required");
         }
 
-        System.out.println("Prompt: " + prompt);
-        System.out.println("Generating image...");
-
-        // image options
+        // 이미지 설정
         OpenAiImageOptions imageOptions = OpenAiImageOptions.builder()
                 .withQuality("standard")
                 .withHeight(1024)
@@ -98,14 +102,8 @@ public class DiaryController {
                 .withWidth(1792)
                 .build();
 
-        // image prompt
         ImagePrompt imagePrompt = new ImagePrompt(prompt, imageOptions);
-
-        System.out.println("Calling image client...");
-        // class ep
         Image img = imageClient.call(imagePrompt).getResult().getOutput();
-
-        System.out.println("Image generated successfully");
         return new PromptResponse(img.getUrl());
     }
 }
