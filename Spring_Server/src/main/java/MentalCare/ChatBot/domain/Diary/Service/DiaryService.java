@@ -8,16 +8,16 @@ import java.util.Map;
 public interface DiaryService {
 
     /*일기 요약*/
-    String SummarizeDiary(DiaryRequest diaryRequest);
+    String SummarizeDiary(String text);
 
     /*일기 기반 4칸 만화 생성*/
-    String DrawComic(DiaryRequest diaryRequest);
+    String DrawComic(String text);
 
-    /*저장 메서드 - 실제로는 DTO 객체를 Stirng으로 변환매서드 */
-    String SaveDiary(DiaryRequest diaryRequest);
+    /*저장 메서드  */
+    String SaveDiary(String text);
 
     /*일기 감성 분류 메서드*/
-    String ClassifyEmotion(DiaryRequest diaryRequest);
+    String ClassifyEmotion(String text);
 
     /*감성 - <일기, 이모티콘> 매칭 메서드*/
     Map<String,String> WeatherMatch( String diaryEmotion);

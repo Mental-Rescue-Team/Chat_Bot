@@ -19,8 +19,8 @@ public class ApiClient {
 
     public String sendData(String text) {
         return webClient.post()
-                .uri("/predict") // FastAPI의 예측 엔드포인트
-                .body(BodyInserters.fromValue(new InputData(text))) // 데이터 전송
+                .uri("/gpt") // FastAPI의 예측 엔드포인트
+                .body(BodyInserters.fromValue(new InputData(text))) // 데이터 전송m
                 .retrieve() // 요청 보내기
                 .bodyToMono(String.class) // 응답을 String으로 변환
                 .block(); // 블로킹 호출
