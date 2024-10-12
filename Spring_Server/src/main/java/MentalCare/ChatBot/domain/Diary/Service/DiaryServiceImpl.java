@@ -69,20 +69,22 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     public String ClassifyEmotion(String text) {
         //String message = diaryRequest.toString();
-        String prompt ="이 일기를 (기쁨,슬픔, 평안, 분노, 불안) 중 하나의 감정으로 감정을 분류해줘. 대답할때는 대답할때는 기쁨,슬픔 이렇게 단어로 답변을 해줘.-> ";
+        String prompt ="이 일기를 (기쁨,슬픔, 평온, 분노, 불안) 중 하나의 감정으로 감정을 분류해줘. 대답할때는 대답할때는 기쁨,슬픔 이렇게 단어로 답변을 해줘.-> ";
         String fullmessage = prompt + text;
         return apiClient.sendData(fullmessage);
     }
 
     /*감정에 따른 날씨 매칭 메서드 */
-    //실패 - 아마 responese 단어 때문일듯
     @Override
     public Map<String, String> WeatherMatch(String diaryEmotion) {
 
+        /* 계속 diaryEmotion에 [ 과 ] 가 붙어서 와서 매칭이 안된다, 그래서 제거하는 로직을 추가함 */
+        String cleanEmotion = diaryEmotion.replaceAll("\\[|\\]|\"", "").trim();
+        System.out.println("서비스 단 cleanEmotion : "+cleanEmotion);
         String weather;
         String weatherEmoji;
 
-        switch (diaryEmotion) {
+        switch (cleanEmotion) {
             case "기쁨" -> {weather = "Sunny";weatherEmoji = "☀️";}
             case "슬픔" -> {weather = "Rainy";weatherEmoji = "🌧️";}
             case "분노" -> {weather = "Stormy";weatherEmoji = "🌩️";}
@@ -90,7 +92,10 @@ public class DiaryServiceImpl implements DiaryService {
             case "불안" -> {weather = "Windy";weatherEmoji = "🌬️";}
             default -> {weather = "Unknown";weatherEmoji = "❓";}
         }
-        return Map.of(weather,weatherEmoji);
+        System.out.println(weather);
+        System.out.println(weatherEmoji);
+
+        return Map.of("weather", weather, "weatherEmoji", weatherEmoji);
     }
 
     /*일기 객체 DB에 저장 메서드  */
