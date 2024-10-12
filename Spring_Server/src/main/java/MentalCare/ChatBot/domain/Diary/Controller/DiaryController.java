@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Tag(name = "Diary", description = "일기 기능 API")
@@ -37,13 +38,12 @@ public class DiaryController {
 
     @Operation(summary = " 일기 저장 버튼 클릭 API ", description = " 일기 저장 버튼 클릭 시 일기 요약 + 4컷 카툰 제작 + 일기 저장 + 감정 분류 + 분류된 감정을 바탕으로 날씨 이름과 날씨 이모티콘 매칭 후 일기 본문과 만화를 반환하는 API")
     @PostMapping("/diary")
-    public ResponseEntity<Map<String, String>> DiarySave(@RequestBody DiaryRequest diaryRequest) {
+    public ResponseEntity<LinkedHashMap<String, String>> DiarySave(@RequestBody String text) {
 
-        String diarySummary = diaryService.SummarizeDiary(diaryRequest); //implementation completed
-        String comicURL = diaryService.DrawComic(diaryRequest); //implementation completed
-        //String diaryText = diaryService.SaveDiary(diaryRequest); //implementation completed
-        String diaryText =diaryRequest.toString();
-        String diaryEmotion = diaryService.ClassifyEmotion(diaryRequest); //implementation completed - replace it with GPT at Fast-API for now.
+        String diarySummary = diaryService.SummarizeDiary(text); //implementation completed
+        String comicURL = diaryService.DrawComic(text); //implementation completed
+        String diaryText = diaryService.SaveDiary(text); //implementation completed
+        String diaryEmotion = diaryService.ClassifyEmotion(text); //implementation completed - replace it with GPT at Fast-API for now.
 
         Map<String,String> weatherMatch = diaryService.WeatherMatch(diaryEmotion); //implementation completed
         String weather = weatherMatch.get("weather");
@@ -52,10 +52,11 @@ public class DiaryController {
         Diary diary = new Diary(diaryText, diarySummary, comicURL, diaryEmotion, weather, weatherEmoji, LocalDate.now());
         diaryService.saveDiary(diary); //implementation completed
 
-        return ResponseEntity.ok().body(Map.of(
-                "diaryText", diaryText,
-                "comicURL", comicURL
-        ));
+        return ResponseEntity.ok().body(new LinkedHashMap<String, String>() {{
+            put("diaryText", diaryText);
+            put("comicURL", comicURL);
+        }});
+
     }
 
     @Operation(summary = " 일기 조회 API ", description = " 클라이언트 측에서 넘어오는 날자 값을 받아 당일날 일기 본문과 4컷 만화를 반환 ")

@@ -29,10 +29,10 @@ public class DiaryServiceImpl implements DiaryService {
     /*일기 요약 메서드 */
     //실패
     @Override
-    public String SummarizeDiary(DiaryRequest diaryRequest) {
-        String message = diaryRequest.toString();
+    public String SummarizeDiary(String text) {
+        //String message = diaryRequest.toString();
         String prompt = "다음 일기를 3줄 또는 4줄로 요약해 주세요->"; //prompt message
-        String fullMessage = prompt + message;
+        String fullMessage = prompt + text;
         return chatClient.call(fullMessage);
     }
 
@@ -40,11 +40,11 @@ public class DiaryServiceImpl implements DiaryService {
     /*4칸 만화 생성 메서드 */
     //성공
     @Override
-    public String DrawComic(DiaryRequest diaryRequest) {
-        String message = diaryRequest.toString();
+    public String DrawComic(String text) {
+        //String message = diaryRequest.toString();
         String prompt = "다음 일기를 분석하여 재미있는 4칸짜리 만화를 그려줘->";
-        String fullMessage = prompt + message;
-        if (StringUtils.isEmpty(message)) {throw new DiaryException(ErrorCode.EMPTY_DIARY_CONTENT);}
+        String fullMessage = prompt + text;
+        if (StringUtils.isEmpty(text)) {throw new DiaryException(ErrorCode.EMPTY_DIARY_CONTENT);}
         OpenAiImageOptions imageOptions = OpenAiImageOptions.builder()
                 .withQuality("standard")
                 .withHeight(1024)
@@ -59,18 +59,18 @@ public class DiaryServiceImpl implements DiaryService {
     /*텍스트 DTO 텍스트 String 으로 변환 메서드*/
     //실페
     @Override
-    public String SaveDiary(DiaryRequest diaryRequest) {
-        /*실제 저장은 하지 않고, String type으로 변환후 return*/
-        return diaryRequest.toString();
+    public String SaveDiary(String text) {
+
+        return text;
     }
 
     /*감정 분류 메서드 - 우선 fast-api 의 gpt 에게 맡김*/
     //성공 다만, response는 빼고 단어만 가져오기
     @Override
-    public String ClassifyEmotion(DiaryRequest diaryRequest) {
-        String message = diaryRequest.toString();
+    public String ClassifyEmotion(String text) {
+        //String message = diaryRequest.toString();
         String prompt ="이 일기를 (기쁨,슬픔, 평안, 분노, 불안) 중 하나의 감정으로 감정을 분류해줘. 대답할때는 대답할때는 기쁨,슬픔 이렇게 단어로 답변을 해줘.-> ";
-        String fullmessage = prompt + message;
+        String fullmessage = prompt + text;
         return apiClient.sendData(fullmessage);
     }
 
