@@ -1,7 +1,7 @@
 package MentalCare.ChatBot.domain.Diary.Service;
 
-import MentalCare.ChatBot.domain.Diary.DTO.Request.DiaryRequest;
 import MentalCare.ChatBot.domain.Diary.Entity.Diary;
+
 import java.time.LocalDate;
 import java.util.Map;
 

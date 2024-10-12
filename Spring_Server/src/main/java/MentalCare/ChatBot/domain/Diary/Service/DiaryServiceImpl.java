@@ -1,6 +1,5 @@
 package MentalCare.ChatBot.domain.Diary.Service;
 
-import MentalCare.ChatBot.domain.Diary.DTO.Request.DiaryRequest;
 import MentalCare.ChatBot.domain.Diary.Entity.Diary;
 import MentalCare.ChatBot.domain.Diary.Repository.DiaryRepository;
 import MentalCare.ChatBot.domain.FastAPIConnection.Client.ApiClient;
@@ -27,18 +26,16 @@ public class DiaryServiceImpl implements DiaryService {
     private final ApiClient apiClient; // 감정 분률 모델 사용시 fast-api로 요청을 보낼 클라이언트
 
     /*일기 요약 메서드 */
-    //실패
     @Override
     public String SummarizeDiary(String text) {
         //String message = diaryRequest.toString();
-        String prompt = "다음 일기를 3줄 또는 4줄로 요약해 주세요->"; //prompt message
+        String prompt = "다음 일기를 3줄 또는 4줄로 요약해 줘->"; //prompt message
         String fullMessage = prompt + text;
         return chatClient.call(fullMessage);
     }
 
     // TODO : 4컷 만화 생성 후 어떻게 저장하고 전송할지 확인
     /*4칸 만화 생성 메서드 */
-    //성공
     @Override
     public String DrawComic(String text) {
         //String message = diaryRequest.toString();
@@ -56,8 +53,6 @@ public class DiaryServiceImpl implements DiaryService {
         return img.getUrl();
     }
 
-    /*텍스트 DTO 텍스트 String 으로 변환 메서드*/
-    //실페
     @Override
     public String SaveDiary(String text) {
 
@@ -65,7 +60,6 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     /*감정 분류 메서드 - 우선 fast-api 의 gpt 에게 맡김*/
-    //성공 다만, response는 빼고 단어만 가져오기
     @Override
     public String ClassifyEmotion(String text) {
         //String message = diaryRequest.toString();
