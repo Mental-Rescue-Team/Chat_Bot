@@ -44,10 +44,13 @@ public class DiaryController {
         String comicURL = diaryService.DrawComic(text); //implementation completed
         String diaryText = diaryService.SaveDiary(text); //implementation completed
         String diaryEmotion = diaryService.ClassifyEmotion(text); //implementation completed - replace it with GPT at Fast-API for now.
+        System.out.println("컨트롤러 단 diaryEmotion :" + diaryEmotion);
 
         Map<String,String> weatherMatch = diaryService.WeatherMatch(diaryEmotion); //implementation completed
         String weather = weatherMatch.get("weather");
         String weatherEmoji = weatherMatch.get("weatherEmoji");
+        System.out.println("클라이언트 측 :"+weather);
+        System.out.println("클라이언트 측 :" + weatherEmoji);
 
         Diary diary = new Diary(diaryText, diarySummary, comicURL, diaryEmotion, weather, weatherEmoji, LocalDate.now());
         diaryService.saveDiary(diary); //implementation completed
