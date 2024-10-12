@@ -1,8 +1,6 @@
 package MentalCare.ChatBot.global.config;
 
-
 import MentalCare.ChatBot.global.auth.JWt.JwtAuthenticationFilter;
-//import MentalCare.ChatBot.global.auth.Userdetails.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,10 +24,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    //private final CustomUserDetailsService userDetailsService;
-    //private final CustomAuthenticationProvider customAuthenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -38,7 +33,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
 
                 // cors 설정
-                .cors(cors -> cors.configurationSource(configurationSource()))
+                //.cors(cors -> cors.configurationSource(configurationSource()))
 
                 // 시큐리티 기본 로그인 비활성화
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -54,7 +49,6 @@ public class SecurityConfig {
 
                         //(사용자 용)한 회원 정보 조회
                         requestMatchers(HttpMethod.GET,"/api/member").permitAll().
-
 
                         /*Swagger-무권한 접근 허용*/
                         requestMatchers("/swagger-ui/**").permitAll().
@@ -74,18 +68,18 @@ public class SecurityConfig {
     }
 
     //cors 차단
-    @Bean
-    public CorsConfigurationSource configurationSource() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addAllowedMethod("*");
-        corsConfiguration.addAllowedOriginPattern("*");
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.addExposedHeader("Authorization");
-        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
-        return urlBasedCorsConfigurationSource;
-    }
+//    @Bean
+//    public CorsConfigurationSource configurationSource() {
+//        CorsConfiguration corsConfiguration = new CorsConfiguration();
+//        corsConfiguration.addAllowedHeader("*");
+//        corsConfiguration.addAllowedMethod("*");
+//        corsConfiguration.addAllowedOriginPattern("*");
+//        corsConfiguration.setAllowCredentials(true);
+//        corsConfiguration.addExposedHeader("Authorization");
+//        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+//        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+//        return urlBasedCorsConfigurationSource;
+//    }
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {

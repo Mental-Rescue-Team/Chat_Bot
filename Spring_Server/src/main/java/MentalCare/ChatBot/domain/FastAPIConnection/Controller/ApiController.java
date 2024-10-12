@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class ApiController {
 
+    // 작동 순서 : apiController -> apiService -> apiClient -> fast-api
     private final ApiService apiService; // final 키워드로 필드를 선언
 
     @PostMapping("/call-fastapi")
