@@ -1,7 +1,5 @@
 package MentalCare.ChatBot.domain.Member.Entity;
 
-//import MentalCare.ChatBot.domain.Entity.Diary;
-//import MentalCare.ChatBot.domain.Entity.Report;
 import MentalCare.ChatBot.domain.Diary.Entity.Diary;
 import MentalCare.ChatBot.domain.Member.Role.Role;
 import jakarta.persistence.*;

@@ -1,6 +1,5 @@
 package MentalCare.ChatBot.domain.Diary.Controller;
 
-import MentalCare.ChatBot.domain.Diary.DTO.Request.DiaryRequest;
 import MentalCare.ChatBot.domain.Diary.DTO.Request.PromptRequest;
 import MentalCare.ChatBot.domain.Diary.DTO.Response.PromptResponse;
 import MentalCare.ChatBot.domain.Diary.Entity.Diary;
@@ -34,8 +33,6 @@ public class DiaryController {
     private final ImageClient imageClient; //일기를 통해 4칸 만화 생성 객체
     private final ApiClient apiClient;
 
-
-
     @Operation(summary = " 일기 저장 버튼 클릭 API ", description = " 일기 저장 버튼 클릭 시 일기 요약 + 4컷 카툰 제작 + 일기 저장 + 감정 분류 + 분류된 감정을 바탕으로 날씨 이름과 날씨 이모티콘 매칭 후 일기 본문과 만화를 반환하는 API")
     @PostMapping("/diary")
     public ResponseEntity<LinkedHashMap<String, String>> DiarySave(@RequestBody String text) {
@@ -51,6 +48,15 @@ public class DiaryController {
         String weatherEmoji = weatherMatch.get("weatherEmoji");
         System.out.println("클라이언트 측 :"+weather);
         System.out.println("클라이언트 측 :" + weatherEmoji);
+
+        //TODO : member_no 칼럼도 삽입해야 함
+        //JWT 에서 member_no 추출해야 함
+        //이름 추출 -> 이름으로 repository에서 member_no 추출 가능?
+        // , HttpServletRequest request 파라메터에 추가
+        //멤버 레포에 이름으로 번호 찾는 로직 추가
+        //추후에는 jwt에 member_no를 그냥 넣기
+
+
 
         Diary diary = new Diary(diaryText, diarySummary, comicURL, diaryEmotion, weather, weatherEmoji, LocalDate.now());
         diaryService.saveDiary(diary); //implementation completed
@@ -129,5 +135,4 @@ public class DiaryController {
         String fullmessage = prompt + text;
         return apiClient.sendData(fullmessage);
     }
-
 }
