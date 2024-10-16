@@ -27,6 +27,8 @@ public enum ErrorCode {
     TOKEN_EXPIRED(631, "토큰이 만료되었습니다."),
     INVALID_TOKEN(632, "유효하지 않은 토큰입니다."),
     TOKEN_NOT_PROVIDED(633, "토큰이 제공되지 않았습니다."),
+    TOKEN_MUST_FILLED(634,"토큰은 널값이나 비어서는 안됩니다"),
+
 
     // TODO : Diary Error - 7xx
     /* 1. 일기 작성 및 저장 과정*/
