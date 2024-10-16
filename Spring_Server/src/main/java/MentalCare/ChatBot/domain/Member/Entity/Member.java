@@ -22,7 +22,7 @@ public class Member{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long member_no;
 
-    //회원가입 시 기입-1
+    //회원가입 시 기입-1 -> 사용자 이름은 중복 허용 불가하기
     private String username;
 
     //회원가입 시 기입-2

@@ -64,8 +64,8 @@ public class DiaryServiceImpl implements DiaryService {
     public String ClassifyEmotion(String text) {
         //String message = diaryRequest.toString();
         String prompt ="이 일기를 (기쁨,슬픔, 평온, 분노, 불안) 중 하나의 감정으로 감정을 분류해줘. 대답할때는 대답할때는 기쁨,슬픔 이렇게 단어로 답변을 해줘.-> ";
-        String fullmessage = prompt + text;
-        return apiClient.sendData(fullmessage);
+        String fullMessage = prompt + text;
+        return apiClient.sendData(fullMessage);
     }
 
     /*감정에 따른 날씨 매칭 메서드 */

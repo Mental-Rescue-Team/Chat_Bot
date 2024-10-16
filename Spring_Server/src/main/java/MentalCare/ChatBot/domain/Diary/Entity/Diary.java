@@ -23,6 +23,7 @@ public class Diary {
     @JoinColumn(name = "member_no")
     private Member member;
 
+    //private Long member_no;
     private String diaryText;
     private String diarySummary;
     private String comicURL;
@@ -36,7 +37,8 @@ public class Diary {
 
     // 생성자 추가
     /*DiaryController에서 생성자를 사용하려고 여기에 생성자 추가 메서드 작성*/
-    public Diary(String diaryText, String diarySummary, String comicURL, String diaryEmotion, String weather, String weatherEmoji, LocalDate diaryDate) {
+    public Diary( Member member ,String diaryText, String diarySummary, String comicURL, String diaryEmotion, String weather, String weatherEmoji, LocalDate diaryDate) {
+        this.member = member ;
         this.diaryText = diaryText;
         this.diarySummary = diarySummary;
         this.comicURL = comicURL;
