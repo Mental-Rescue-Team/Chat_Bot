@@ -5,25 +5,14 @@ import MentalCare.ChatBot.domain.Member.Entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
-    //멤버 찾기
-    List<Diary> findByMember(Member member);
+    List<Diary> findByMember(Member member);//멤버 찾기
+    Diary findByDiaryDate(LocalDate date); // 날짜로 일기 조회
+    Optional<Diary> findByMemberAndDiaryDate(Member member, LocalDate diaryDate);// 특정 날짜와 사용자에 해당하는 일기를 찾는 메서드
 
-    //맴버 번호로 다이어리 리스트 가져오기
-    /*문제 발생 point 쿼리 인식 불가능 한것 같음*/
-    //List<Diary> findByMember_no(Long member_no);
-
-    //감정으로 일기 조회
     List<Diary> findByDiaryEmotion(String diaryEmotion);
-
-    //요약으로 일기 조회
     List<Diary> findByDiarySummaryContaining(String summary);
-
-    //날짜로 일기 조회
-    Diary findByDiaryDate(LocalDate date); // 날짜로 일기 조회 메서드 추가
-
-    //List<Diary> getDiariesByMonthAndUser(int month,Long member_no);
-
 }

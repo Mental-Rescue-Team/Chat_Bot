@@ -22,19 +22,11 @@ public class Member{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long member_no;
 
-    //회원가입 시 기입-1 -> 사용자 이름은 중복 허용 불가하기
+    //회원가입 시 기입- 사용자 이름은 중복 허용 불가하기
     private String username;
-
-    //회원가입 시 기입-2
     private String email;
-
-    //회원가입 시 기입-3
     private String password;
-
-    //회원가입 시 기입-4
     private LocalDate birth;
-
-    //회원가입 시 기입-5
     private String gender;
 
     @Enumerated(EnumType.STRING)  // ROLE을 문자열로 저장
