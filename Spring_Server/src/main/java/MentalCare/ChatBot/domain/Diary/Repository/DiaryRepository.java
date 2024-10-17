@@ -12,7 +12,9 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     List<Diary> findByMember(Member member);
 
     //맴버 번호로 다이어리 리스트 가져오기
-    List<Diary> findByMember_no(Long member_no);
+    /*문제 발생 point 쿼리 인식 불가능 한것 같음*/
+    //List<Diary> findByMember_no(Long member_no);
+
     //감정으로 일기 조회
     List<Diary> findByDiaryEmotion(String diaryEmotion);
 
