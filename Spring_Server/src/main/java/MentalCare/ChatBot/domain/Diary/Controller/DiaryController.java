@@ -38,8 +38,8 @@ import java.util.stream.Collectors;
 public class DiaryController {
 
     private final DiaryService diaryService;
-    private final ChatClient chatClient; //일기 요약 + 채팅 전용 객체
-    private final ImageClient imageClient; //일기를 통해 4칸 만화 생성 객체
+    private final ChatClient chatClient;
+    private final ImageClient imageClient;
     private final ApiClient apiClient;
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
@@ -95,9 +95,7 @@ public class DiaryController {
         }
 
         Diary diary = diaryService.getDiaryByDate(diaryDate);
-        if (diary == null) {
-            return ResponseEntity.notFound().build();
-        }
+        if (diary == null) {return ResponseEntity.notFound().build();}
 
         Map<String, String> response = Map.of(
                 "diaryText", diary.getDiaryText(),
@@ -151,14 +149,12 @@ public class DiaryController {
         return chatClient.call(fullMessage);
     }
 
-    //TODO : 리펙토링 요망
     @PostMapping("/diary/comic")
     public PromptResponse getImage(@RequestBody PromptRequest request) {
 
         final String prompt = request.prompt();
 
         if (StringUtils.isEmpty(prompt)) {
-            System.out.println("Prompt is required");
             throw new IllegalArgumentException("Prompt is required");
         }
 
