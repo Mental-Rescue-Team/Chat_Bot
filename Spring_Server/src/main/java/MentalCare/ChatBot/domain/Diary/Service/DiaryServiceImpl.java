@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 public class DiaryServiceImpl implements DiaryService {
 
     private final DiaryRepository diaryRepository;
-    private final ChatClient chatClient; //일기 요약 + 채팅 전용 객체
-    private final ImageClient imageClient; //일기를 통해 4칸 만화 생성 객체
-    private final ApiClient apiClient; // 감정 분률 모델 사용시 fast-api로 요청을 보낼 클라이언트
+    private final ChatClient chatClient;
+    private final ImageClient imageClient;
+    private final ApiClient apiClient;
 
     /*일기 요약 메서드 */
     @Override
@@ -59,7 +59,6 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     public String SaveDiary(String text) {
-
         return text;
     }
 
@@ -78,7 +77,6 @@ public class DiaryServiceImpl implements DiaryService {
 
         /* 계속 diaryEmotion에 [ 과 ] 가 붙어서 와서 매칭이 안된다, 그래서 제거하는 로직을 추가함 */
         String cleanEmotion = diaryEmotion.replaceAll("\\[|\\]|\"", "").trim();
-        System.out.println("서비스 단 cleanEmotion : "+cleanEmotion);
         String weather;
         String weatherEmoji;
 
@@ -90,8 +88,6 @@ public class DiaryServiceImpl implements DiaryService {
             case "불안" -> {weather = "Windy";weatherEmoji = "🌬️";}
             default -> {weather = "Unknown";weatherEmoji = "❓";}
         }
-        System.out.println(weather);
-        System.out.println(weatherEmoji);
 
         return Map.of("weather", weather, "weatherEmoji", weatherEmoji);
     }
