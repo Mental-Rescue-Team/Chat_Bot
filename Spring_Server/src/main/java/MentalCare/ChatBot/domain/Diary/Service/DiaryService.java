@@ -1,8 +1,11 @@
 package MentalCare.ChatBot.domain.Diary.Service;
 
+import MentalCare.ChatBot.domain.Diary.DTO.Response.DateEmoji;
 import MentalCare.ChatBot.domain.Diary.Entity.Diary;
+import MentalCare.ChatBot.domain.Member.Entity.Member;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 public interface DiaryService {
@@ -27,4 +30,10 @@ public interface DiaryService {
 
     /*날짜 기반 일기 조회 메서드*/
     Diary getDiaryByDate(LocalDate date);
+
+    /*월별 (날짜/날씨 이모티콘) 모두 전송 메서드*/
+    List<DateEmoji> getEveryDateEmoji(int month, Member member);
+
+    /*요청으로 부터사용자 감정 추출 메서드*/
+    String getMemberEmotion(Member member);
 }
