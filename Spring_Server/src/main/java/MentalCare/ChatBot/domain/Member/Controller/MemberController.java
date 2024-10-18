@@ -31,63 +31,57 @@ public class MemberController {
     private final JwtUtil jwtutil;
     private final MemberRepository memberRepository;
 
-    // FIXME : 현재 USER의 한 사용자 정보 조회와, ADMIN의 모든 사용자 정보 조회 시 jwt에서 role이 아니라 이름으로 추출한다.
-    /*보안상 문제가 된다. username은 기본적으로 중복이 허용되는데, 관리자와 우연히 이름이 같은 사용자는 관리자 페이지로 접근이 가능하기 때문이다.*/
+    /* 보안 이슈 : 현재 JWT에서 username을 추출하기에 만약 관리자/사용자 사이에 동명이인이 있으면, 권한 문제가 생길 수 있음 */
+    /* 해결책 1 : JWT에 권한을 넣어서 권한을 추출하여 메서드를 다시 구현 */
+    /* 해결책 2 : 각 메서드 별로 권한 설정을 하여 동명이인일지라도 결국은 ROLE을 확인하도록 구현 */
 
     @Operation(summary = " 회원가입 ", description = " 회원가입 ")
     @PostMapping("member/register")
     public ResponseEntity<ResponseVO<String>> register(@RequestBody @Valid MemberRequest request) {
+
         Long createdId = memberService.register(request);
         ResponseVO<String> response = new ResponseVO<>("Registration successful. User ID: " + createdId,"회원가입 성공");
+
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @Operation(summary = "(사용자 용)한 회원 정보 조회", description = "(사용자 용)한 회원 정보 조회")
     @GetMapping("/member")
-    public ResponseEntity<ResponseVO<MemberResponse>> getmyinfo(HttpServletRequest request){
+    public ResponseEntity<ResponseVO<MemberResponse>> getInfo(HttpServletRequest request){
 
-        //요청에서 jwt 토큰을 가져옴
-        String usertoken =jwtutil.extractTokenFromRequest(request);
-        if (usertoken == null || usertoken.isEmpty())
-        {throw new IllegalArgumentException("JWT token cannot be null or empty");}
+        String userToken =jwtutil.extractTokenFromRequest(request);
+        jwtutil.validateToken_isTokenValid(userToken);
+        MemberResponse response = memberService.getmyinfo(jwtutil.extractUsername(userToken));
 
-        //jwt토큰에서 사용자 이름 추출
-        String username = jwtutil.extractUsername(usertoken);
-        MemberResponse response = memberService.getmyinfo(username);
-
-        //200ok + 사용자 정보
         return ResponseEntity.ok(new ResponseVO<>(response,"(사용자 용)한 회원 정보 조회"));
     }
 
     @Operation(summary = "(관리자 용)모든 회원 정보 조회", description = "(관리자 용)모든 회원 정보 조회")
     @GetMapping("/admin")
-    public ResponseEntity<ResponseVO<List<EveryMemberResponse>>> geteveryinfo(HttpServletRequest request){
+    public ResponseEntity<ResponseVO<List<EveryMemberResponse>>> getEveryInfo(HttpServletRequest request){
 
-        String admintoken =jwtutil.extractTokenFromRequest(request);
-        if (admintoken == null || admintoken.isEmpty())
-        {throw new IllegalArgumentException("JWT token cannot be null or empty");}
-
-        String username = jwtutil.extractUsername(admintoken);
+        String adminToken =jwtutil.extractTokenFromRequest(request);
+        jwtutil.validateToken_isTokenValid(adminToken);
+        String username = jwtutil.extractUsername(adminToken);
         List<EveryMemberResponse> responseList = memberService.geteveryinfo(username);
 
-        //200ok + 사용자 정보
         return ResponseEntity.ok(new ResponseVO<>(responseList,"(관리자 용)모든 회원 정보 조회"));
     }
 
+    // TODO : 희대의 난재 -회원 정보 수정 후 바로 사용자 정보 조회 API 등 다른 api를 불러와야 하는데,
+    // 정보를 수정하니 JWT 토큰에 변화가 생겨서 불가능하더라
+    /* 해결방안 강구 */
+    /* 대첵 1 : 회원 정보 수정 후에도 JWT 토큰이 안바뀔 수 있는지? */
+    /* 대책 2 : 아니면 회원 정보 수정 후 바뀐 JWT 토큰이 자동으로 클라이언트 측에 주입이 되는 방식으로 진행할지? */
     @Operation(summary = "(사용자 용)회원 정보 수정", description = "(사용자 용)회원 정보 수정")
     @PutMapping("/member/edit")
-    public ResponseEntity<ResponseVO<String>> updateMember(HttpServletRequest request,@RequestBody UpdateMemberDTO updateMemberDTO){
+    public ResponseEntity<String> updateMember(HttpServletRequest request,@RequestBody UpdateMemberDTO updateMemberDTO){
 
-        String usertoken =jwtutil.extractTokenFromRequest(request);
-        if (usertoken == null || usertoken.isEmpty())
-        {throw new IllegalArgumentException("JWT token cannot be null or empty");}
+        String userToken =jwtutil.extractTokenFromRequest(request);
+        jwtutil.validateToken_isTokenValid(userToken);
+        memberService.updateMember(jwtutil.extractUsername(userToken), updateMemberDTO);
 
-        String username = jwtutil.extractUsername(usertoken);
-        Long editedmember_no =memberService.updateMember(username, updateMemberDTO);
-
-        ResponseVO<String> response = new ResponseVO<>( "수정된 회원 번호 = " + editedmember_no , "회원 정보 수정");
-        return new ResponseEntity<>(response, HttpStatus.OK);
-
+        return ResponseEntity.ok().body("회원 정보 수정 완료");
     }
 
     @Operation(summary = "(관리자 용)회원 정보 삭제", description = "(관리자 용) 회원 정보 삭제")

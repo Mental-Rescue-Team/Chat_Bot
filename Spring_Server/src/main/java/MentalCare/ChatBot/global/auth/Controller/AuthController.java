@@ -31,29 +31,18 @@ public class AuthController {
     private final AuthenticateAndGenerateToken authenticateAndGenerateToken;
     private final MemberRepository memberRepository;
 
-    //로그인-jwt불필요,jwt 발급 - access token,refreshtoken 모두 발급
-    //메서드 구현 o
-    //테스팅 o : postman
     @Operation(summary = "로그인 ", description = "로그인")
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
 
-        //인증이 성공하면 JWT 생성
-        JwtTokenDto token = authenticateAndGenerateToken.authenticateAndGenerateToken(authRequest.username(), authRequest.password());
-
-        //jwt를 클라이언트에게 반환
-        return ResponseEntity.ok(new AuthResponse(token));
+        JwtTokenDto token = authenticateAndGenerateToken.authenticateAndGenerateToken(authRequest.username(), authRequest.password()); //인증이 성공하면 JWT 생성
+        return ResponseEntity.ok(new AuthResponse(token)); //jwt를 클라이언트에게 반환
     }
 
-    //로그아웃-jwt 불필요,클라이언트 측에서 jwt 삭제
-    //메서드 구현 o
-    //테스팅 x
     @Operation(summary = "로그아웃 ", description = "로그아웃")
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
-
-        //클라이언트 주도 jwt 삭제이므로 서버 측에서는 특별한 처리 x
-        return ResponseEntity.ok("Logged out successfully! Please delete your JWT tokens at Client Side.-클라이언트 측에서 엑세스 토큰과 리프레시 토큰을 모두 삭제해 주세요");
+        return ResponseEntity.ok("클라이언트 측에서 엑세스 토큰과 리프레시 토큰을 모두 삭제해 주세요"); //클라이언트 주도 jwt 삭제이므로 서버 측에서는 특별한 처리 x
     }
 
     @Operation(summary = "엑세스 토큰 만료시 자동 리프레시 토큰 발급 API ", description = "엑세스 토큰 만료시 자동 리프레시 토큰 발급 API")
@@ -61,9 +50,7 @@ public class AuthController {
     public ResponseEntity<AuthResponse> refreshToken(HttpServletRequest request) {
 
         String refreshToken =jwtUtil.extractTokenFromRequest(request);
-
-        if (refreshToken == null || refreshToken.isEmpty())
-        {throw new IllegalArgumentException("JWT token cannot be null or empty");}
+        jwtUtil.validateToken_isTokenValid(refreshToken);
 
         if (refreshToken == null || !jwtUtil.validateRefreshToken(refreshToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -71,7 +58,6 @@ public class AuthController {
         }
 
         String username = jwtUtil.extractUsername(refreshToken);
-
         if (username == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(null);

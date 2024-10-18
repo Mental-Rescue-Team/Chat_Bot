@@ -2,8 +2,6 @@ package MentalCare.ChatBot.domain.Member.DTO.Response;
 
 import MentalCare.ChatBot.domain.Member.Entity.Member;
 import MentalCare.ChatBot.domain.Member.Role.Role;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /*
