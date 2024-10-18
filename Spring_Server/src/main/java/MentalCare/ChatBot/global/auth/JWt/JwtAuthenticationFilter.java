@@ -54,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Member member = memberRepository.findByUsername(username)
                     .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
 
-            if (jwtUtil.validateToken(jwt, member.getUsername())) {
+            if (jwtUtil.validateToken_isUsernameMatching(jwt, member.getUsername())) {
                 // 인증 설정
                 Collection<? extends GrantedAuthority> authorities =
                         Collections.singletonList(new SimpleGrantedAuthority(member.getRole().name()));
