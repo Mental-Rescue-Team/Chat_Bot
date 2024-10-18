@@ -1,8 +1,10 @@
 package MentalCare.ChatBot.domain.Diary.Service;
 
+import MentalCare.ChatBot.domain.Diary.DTO.Response.DateEmoji;
 import MentalCare.ChatBot.domain.Diary.Entity.Diary;
 import MentalCare.ChatBot.domain.Diary.Repository.DiaryRepository;
 import MentalCare.ChatBot.domain.FastAPIConnection.Client.ApiClient;
+import MentalCare.ChatBot.domain.Member.Entity.Member;
 import MentalCare.ChatBot.global.Exception.DiaryException;
 import MentalCare.ChatBot.global.Exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +16,9 @@ import org.springframework.ai.image.ImagePrompt;
 import org.springframework.ai.openai.OpenAiImageOptions;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -102,5 +106,24 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     public Diary getDiaryByDate(LocalDate date) {
         return diaryRepository.findByDiaryDate(date);
+    }
+
+    @Override
+    public List<DateEmoji> getEveryDateEmoji(int month, Member member) {
+
+        List<Diary> diaries = diaryRepository.findByMember(member);
+
+        return diaries.stream()
+                .filter(diary -> diary.getDiaryDate().getMonthValue() == month) // 특정 월 필터링
+                .map(diary -> new DateEmoji(diary.getDiaryDate(), diary.getWeatherEmoji())) // DateEmoji로 변환
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getMemberEmotion(Member member) {
+
+        return diaryRepository.findByMemberAndDiaryDate(member,LocalDate.now())
+                .map(Diary::getDiaryEmotion)
+                .orElseThrow(() -> new DiaryException(ErrorCode.DIARY_NOT_FOUND_FOR_DATE));
     }
 }
