@@ -1,14 +1,14 @@
 package MentalCare.ChatBot.domain.Member.DTO.Request;
 
+import MentalCare.ChatBot.domain.Member.Entity.Member;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
-import MentalCare.ChatBot.domain.Member.Entity.Member;
-
 import java.time.LocalDate;
 
+@Builder
 public record MemberRequest(
 
         @NotBlank(message = "Username is required")
