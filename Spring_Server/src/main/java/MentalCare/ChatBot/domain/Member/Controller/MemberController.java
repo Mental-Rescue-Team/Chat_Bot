@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -37,12 +36,10 @@ public class MemberController {
 
     @Operation(summary = " 회원가입 ", description = " 회원가입 ")
     @PostMapping("member/register")
-    public ResponseEntity<ResponseVO<String>> register(@RequestBody @Valid MemberRequest request) {
+    public ResponseEntity<String> register(@RequestBody @Valid MemberRequest request) {
 
         Long createdId = memberService.register(request);
-        ResponseVO<String> response = new ResponseVO<>("Registration successful. User ID: " + createdId,"회원가입 성공");
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return ResponseEntity.ok().body("회원 가입 성공! member_no : " +createdId);
     }
 
     @Operation(summary = "(사용자 용)한 회원 정보 조회", description = "(사용자 용)한 회원 정보 조회")
