@@ -17,17 +17,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-//@ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")  // "test" 프로파일을 활성화하여 H2 설정을 적용
+@Transactional //만약 롤백을 원하지 않는 메서드의 경우 @Rollback(false)선언
 class MemberControllerTest {
 
     @InjectMocks //실제 테스팅 대상
@@ -77,11 +81,17 @@ class MemberControllerTest {
     void 회원가입_테스트1() {
 
         // Given
-        MemberRequest memberRequest = new MemberRequest("rsy","eric1225","rsy@naver.com", LocalDate.parse("2024-01-01"),"male");
-        Long createdId = 1L;
+        MemberRequest request = MemberRequest.builder()
+                .username("testUser")
+                .password("test2024^^") //비밀번호 형식에 맞지 않는 입력값
+                .email("test@test.com")
+                .birth(LocalDate.of(1990, 1, 1))
+                .gender("male")
+                .build();
+        Long createdId = 0L;
         /* mockito의 when-then패턴을 사용함 */
         /* membserService는 목 객체이기 때문에, 실제 memberService를 가져온 것이 아니라 지금 이 객체의 행동을 정의하는 것이다. */
-        when(memberService.register(memberRequest)).thenReturn(createdId);
+        when(memberService.register(request)).thenReturn(createdId);
 
         // When
         /* 여기서 memberController의 register는 실제 컨트롤러의 메서드이다. */
@@ -90,7 +100,7 @@ class MemberControllerTest {
 
         /* 하지만, memberController에 대한 부분은 실제 메서드를 가져온다 */
         /* 이유는 지금 그것을 단위테스팅 하는 것이기에 실제로 가져와야지 테스팅을 할 수있기 떄문이다. */
-        ResponseEntity<String> response = memberController.register(memberRequest);
+        ResponseEntity<String> response = memberController.register(request);
 
         // Then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -112,7 +122,7 @@ class MemberControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/member/register")
                         .contentType(MediaType.APPLICATION_JSON) //컨텐츠 타입 헤더를 Json 형식으로 설정하는 부분이다. -> 여기서는 json 형식으로 데이터를 서버에 전송한다는 의미이다.
                         .content(objectMapper.writeValueAsString(request))) //memberrequest라는 DTO 자바 객체를 Json 문자열로 변환하는 작업을 한 후 서버로 보내는 것이다.
-                .andExpect(MockMvcResultMatchers.status().isBadRequest()) // 유효성 검사 실패로 인해 400 Bad Request
+                .andExpect(status().isBadRequest()) // 유효성 검사 실패로 인해 400 Bad Request
                 .andExpect(MockMvcResultMatchers.content().string("Password must be at least 6 characters long")) // 응답 내용을 문자열로 비교
                 .andDo(print()); //요청과 응답 내용을 콘솔에 표기한다. -> 디버깅용
 
@@ -131,7 +141,7 @@ class MemberControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/member/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))) //writeValueAsString는 objectMapper의 메서드인데, 객체 변환 실패시 오류를 발생하기에 필히 예외처리를 해줘야 한다.
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().string("Email should be valid")) // 응답 내용을 문자열로 비교
                 .andDo(print());
     }
@@ -150,13 +160,41 @@ class MemberControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/member/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))) //writeValueAsString는 objectMapper의 메서드인데, 객체 변환 실패시 오류를 발생하기에 필히 예외처리를 해줘야 한다.
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().string("Username is required")) // 응답 내용을 문자열로 비교
                 .andDo(print());
     }
     @Test //예외처리 테스트 - 이미 사용된 이력이 있는 email 사용으로 이메일 중복 테스트
-    void 회원가입_테스트5(){
+    void 회원가입_테스트5() throws Exception{
 
+        MemberRequest request1 = MemberRequest.builder()
+                .username("testUser1")
+                .password("test2024^^")
+                .email("test2024@naver.com")
+                .birth(LocalDate.of(1990, 1, 1))
+                .gender("male")
+                .build();
+
+        MemberRequest request2 = MemberRequest.builder()
+                .username("test2")
+                .password("test1225^^")
+                .email("test2024@naver.com")
+                .birth(LocalDate.of(1991, 11, 11))
+                .gender("male")
+                .build();
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/member/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request1))) //writeValueAsString는 objectMapper의 메서드인데, 객체 변환 실패시 오류를 발생하기에 필히 예외처리를 해줘야 한다.
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/member/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request2))) //writeValueAsString는 objectMapper의 메서드인데, 객체 변환 실패시 오류를 발생하기에 필히 예외처리를 해줘야 한다.
+                .andExpect(status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().string("이미 존재하는 이메일입니다."))
+                .andDo(print());
 
     }
     @Test //의존성 모킹 검증
