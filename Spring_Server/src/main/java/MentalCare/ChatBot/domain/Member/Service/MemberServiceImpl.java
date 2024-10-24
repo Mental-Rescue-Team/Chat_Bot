@@ -13,7 +13,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = request.toEntity();
         if (memberRepository.existsByEmail(member.getEmail())) {
-            throw new MemberException(ErrorCode.ALREADY_EXIST_MEMBER);
+            throw new MemberException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
         member.encodePassword(passwordEncoder);
 
