@@ -212,28 +212,28 @@ class MemberControllerTest {
 //    5.헤더가 널값 인 경우 - null 값 반환
 //    6.의존성 모킹 검증 -jwt 메서드 3개 + memberService 메서드 1개 검증
 
-    @Test
+    @Test //정상 회원 조회
     void 회원조회_테스트1() {}
-    @Test
+    @Test //빈 토큰 요청
     void 회원조회_테스트2() {}
-    @Test
+    @Test //null 값 토큰 요청
     void 회원조회_테스트3() {}
-    @Test
+    @Test //헤더가 bearer가 아닌 경우
     void 회원조회_테스트4() {}
-    @Test
+    @Test //헤더가 null값인 경우
     void 회원조회_테스트5() {}
-    @Test
+    @Test //의존성 모킹 검증
     void 회원조회_테스트6() {}
 
     @Test
-    void getEveryInfo() {
+    void 모든_회원조회_테스트() {
     }
 
     @Test
-    void updateMember() {
+    void 회원정보수정_테스트() {
     }
 
     @Test
-    void deleteMember() {
+    void 회원삭제_테스트() {
     }
 }
