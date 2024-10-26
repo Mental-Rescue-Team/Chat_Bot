@@ -9,7 +9,6 @@ import MentalCare.ChatBot.domain.Diary.Service.DiaryService;
 import MentalCare.ChatBot.domain.FastAPIConnection.Client.ApiClient;
 import MentalCare.ChatBot.domain.Member.Entity.Member;
 import MentalCare.ChatBot.domain.Member.Repository.MemberRepository;
-import MentalCare.ChatBot.global.Exception.DiaryException;
 import MentalCare.ChatBot.global.Exception.ErrorCode;
 import MentalCare.ChatBot.global.Exception.MemberException;
 import MentalCare.ChatBot.global.auth.JWt.JwtUtil;
@@ -27,8 +26,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Tag(name = "Diary", description = "일기 기능 API")
 @RestController
