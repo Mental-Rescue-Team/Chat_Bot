@@ -1,5 +1,6 @@
 package MentalCare.ChatBot.domain.Member.Entity;
 
+import MentalCare.ChatBot.domain.Chatbot.Entity.Report;
 import MentalCare.ChatBot.domain.Diary.Entity.Diary;
 import MentalCare.ChatBot.domain.Member.Role.Role;
 import jakarta.persistence.*;
@@ -35,9 +36,13 @@ public class Member{
     @Column(updatable = false)
     private LocalDateTime registerDate;
 
-    //일기 데이터 테이블과의 관계 설정
+    // 일기 데이터 테이블과의 관계 설정
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Diary> diaries = new ArrayList<>();
+
+    // AI 레포트 테이블과 관계 설정
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Report> reports = new ArrayList<>();
 
     @PrePersist  // 엔티티가 저장되기 전에 실행
     protected void onCreate() {
