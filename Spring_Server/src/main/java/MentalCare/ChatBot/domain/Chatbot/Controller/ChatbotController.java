@@ -1,7 +1,11 @@
 package MentalCare.ChatBot.domain.Chatbot.Controller;
 
+import MentalCare.ChatBot.domain.Chatbot.Service.AiReportService;
 import MentalCare.ChatBot.domain.Chatbot.Service.ChatbotService;
+import MentalCare.ChatBot.domain.Member.Entity.Member;
 import MentalCare.ChatBot.domain.Member.Repository.MemberRepository;
+import MentalCare.ChatBot.global.Exception.ErrorCode;
+import MentalCare.ChatBot.global.Exception.MemberException;
 import MentalCare.ChatBot.global.auth.JWt.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,8 +13,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.ChatClient;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "ChatBot", description = "챗봇 기능 API")
 @RestController
@@ -22,10 +27,11 @@ public class ChatbotController {
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
     private final ChatClient chatClient;
+    private final AiReportService aiReportService;
 
     /* GPT 모델 */
     /*친근한 친구 모드*/
-    @Operation(summary = " GPT 챗봇 API ", description = " GPT 챗봇 기능")
+    @Operation(summary = " 챗봇 API - 친근한 친구 모드 ", description = " 채팅 화면에서 전송 버튼을 누르면 호출되는 API이다. GPT 챗봇 기능을 한다. ")
     @PostMapping("/chatbot/friend")
     public String GptChatBot(@RequestBody String message, HttpServletRequest request){
 
@@ -36,23 +42,42 @@ public class ChatbotController {
         return chatbotService.gptChatting(username,message);
     }
 
-    /* GPT 채팅 종료 */
-    /*친근한 친구 모드*/
-    //@Operation(summary = "채팅 종류 API", description =" ")
+    /* GPT 채팅 종료 + AI 레포트 생성 */
+    @Operation(summary = "채팅 종료 + AI 레포트 생성 API", description =" 채팅화면에서 채팅 종료 버튼을 누르면 호출되는 API 이다. 채팅을 종료함과 동시에 AI 레포트를 생성해준다")
     @GetMapping("/chatbot/finish/friend")
-    public List<String> finishGpt(Long member_no){
+    public Map<String, Object> finishGpt(HttpServletRequest request){
 
-        //모든 메시지 가져오기
-        List<String> everyMessage= chatbotService.finishChatting(member_no);
+        Map<String, Object> response = new LinkedHashMap<>(); //순서가 보장이 되는 LinkedHashMap<> 자료구조를 선택
 
-        //GPT에게 AI 레포트 생성 요청하기
+        String userToken =jwtUtil.extractTokenFromRequest(request);
+        jwtUtil.validateToken_isTokenValid(userToken);
+        String username = jwtUtil.extractUsername(userToken);                   System.out.println("username : " + username);
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(()-> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
 
-        return null;
+        List<String> everyMessage= chatbotService.finishChatting(username);
+        String[] reportResult = aiReportService.report(everyMessage); //GPT에게 AI 레포트 생성 요청하기
+        String emotion =  aiReportService.getEmotion(reportResult[1]); // 피상담자의 현재 감정을 추출
+
+        String currentDifficulty = reportResult[0];                             System.out.println(currentDifficulty);
+        String currentEmotion = reportResult[1] ;                               System.out.println(currentEmotion);
+        String aiAdvice = reportResult[2];                                      System.out.println(aiAdvice);
+        String[] videoLinks =aiReportService.getRandomLink(emotion);
+        String video_link1= videoLinks[0];                                      System.out.println(video_link1);
+        String video_link2= videoLinks[1];                                      System.out.println(video_link2);
+
+        // 실제 DB에 저장 (레포트 + 비디오 링크)
+        aiReportService.saveReport( member, currentDifficulty, currentEmotion, aiAdvice ,video_link1,video_link2);
+
+        //Map 형태로 수정하여 클라이언트 측에서 보기 좋게 반환한다.
+        response.put("currentDifficulty", currentDifficulty);
+        response.put("currentEmotion", currentEmotion);
+        response.put("aiAdvice", aiAdvice);
+        response.put("video_link1", video_link1);
+        response.put("video_link2", video_link2);
+
+        return response;
     }
-
-
-
-
 
 
     /* BERT 모델 */
@@ -72,18 +97,4 @@ public class ChatbotController {
         return null;
     }
 
-
-    /* Test Method Below */
-
-    /* 챗봇 도메인 관련 테스팅 */
-    /* 1. API를 사용하여 챗봇을 구현하면, 이전의 대화의 내용을 끌어올 수 있는가? */
-    //간단한 API 만들어서 여러번 요청을 보내보기
-    // 1번 요청-나는 오늘 샌드위치를 만들어 먹었어
-    // 2번 요청-나는 오늘 수박을 후식으로 먹었어
-    // 3번 요청-내가 오늘 무엇을 먹었니?
-    @PostMapping("/chatbot/test")
-    public String chatTest(@RequestBody String message){
-        return chatClient.call(message);
-    }
-    /*테스팅 결과 : GPT는 이전의 대화를 기억하지 못한다. */
 }
