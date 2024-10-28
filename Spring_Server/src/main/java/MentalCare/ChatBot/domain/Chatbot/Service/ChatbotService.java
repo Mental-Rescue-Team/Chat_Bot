@@ -8,6 +8,6 @@ public interface ChatbotService {
     String gptChatting(String username,String message);
 
     /* GPT 채팅 종료 */
-    List<String> finishChatting(Long member_no);
+    List<String> finishChatting(String username);
 
 }
