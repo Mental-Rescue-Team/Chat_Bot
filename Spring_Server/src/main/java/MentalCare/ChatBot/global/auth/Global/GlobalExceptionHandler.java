@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    //TODO : 글로벌 익셉선 헨들러에 대해 공부해볼것
+
     /*글로벌 에러*/
 
     // 유효성 검사 실패 시 400 Bad Request 반환

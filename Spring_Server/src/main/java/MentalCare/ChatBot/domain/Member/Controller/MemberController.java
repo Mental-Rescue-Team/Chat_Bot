@@ -2,7 +2,6 @@ package MentalCare.ChatBot.domain.Member.Controller;
 
 import MentalCare.ChatBot.domain.Member.DTO.Request.MemberRequest;
 import MentalCare.ChatBot.domain.Member.DTO.Request.UpdateMemberDTO;
-import MentalCare.ChatBot.domain.Member.DTO.Response.EveryMemberResponse;
 import MentalCare.ChatBot.domain.Member.DTO.Response.MemberResponse;
 import MentalCare.ChatBot.domain.Member.Repository.MemberRepository;
 import MentalCare.ChatBot.domain.Member.Service.MemberService;
@@ -14,10 +13,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @Tag(name = "Member", description = "회원관리 API")
 @RestController
@@ -53,18 +50,6 @@ public class MemberController {
         return ResponseEntity.ok(new ResponseVO<>(response,"(사용자 용)한 회원 정보 조회"));
     }
 
-    @Operation(summary = "(관리자 용)모든 회원 정보 조회", description = "(관리자 용)모든 회원 정보 조회")
-    @GetMapping("/admin")
-    public ResponseEntity<ResponseVO<List<EveryMemberResponse>>> getEveryInfo(HttpServletRequest request){
-
-        String adminToken =jwtutil.extractTokenFromRequest(request);
-        jwtutil.validateToken_isTokenValid(adminToken);
-        String username = jwtutil.extractUsername(adminToken);
-        List<EveryMemberResponse> responseList = memberService.geteveryinfo(username);
-
-        return ResponseEntity.ok(new ResponseVO<>(responseList,"(관리자 용)모든 회원 정보 조회"));
-    }
-
     // TODO : 희대의 난재 -회원 정보 수정 후 바로 사용자 정보 조회 API 등 다른 api를 불러와야 하는데,
     // 정보를 수정하니 JWT 토큰에 변화가 생겨서 불가능하더라
     /* 해결방안 강구 */
@@ -81,12 +66,6 @@ public class MemberController {
         return ResponseEntity.ok().body("회원 정보 수정 완료");
     }
 
-    @Operation(summary = "(관리자 용)회원 정보 삭제", description = "(관리자 용) 회원 정보 삭제")
-    @DeleteMapping("/members/{member_no}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deleteMember(@PathVariable("member_no") Long member_no) {
-        memberService.deleteMember(member_no);
-        return ResponseEntity.ok("회원 삭제 완료");
-    }
+
 }
 

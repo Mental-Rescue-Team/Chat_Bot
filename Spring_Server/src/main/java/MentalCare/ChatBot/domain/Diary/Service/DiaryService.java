@@ -36,4 +36,7 @@ public interface DiaryService {
 
     /*요청으로 부터사용자 감정 추출 메서드*/
     String getMemberEmotion(Member member);
+
+    /*감정 별 카운트 메서드*/
+    Map<String, Long> getEmotionCounts();
 }
