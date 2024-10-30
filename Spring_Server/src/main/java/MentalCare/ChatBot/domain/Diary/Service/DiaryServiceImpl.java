@@ -16,6 +16,7 @@ import org.springframework.ai.image.ImagePrompt;
 import org.springframework.ai.openai.OpenAiImageOptions;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -122,4 +123,26 @@ public class DiaryServiceImpl implements DiaryService {
                 .map(Diary::getDiaryEmotion)
                 .orElseThrow(() -> new DiaryException(ErrorCode.DIARY_NOT_FOUND_FOR_DATE));
     }
+
+    @Override
+    public Map<String, Long> getEmotionCounts() {
+        // 기본 감정 리스트를 정의하고, 각 감정을 0으로 초기화
+        Map<String, Long> emotionCounts = new HashMap<>();
+        List<String> defaultEmotions = List.of("[\"기쁨\"]", "[\"평온\"]", "[\"분노\"]", "[\"슬픔\"]", "[\"불안\"]");
+
+        for (String emotion : defaultEmotions) {
+            emotionCounts.put(emotion, 0L);
+        }
+
+        // DB에서 가져온 결과를 emotionCounts에 업데이트
+        List<Object[]> results = diaryRepository.countDiariesByEmotion();
+        for (Object[] result : results) {
+            String emotion = (String) result[0];
+            Long count = (Long) result[1];
+            emotionCounts.put(emotion, count);
+        }
+
+        return emotionCounts;
+    }
 }
+

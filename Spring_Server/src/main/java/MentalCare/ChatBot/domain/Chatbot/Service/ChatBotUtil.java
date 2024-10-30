@@ -31,8 +31,6 @@ public class ChatBotUtil {
     /* Prompt Message - 선택한 모드에 따라 프롬프트 메시지 변환*/
     public String getPromptMessage(String mood, StringBuilder previousMessagesSummary){
         return switch (mood) {
-            case "일반 모드" -> "여기에 일반 모드의 프롬프트 메시지를 입력하세요.";
-
             case "친근한 친구 모드" ->
                     " 당신은 멘탈케어 어플리케이션의 AI 챗봇 상담사입니다." +
                     " 당신의 상담 모드는 친근한 친구 모드입니다." +
