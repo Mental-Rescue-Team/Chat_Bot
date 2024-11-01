@@ -6,7 +6,6 @@ import MentalCare.ChatBot.domain.Diary.DTO.Response.PromptResponse;
 import MentalCare.ChatBot.domain.Diary.Entity.Diary;
 import MentalCare.ChatBot.domain.Diary.Repository.DiaryRepository;
 import MentalCare.ChatBot.domain.Diary.Service.DiaryService;
-import MentalCare.ChatBot.domain.FastAPIConnection.Client.ApiClient;
 import MentalCare.ChatBot.domain.Member.Entity.Member;
 import MentalCare.ChatBot.domain.Member.Repository.MemberRepository;
 import MentalCare.ChatBot.global.Exception.ErrorCode;
@@ -40,7 +39,6 @@ public class DiaryController {
     private final DiaryService diaryService;
     private final ChatClient chatClient;
     private final ImageClient imageClient;
-    private final ApiClient apiClient;
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
     private final DiaryRepository diaryRepository;
@@ -169,15 +167,6 @@ public class DiaryController {
         ImagePrompt imagePrompt = new ImagePrompt(prompt, imageOptions);
         Image img = imageClient.call(imagePrompt).getResult().getOutput();
         return new PromptResponse(img.getUrl());
-    }
-
-    /*fast-api 와 통신 성공한 APi */
-    // 우선 감정 분류 테스팅도 통과함
-    @PostMapping("/fast")
-    public String fastAPI(@RequestBody String text ){
-        String prompt ="이 일기를 (기쁨,슬픔, 평안, 분노, 불안) 중 하나의 감정으로 감정을 분류해줘. 대답할때는 대답할때는 기쁨,슬픔 이렇게 단어로 답변을 해줘.-> ";
-        String fullMessage = prompt + text;
-        return apiClient.sendData(fullMessage);
     }
 
 }

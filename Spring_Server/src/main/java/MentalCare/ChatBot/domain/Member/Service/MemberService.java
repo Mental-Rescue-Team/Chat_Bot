@@ -2,13 +2,8 @@ package MentalCare.ChatBot.domain.Member.Service;
 
 import MentalCare.ChatBot.domain.Member.DTO.Request.MemberRequest;
 import MentalCare.ChatBot.domain.Member.DTO.Request.UpdateMemberDTO;
-import MentalCare.ChatBot.domain.Member.DTO.Response.EveryMemberResponse;
 import MentalCare.ChatBot.domain.Member.DTO.Response.MemberResponse;
-import MentalCare.ChatBot.domain.Member.Role.Role;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public interface MemberService {

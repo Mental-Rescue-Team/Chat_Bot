@@ -1,12 +1,15 @@
 package MentalCare.ChatBot.domain.Member.Controller;
 
 import MentalCare.ChatBot.domain.Member.DTO.Request.MemberRequest;
+import MentalCare.ChatBot.domain.Member.DTO.Response.MemberResponse;
 import MentalCare.ChatBot.domain.Member.Repository.MemberRepository;
 import MentalCare.ChatBot.domain.Member.Service.MemberService;
 import MentalCare.ChatBot.global.auth.JWt.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,9 +27,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -78,6 +82,7 @@ class MemberControllerTest {
 //    6.의존성 모킹 검증 - verify(memberService).register(memberRequest)로 메서드가 잘 호출되었는지 확인
 
     @Test //정상적인 입력
+    @DisplayName("정상적인 입력")
     void 회원가입_테스트1() {
 
         // Given
@@ -107,7 +112,8 @@ class MemberControllerTest {
         assertThat(response.getBody()).isEqualTo("회원 가입 성공! member_no : " +createdId);
 
     }
-    @Test //유효하지 않은 비밀번호 입력
+    @Test
+    @DisplayName("유효하지 않은 비밀번호 입력")
     void 회원가입_테스트2()throws Exception{
 
         MemberRequest request = MemberRequest.builder()
@@ -127,7 +133,8 @@ class MemberControllerTest {
                 .andDo(print()); //요청과 응답 내용을 콘솔에 표기한다. -> 디버깅용
 
     }
-    @Test //유효하지 않은 이메일 입력
+    @Test
+    @DisplayName("유효하지 않은 이메일 입력")
     void 회원가입_테스트3()throws Exception{
         MemberRequest request = MemberRequest.builder()
                 .username("testUser")
@@ -145,7 +152,8 @@ class MemberControllerTest {
                 .andExpect(MockMvcResultMatchers.content().string("Email should be valid")) // 응답 내용을 문자열로 비교
                 .andDo(print());
     }
-    @Test//유효하지 않은 입력 - username에 blank가 포함된 입력
+    @Test
+    @DisplayName("유효하지 않은 사용자 이름 입력")
     void 회원가입_테스트4() throws Exception{
 
         MemberRequest request = MemberRequest.builder()
@@ -164,7 +172,8 @@ class MemberControllerTest {
                 .andExpect(MockMvcResultMatchers.content().string("Username is required")) // 응답 내용을 문자열로 비교
                 .andDo(print());
     }
-    @Test //예외처리 테스트 - 이미 사용된 이력이 있는 email 사용으로 이메일 중복 테스트
+    @Test
+    @DisplayName("예외처리 테스트- 이미 사용한 이력이 있는 이메일 사용")
     void 회원가입_테스트5() throws Exception{
 
         MemberRequest request1 = MemberRequest.builder()
@@ -197,7 +206,8 @@ class MemberControllerTest {
                 .andDo(print());
 
     }
-    @Test //의존성 모킹 검증
+    @Test
+    @DisplayName("의존성 모킹 검증")
     void 회원가입_테스트6(){
 
     }
@@ -212,28 +222,59 @@ class MemberControllerTest {
 //    5.헤더가 널값 인 경우 - null 값 반환
 //    6.의존성 모킹 검증 -jwt 메서드 3개 + memberService 메서드 1개 검증
 
-    @Test //정상 회원 조회
-    void 회원조회_테스트1() {}
-    @Test //빈 토큰 요청
+    @Test
+    @DisplayName("정상 회원 조회 - 정상 조회 확인")
+    void 회원조회_테스트1() throws Exception {
+
+        // Given
+        String validToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyc3k5OTEyMjVfdXNlciIsImlhdCI6MTczMDIxNzg2MSwiZXhwIjoxNzMwODIyNjYxfQ.YWVRGEYmWYScIcayP8MoSsiurpNIJQa6JTNem9AVErufdBFoZLyz0bVIHq_K0sO6HalH2c3NiE4Z_HLK-eRISQ";
+        String username = "testUser";
+
+        MemberResponse expectedResponse = MemberResponse.builder()
+                .username("testUser")
+                .email("test@test.com")
+                .birth(LocalDate.of(1990, 1, 1))
+                .gender("male")
+                .build();
+
+        // Mock 설정
+        when(jwtUtil.extractTokenFromRequest(any(HttpServletRequest.class))).thenReturn(validToken);
+        //doNothing().when(jwtUtil).validateToken_isTokenValid(validToken);
+        when(jwtUtil.extractUsername(validToken)).thenReturn(username);
+        when(memberService.getmyinfo(username)).thenReturn(expectedResponse);
+
+        // When & Then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/member")
+                        .header("Authorization", validToken))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value("testUser"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("test@test.com"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.birth").value("1990-01-01"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.gender").value("male"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("(사용자 용)한 회원 정보 조회"))
+                .andDo(print());
+
+    }
+
+    @Test
+    @DisplayName("빈 토큰 요청")
     void 회원조회_테스트2() {}
-    @Test //null 값 토큰 요청
+
+    @Test
+    @DisplayName("null 값 토큰 요청")
     void 회원조회_테스트3() {}
+
     @Test //헤더가 bearer가 아닌 경우
+    @DisplayName("헤더가 bearer가 아닌 경우")
     void 회원조회_테스트4() {}
+
     @Test //헤더가 null값인 경우
+    @DisplayName("헤더가 null값인 경우")
     void 회원조회_테스트5() {}
+
     @Test //의존성 모킹 검증
+    @DisplayName("의존성 모킹 검증")
     void 회원조회_테스트6() {}
 
-    @Test
-    void 모든_회원조회_테스트() {
-    }
 
-    @Test
-    void 회원정보수정_테스트() {
-    }
-
-    @Test
-    void 회원삭제_테스트() {
-    }
 }

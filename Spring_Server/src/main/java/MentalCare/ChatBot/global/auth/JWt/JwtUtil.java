@@ -68,6 +68,7 @@ public class JwtUtil {
     /* 요청에서 토큰 추출 메서드 */
     public String extractTokenFromRequest(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
+        System.out.println("header from method extractTokenFromRequest : " + header);
         if (header != null && header.startsWith("Bearer ")) {
             return header.substring(7); // "Bearer " 이후의 문자열을 반환
         }
@@ -100,6 +101,8 @@ public class JwtUtil {
 
     /* 토큰의 유효성 검증 - 토큰이 비어있는지 null값인지 확인 */
     public void validateToken_isTokenValid(String token){
+        System.out.println("*** validateToken_isTokenValid ***");
+        System.out.println("class validateToken_isTokenValid(String token) : " + token );
         if (token == null || token.isEmpty()) {
             throw new MemberException(ErrorCode.TOKEN_MUST_FILLED);
         }

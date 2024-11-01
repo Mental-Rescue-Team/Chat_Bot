@@ -2,18 +2,15 @@ package MentalCare.ChatBot.domain.Member.Service;
 
 import MentalCare.ChatBot.domain.Member.DTO.Request.MemberRequest;
 import MentalCare.ChatBot.domain.Member.DTO.Request.UpdateMemberDTO;
-import MentalCare.ChatBot.domain.Member.DTO.Response.EveryMemberResponse;
 import MentalCare.ChatBot.domain.Member.DTO.Response.MemberResponse;
 import MentalCare.ChatBot.domain.Member.Entity.Member;
 import MentalCare.ChatBot.domain.Member.Repository.MemberRepository;
 import MentalCare.ChatBot.global.Exception.ErrorCode;
 import MentalCare.ChatBot.global.Exception.MemberException;
 import MentalCare.ChatBot.global.auth.JWt.JwtUtil;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,8 +34,17 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.save(member).getMember_no();
     }
 
-    /* 회원 정보 수정 메서드 구현 */
+    /* 회원 정보 조회 메서드 구현 */
+    @Override
+    public MemberResponse getmyinfo(String username) {
 
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(()->new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+
+        return MemberResponse.from(member);
+    }
+
+    /* 회원 정보 수정 메서드 구현 */
     @Override
     public void updateMember(String username , UpdateMemberDTO request) {
 
@@ -62,17 +68,6 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
-
-
-    /* 회원 정보 조회 메서드 구현 */
-    @Override
-    public MemberResponse getmyinfo(String username) {
-
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(()->new MemberException(ErrorCode.NOT_FOUND_MEMBER));
-
-        return MemberResponse.from(member);
-    }
 
 
 }
