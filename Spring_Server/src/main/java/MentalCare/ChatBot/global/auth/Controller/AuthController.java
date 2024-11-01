@@ -4,12 +4,11 @@ import MentalCare.ChatBot.domain.Member.Entity.Member;
 import MentalCare.ChatBot.domain.Member.Repository.MemberRepository;
 import MentalCare.ChatBot.global.Exception.ErrorCode;
 import MentalCare.ChatBot.global.Exception.MemberException;
+import MentalCare.ChatBot.global.auth.DTO.Request.AuthRequest;
 import MentalCare.ChatBot.global.auth.DTO.Response.AuthResponse;
+import MentalCare.ChatBot.global.auth.JWt.AuthenticateAndGenerateToken;
 import MentalCare.ChatBot.global.auth.JWt.JwtTokenDto;
 import MentalCare.ChatBot.global.auth.JWt.JwtUtil;
-import MentalCare.ChatBot.global.auth.JWt.AuthenticateAndGenerateToken;
-//import MentalCare.ChatBot.global.auth.Userdetails.CustomUserDetailsService;
-import MentalCare.ChatBot.global.auth.DTO.Request.AuthRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,7 +44,7 @@ public class AuthController {
         return ResponseEntity.ok("클라이언트 측에서 엑세스 토큰과 리프레시 토큰을 모두 삭제해 주세요"); //클라이언트 주도 jwt 삭제이므로 서버 측에서는 특별한 처리 x
     }
 
-    @Operation(summary = "엑세스 토큰 만료시 자동 리프레시 토큰 발급 API ", description = "엑세스 토큰 만료시 자동 리프레시 토큰 발급 API")
+    @Operation(summary = "엑세스 토큰 만료시 자동 토큰 재발급 API ", description = "엑세스 토큰 만료시 자동 리프레시 토큰 발급 API")
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(HttpServletRequest request) {
 

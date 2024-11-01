@@ -44,27 +44,23 @@ public class MemberController {
     public ResponseEntity<ResponseVO<MemberResponse>> getInfo(HttpServletRequest request){
 
         String userToken =jwtutil.extractTokenFromRequest(request);
-        jwtutil.validateToken_isTokenValid(userToken);
+        jwtutil.validateToken_isTokenValid(userToken); // 토큰 정상 발급
         MemberResponse response = memberService.getmyinfo(jwtutil.extractUsername(userToken));
 
         return ResponseEntity.ok(new ResponseVO<>(response,"(사용자 용)한 회원 정보 조회"));
     }
 
-    // TODO : 희대의 난재 -회원 정보 수정 후 바로 사용자 정보 조회 API 등 다른 api를 불러와야 하는데,
-    // 정보를 수정하니 JWT 토큰에 변화가 생겨서 불가능하더라
-    /* 해결방안 강구 */
-    /* 대첵 1 : 회원 정보 수정 후에도 JWT 토큰이 안바뀔 수 있는지? */
-    /* 대책 2 : 아니면 회원 정보 수정 후 바뀐 JWT 토큰이 자동으로 클라이언트 측에 주입이 되는 방식으로 진행할지? */
-    @Operation(summary = "(사용자 용)회원 정보 수정", description = "(사용자 용)회원 정보 수정")
-    @PutMapping("/member/edit")
-    public ResponseEntity<String> updateMember(HttpServletRequest request,@RequestBody UpdateMemberDTO updateMemberDTO){
-
-        String userToken =jwtutil.extractTokenFromRequest(request);
-        jwtutil.validateToken_isTokenValid(userToken);
-        memberService.updateMember(jwtutil.extractUsername(userToken), updateMemberDTO);
-
-        return ResponseEntity.ok().body("회원 정보 수정 완료");
-    }
+//
+//    @Operation(summary = "(사용자 용)회원 정보 수정", description = "(사용자 용)회원 정보 수정")
+//    @PutMapping("/member/edit")
+//    public ResponseEntity<String> updateMember(HttpServletRequest request,@RequestBody UpdateMemberDTO updateMemberDTO){
+//
+//        String userToken =jwtutil.extractTokenFromRequest(request);
+//        jwtutil.validateToken_isTokenValid(userToken);
+//        memberService.updateMember(jwtutil.extractUsername(userToken), updateMemberDTO);
+//
+//        return ResponseEntity.ok().body("회원 정보 수정 완료");
+//    }
 
 
 }

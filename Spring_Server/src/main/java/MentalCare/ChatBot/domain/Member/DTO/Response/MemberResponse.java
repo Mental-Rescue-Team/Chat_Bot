@@ -1,9 +1,11 @@
 package MentalCare.ChatBot.domain.Member.DTO.Response;
 
 import MentalCare.ChatBot.domain.Member.Entity.Member;
+import lombok.Builder;
 
 import java.time.LocalDate;
 
+@Builder
 public record MemberResponse(
         String username,  // 사용자 이름
         String email,     // 이메일
