@@ -42,9 +42,10 @@ public class ChatbotController {
         return chatbotService.gptChatting(username,message);
     }
 
+
     /* GPT 채팅 종료 + AI 레포트 생성 */
     @Operation(summary = "채팅 종료 + AI 레포트 생성 API", description =" 채팅화면에서 채팅 종료 버튼을 누르면 호출되는 API 이다. 채팅을 종료함과 동시에 AI 레포트를 생성해준다")
-    @GetMapping("/chatbot/finish/friend")
+    @GetMapping("/chatbot/friend/finish")
     public Map<String, Object> finishGpt(HttpServletRequest request){
 
         Map<String, Object> response = new LinkedHashMap<>(); //순서가 보장이 되는 LinkedHashMap<> 자료구조를 선택
@@ -79,6 +80,11 @@ public class ChatbotController {
         return response;
     }
 
+
+
+
+
+    /* develope later below */
 
     /* BERT 모델 */
     //@Operation(summary = " BERT 챗봇 API ", description = " BERT 챗봇 기능")
