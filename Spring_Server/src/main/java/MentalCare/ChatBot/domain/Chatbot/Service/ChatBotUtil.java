@@ -12,8 +12,7 @@ import java.util.Map;
 public class ChatBotUtil {
 
     private final RedisTemplate<String, String> redisTemplate;
-
-    // TODO : Service단의 클린코드 및 리펙토링을 위한 ChatBotUtil 서비스 정리
+    private final ChattingMemory chattingMemory;
 
     /* 이전의 대화 내용 로그 출력 */
     public void getLogFromFourMessageFromRedis(StringBuilder previousMessagesSummary){
@@ -63,18 +62,16 @@ public class ChatBotUtil {
         return userMessage;
     }
 
-
-    /* Redis에서 이전 메시지 가져오기 */
-    // 이전 메시지를 요약하여 문자열로 반환하는 메서드
+    /* ConcurrentHashMap에서 이전 메시지 요약 가져오기 */
     public StringBuilder getPreviousMessagesSummary(String username) {
-        // Redis에서 이전 메시지 가져오기
-        List<String> previousMessages = redisTemplate.opsForList().range(username + ":chat", 0, -1);
+        // ConcurrentHashMap에서 이전 메시지 가져오기
+        List<String> previousMessages = chattingMemory.getOrDefault(username);
 
         // 이전 메시지를 간략히 정리하여 문자열로 변환
         StringBuilder previousMessagesSummary = new StringBuilder();
-        if (previousMessages != null && !previousMessages.isEmpty()) {
+        if (!previousMessages.isEmpty()) {
             // 이전 메시지를 최신 것부터 4개만 보여주기
-            int count = Math.min(previousMessages.size(), 4); // 둘 중 더 작은 값은 반환
+            int count = Math.min(previousMessages.size(), 4);
             for (int i = previousMessages.size() - count; i < previousMessages.size(); i++) {
                 previousMessagesSummary.append(previousMessages.get(i)).append("\n");
             }
@@ -83,19 +80,49 @@ public class ChatBotUtil {
         return previousMessagesSummary;  // 요약된 메시지를 반환
     }
 
-    /* Redis에서 사용자와 챗봇의 메시지 저장*/
-    public void saveMessageInRedis(String username,String userMessage ,String response){
-        // Redis에 사용자와 챗봇의 메시지 저장
-        saveMessage(username, userMessage, "user");
-        saveMessage(username, response, "chatbot");
 
+//    /* Redis에서 이전 메시지 가져오기 */
+//    // 이전 메시지를 요약하여 문자열로 반환하는 메서드
+//    public StringBuilder getPreviousMessagesSummary(String username) {
+//        // Redis에서 이전 메시지 가져오기
+//        List<String> previousMessages = redisTemplate.opsForList().range(username + ":chat", 0, -1);
+//
+//        // 이전 메시지를 간략히 정리하여 문자열로 변환
+//        StringBuilder previousMessagesSummary = new StringBuilder();
+//        if (previousMessages != null && !previousMessages.isEmpty()) {
+//            // 이전 메시지를 최신 것부터 4개만 보여주기
+//            int count = Math.min(previousMessages.size(), 4); // 둘 중 더 작은 값은 반환
+//            for (int i = previousMessages.size() - count; i < previousMessages.size(); i++) {
+//                previousMessagesSummary.append(previousMessages.get(i)).append("\n");
+//            }
+//        }
+//
+//        return previousMessagesSummary;  // 요약된 메시지를 반환
+//    }
+
+    /* ConcurrentHashMap에 사용자와 챗봇의 메시지 저장 */
+    public void saveMessageInMap(String username, String userMessage, String response) {
+        // ConcurrentHashMap에 사용자와 챗봇의 메시지 저장
+        chattingMemory.saveMessage(username, userMessage, "user");
+        chattingMemory.saveMessage(username, response, "chatbot");
     }
 
-    /* Redis에 메시지 저장 */
-    // 데이터는 List형식으로 저장이 된다.
-    private void saveMessage(String username, String message, String sender) {
-        String key = username + ":chat";
-        String taggedMessage = sender + ": " + message;
-        redisTemplate.opsForList().rightPush(key, taggedMessage);
-    }
+
+
+
+//    /* Redis에서 사용자와 챗봇의 메시지 저장*/
+//    public void saveMessageInRedis(String username,String userMessage ,String response){
+//        // Redis에 사용자와 챗봇의 메시지 저장
+//        saveMessage(username, userMessage, "user");
+//        saveMessage(username, response, "chatbot");
+//
+//    }
+//
+//    /* Redis에 메시지 저장 */
+//    // 데이터는 List형식으로 저장이 된다.
+//    private void saveMessage(String username, String message, String sender) {
+//        String key = username + ":chat";
+//        String taggedMessage = sender + ": " + message;
+//        redisTemplate.opsForList().rightPush(key, taggedMessage);
+//    }
 }

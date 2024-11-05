@@ -22,8 +22,11 @@ public class Diary {
     private Member member;
 
     //private Long member_no;
+    @Column(length = 1000)  // 길이를 500으로 설정
     private String diaryText;
+    @Column(length = 500)  // 길이를 500으로 설정
     private String diarySummary;
+    @Column(length = 500)  // 길이를 500으로 설정
     private String comicURL;
     private String diaryEmotion;
     private String weather;

@@ -1,1 +1,0 @@
-fastapi server created by ryu.2024.10.02
