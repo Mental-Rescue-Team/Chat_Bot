@@ -17,7 +17,7 @@ import { bindActionCreators } from 'redux';
 import ValidationRules from '../../utils/forms/validationRules';
 import { setTokens } from '../../utils/misc';
 
-const AuthForm = ({goWithoutLogin}) =>  {
+const AuthSample = ({goWithoutLogin}) =>  {
     const [type, setType] = useState('Login');
     const [action, setAction] = useState('로그인');
     const [actionMode, setActionMode] = useState('회원가입');
@@ -213,4 +213,4 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({signIn, signUp}, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AuthForm);
+export default connect(mapStateToProps, mapDispatchToProps)(AuthSample);

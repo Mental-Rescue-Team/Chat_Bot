@@ -1,20 +1,37 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {StyleSheet, Text, View, ActivityIndicator, ScrollView} from 'react-native';
 import AuthForm from './authForm';
-import { getTokens } from '../../utils/misc';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// const AuthStack = createStackNavigator();
 const AuthComponent = ({navigation}) => {
 
-    const [loading, setLoading] = React.useState(false)
-
-    goWithoutLogin = () => {
-        navigation.navigate("AppTabComponent")
-    }
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        getTokens();
-      }, []);
+        const checkLoginStatus = async () => {
+            try {
+                const tokenData = await AsyncStorage.getItem('Tokens');
+                if (tokenData) {
+                    const { accessToken } = JSON.parse(tokenData);
+                    if (accessToken) {
+                        // 액세스 토큰이 유효한 경우, AppTabComponent로 이동
+                        navigation.navigate('AppTabComponent');
+                    } else {
+                        // 액세스 토큰이 없는 경우, 로그인 화면 유지
+                        setLoading(false);
+                    }
+                } else {
+                    // 토큰 데이터가 없는 경우, 로그인 화면 유지
+                    setLoading(false);
+                }
+            } catch (err) {
+                console.error("로그인 상태 확인 중 오류 발생:", err);
+                setLoading(false);
+            }
+        };
+
+        checkLoginStatus();
+    }, [navigation]);
     
     if(loading) {
         return (

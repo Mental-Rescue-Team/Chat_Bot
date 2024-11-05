@@ -10,9 +10,10 @@
 import React, { useState } from 'react';
 import {StyleSheet, Text, View, TextInput, TouchableWithoutFeedback } from 'react-native';
 import DateHead from './dateHead';
+import { diaryData } from '../../utils/tokenUtils';
 // import { styles } from '../../styles/style';
 
-const DiaryComponent = () =>  {
+const DiaryComponent = ({navigation}) =>  {
 
   const [text, setText] = useState('');
 
@@ -21,6 +22,11 @@ const DiaryComponent = () =>  {
   const onChangeText = (inputText) => {
     setText(inputText);
   };
+
+  const onSaveButton = () => {
+    const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+    diaryData(formattedDate, text, navigation);
+  }
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -36,7 +42,7 @@ const DiaryComponent = () =>  {
                 style={styles.input}
                 multiline
               />
-        <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={onSaveButton}>
           <View style={styles.button}>
             <Text style={styles.buttext}>저장하기</Text>
           </View>

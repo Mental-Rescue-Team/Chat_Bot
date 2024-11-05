@@ -1,12 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-
 import React, { useState, useEffect } from 'react';
 import { Text, View, TouchableWithoutFeedback, Button } from 'react-native';
 import { styles } from '../../styles/style';
@@ -14,9 +5,8 @@ import { TextInput } from 'react-native-paper';
 import { getTokens } from '../../utils/tokenUtils';
 
 
-const AuthSample = ({navigation}) =>  {
+const AuthForm = ({navigation}) =>  {
 
-    // const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -32,12 +22,6 @@ const AuthSample = ({navigation}) =>  {
         <View style = {styles.container}>
             <Text style={styles.mainText}>Login</Text>
                 <View style={styles.mainView}>
-                    {/* <TextInput style={styles.textInput}
-                            value={email}
-                            type="email"
-                            onChangeText={email => setEmail(email)}
-                            placeholder="E-mail"
-                            mode='outlined'/> */}
                     <TextInput style={styles.textInput}
                             value={username}
                             type="username"
@@ -69,4 +53,4 @@ const AuthSample = ({navigation}) =>  {
 }
     
 
-export default AuthSample;
+export default AuthForm;
