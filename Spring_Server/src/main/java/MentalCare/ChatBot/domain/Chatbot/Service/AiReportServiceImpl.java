@@ -35,7 +35,9 @@ public class AiReportServiceImpl implements AiReportService{
         String fullMessage2= prompt2 + everyMessage;
 
         String prompt3 ="다음 모든 메시지들(사용자와 챗봇의 대화 내용)을 보고 아래 질문에 1~2문장으로 답을 해줘라 "
-                + " 챗봇이 사용자에게 추가적으로 해줄 구체적인 조언 및 덕담은 무엇인가?   ";
+                + " 챗봇이 사용자에게 마지막으로 조언해주고 싶은 한마디를 다음과 예시의 말투와 같이 출력하라 "
+                +" (예시1)항상 함께 응원해주는 친구가 있으니 너는 힘낼 수 있어. 계속 이야기해주고 함께 화이팅해보자 "
+                +" (예시2)힘들지만 조금만 더 힘내자, 너에겐 내가 있잖아";
         String fullMessage3 = prompt3 + everyMessage;
 
         result[0] = chatClient.call(fullMessage1);

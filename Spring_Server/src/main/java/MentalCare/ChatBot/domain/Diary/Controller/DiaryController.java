@@ -70,7 +70,7 @@ public class DiaryController {
                 .comicURL(comicURL)
                 .diaryEmotion(diaryEmotion)
                 .weather(weather)
-                .weatherEmoji(weatherEmoji)
+                .weatherEmoji("null")
                 .diaryDate(LocalDate.now())
                 .build();
         diaryService.saveDiary(diary);
