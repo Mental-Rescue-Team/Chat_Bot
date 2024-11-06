@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Member", description = "회원관리 API")
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/member")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -30,7 +30,7 @@ public class AuthController {
     private final AuthenticateAndGenerateToken authenticateAndGenerateToken;
     private final MemberRepository memberRepository;
 
-    @Operation(summary = "로그인 ", description = "로그인")
+    @Operation(summary = "로그인 ", description = " username과 password 입력 시 JWT(엑세스 토큰, 리프레시 토큰) 토큰을 클라이언트 측으로 발급한다.")
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
 
@@ -38,13 +38,14 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(token)); //jwt를 클라이언트에게 반환
     }
 
-    @Operation(summary = "로그아웃 ", description = "로그아웃")
+    @Operation(summary = "로그아웃 ", description = "백엔드 측에서는 로그아웃기능을 않았습니다. 클라이언트 측에서 엑세스 토큰과 리프레시 토큰을 삭제해 주는 방식으로 로그아웃이 가능할까요?")
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
         return ResponseEntity.ok("클라이언트 측에서 엑세스 토큰과 리프레시 토큰을 모두 삭제해 주세요"); //클라이언트 주도 jwt 삭제이므로 서버 측에서는 특별한 처리 x
     }
 
-    @Operation(summary = "엑세스 토큰 만료시 자동 토큰 재발급 API ", description = "엑세스 토큰 만료시 자동 리프레시 토큰 발급 API")
+    //FIXME : 언제 호풀되어서 토큰이 발급되는지 명시할 것
+    @Operation(summary = "엑세스 토큰 만료시 자동 (엑세스 / 리프레시)토큰 재발급 API ", description = "엑세스 토큰 만료시 자동 리프레시/엑세스 토큰 발급 API")
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(HttpServletRequest request) {
 

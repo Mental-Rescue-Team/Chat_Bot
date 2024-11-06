@@ -20,7 +20,7 @@ import java.util.Map;
 @Tag(name = "ChatBot", description = "챗봇 기능 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/chatbot")
 public class ChatbotController {
 
     private final ChatbotService chatbotService;
@@ -32,7 +32,7 @@ public class ChatbotController {
     /* GPT 모델 */
     /*친근한 친구 모드*/
     @Operation(summary = " 챗봇 API - 친근한 친구 모드 ", description = " 채팅 화면에서 전송 버튼을 누르면 호출되는 API이다. GPT 챗봇 기능을 한다. ")
-    @PostMapping("/chatbot/friend")
+    @PostMapping("/friend")
     public String GptChatBot(@RequestBody String message, HttpServletRequest request){
 
         String userToken =jwtUtil.extractTokenFromRequest(request);
@@ -45,7 +45,7 @@ public class ChatbotController {
 
     /* GPT 채팅 종료 + AI 레포트 생성 */
     @Operation(summary = "채팅 종료 + AI 레포트 생성 API", description =" 채팅화면에서 채팅 종료 버튼을 누르면 호출되는 API 이다. 채팅을 종료함과 동시에 AI 레포트를 생성해준다")
-    @GetMapping("/chatbot/friend/finish")
+    @GetMapping("/friend/finish")
     public Map<String, Object> finishGpt(HttpServletRequest request){
 
         Map<String, Object> response = new LinkedHashMap<>(); //순서가 보장이 되는 LinkedHashMap<> 자료구조를 선택
@@ -80,15 +80,16 @@ public class ChatbotController {
         return response;
     }
 
-
-
-
-
     /* develope later below */
+    /* develope later below */
+    /* develope later below */
+    /* develope later below */
+    /* develope later below */
+
 
     /* BERT 모델 */
     //@Operation(summary = " BERT 챗봇 API ", description = " BERT 챗봇 기능")
-    @PostMapping("/chatbot/bert")
+    @PostMapping("/bert")
     public String BertChatBot(@RequestBody String message){
 
         // 메시지를 BERT에게 전송
@@ -97,7 +98,7 @@ public class ChatbotController {
     }
     /* BERT 채팅 종료 */
     //@Operation(summary = "채팅 종류 API", description =" ")
-    @GetMapping("/chatbot/finish/bert")
+    @GetMapping("/finish/bert")
     public List<String> finishBert(){
 
         return null;

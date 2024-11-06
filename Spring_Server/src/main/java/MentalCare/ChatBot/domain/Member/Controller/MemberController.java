@@ -1,7 +1,6 @@
 package MentalCare.ChatBot.domain.Member.Controller;
 
 import MentalCare.ChatBot.domain.Member.DTO.Request.MemberRequest;
-import MentalCare.ChatBot.domain.Member.DTO.Request.UpdateMemberDTO;
 import MentalCare.ChatBot.domain.Member.DTO.Response.MemberResponse;
 import MentalCare.ChatBot.domain.Member.Repository.MemberRepository;
 import MentalCare.ChatBot.domain.Member.Service.MemberService;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Member", description = "회원관리 API")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/member")
 @RequiredArgsConstructor
 @Validated
 public class MemberController {
@@ -31,16 +30,16 @@ public class MemberController {
     /* 해결책 1 : JWT에 권한을 넣어서 권한을 추출하여 메서드를 다시 구현 */
     /* 해결책 2 : 각 메서드 별로 권한 설정을 하여 동명이인일지라도 결국은 ROLE을 확인하도록 구현 */
 
-    @Operation(summary = " 회원가입 ", description = " 회원가입 ")
-    @PostMapping("member/register")
+    @Operation(summary = " 회원가입 ", description = " 회원 가입 시 username,password, email, birth, gender 이렇게 5가지를 입력 ")
+    @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody @Valid MemberRequest request) {
 
         Long createdId = memberService.register(request);
         return ResponseEntity.ok().body("회원 가입 성공! member_no : " +createdId);
     }
 
-    @Operation(summary = "(사용자 용)한 회원 정보 조회", description = "(사용자 용)한 회원 정보 조회")
-    @GetMapping("/member")
+    @Operation(summary = "(사용자 용)한 회원 정보 조회", description = "사용자가 마이페이지에서 본인의 회원 정보를 조회할 수 있는 기능 - username, email, birth, gender 이렇게 4개를 조회 가능")
+    @GetMapping("")
     public ResponseEntity<ResponseVO<MemberResponse>> getInfo(HttpServletRequest request){
 
         String userToken =jwtutil.extractTokenFromRequest(request);
