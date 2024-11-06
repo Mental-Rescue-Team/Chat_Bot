@@ -5,7 +5,8 @@ import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { loadDiaryData } from '../../utils/tokenUtils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-const URL = 'https://a04db67f-68f0-4131-a8bd-0504a248a1ca.mock.pstmn.io'
+// const URL = 'https://a04db67f-68f0-4131-a8bd-0504a248a1ca.mock.pstmn.io'
+const URL = 'http://ceprj.gachon.ac.kr:60016'
 
 function CalendarTab({navigation}) {
 
@@ -23,42 +24,27 @@ function CalendarTab({navigation}) {
     "불안": '😨',
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const data = await loadDiaryData();
-  //       if (data && typeof data === 'object') {
-  //         const { date, emotion } = data;
-  //         const emoji = emotionToEmoji[emotion];
-  //         setEmotionData({ [date]: { emoji } });
-  //         console.log('Loaded emotion data for calendar:', { [date]: { emoji } });
-  //       } else {
-  //         console.log('No emoji data found or data format is incorrect:', data);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error loading diary data:', error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
+        
+        const currentMonth = format(new Date(), "MM");
+
         // **서버에서 데이터 요청**
-        const response = await axios.get(`${URL}/api/every/weathers`);
-        const data = response.data;  // 서버로부터 받은 데이터
+        const response = await axios.get(`${URL}/diary/every/weathers?month=${currentMonth}`);
+        
+        console.log('서버 응답 데이터:', response.data);
 
-        // **AsyncStorage에 저장**
-        await AsyncStorage.setItem('emotionData', JSON.stringify(data));
+        // const data = response.data;  // 서버로부터 받은 데이터
+        // // **AsyncStorage에 저장**
+        // await AsyncStorage.setItem('emotionData', JSON.stringify(data));
 
-        // **emotionData 상태 설정** (각 날짜에 맞는 이모지 저장)
-        const emotionMap = data.reduce((acc, entry) => {
-          acc[entry.date] = { emoji: emotionToEmoji[entry.emotion] };
-          return acc;
-        }, {});
-        setEmotionData(emotionMap);
+        // // **emotionData 상태 설정** (각 날짜에 맞는 이모지 저장)
+        // const emotionMap = data.reduce((acc, entry) => {
+        //   acc[entry.diaryDate] = { emoji: entry.weatherEmoji };
+        //   return acc;
+        // }, {});
+        // setEmotionData(emotionMap);
 
       } catch (error) {
         console.error('데이터를 불러오는 중 오류 발생:', error);

@@ -1,14 +1,55 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View, Button, FlatList, ScrollView, TouchableWithoutFeedback} from 'react-native';
+import {StyleSheet, Text, View, FlatList, TouchableWithoutFeedback} from 'react-native';
 import { RadioButton } from 'react-native-paper';
 
 const CheckComponent = () =>  {
   // 진단검사 질문과 선택지
   const questions = [
-    { id: '1', question: "오늘 기분이 어떠신가요?", options: ["좋음", "보통", "나쁨"] },
-    { id: '2', question: "최근 스트레스가 많으셨나요?", options: ["예", "아니오"] },
-    { id: '3', question: "최근 스트레스가 많으셨나요?", options: ["예", "아니오"] },
-    { id: '4', question: "최근 스트레스가 많으셨나요?", options: ["예", "아니오"] },
+    { 
+      id: '1', 
+      question: "기분이 가라앉거나, 우울하거나, 희망이 없다고 느꼈다.", 
+      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
+    },
+    { 
+      id: '2', 
+      question: "평소 하던 일에 대한 흥미가 없어지거나 즐거움을 느끼지 못했다.", 
+      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
+    },
+    { 
+      id: '3', 
+      question: "잠들기가 어렵거나 자주 깼다 / 혹은 너무 많이 잤다.", 
+      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
+    },
+    { 
+      id: '4', 
+      question: "평소보다 식욕이 줄었다 / 혹은 평소보다 많이 먹었다.", 
+      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
+    },
+    { 
+      id: '5', 
+      question: "다른 사람들이 눈치 챌 정도로 평소보다 말과 행동이 느려졌다.", 
+      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
+    },
+    { 
+      id: '6', 
+      question: "피곤하고 기운이 없었다.", 
+      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
+    },
+    { 
+      id: '7', 
+      question: "내가 잘못 했거나, 실패했다는 생각이 들었다.", 
+      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
+    },
+    { 
+      id: '8', 
+      question: "신문을 읽거나 TV를 보는 것과 같은 일상적인 일에도 집중 할 수가 없었다.", 
+      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
+    },
+    { 
+      id: '9', 
+      question: "차라리 죽는 것이 더 낫겠다고 생각했다 / 혹은 자해할 생각을 했다.", 
+      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
+    },
   ];
 
   const [answers, setAnswers] = useState([]);

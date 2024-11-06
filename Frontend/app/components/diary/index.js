@@ -1,12 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-
 import React, { useState } from 'react';
 import {StyleSheet, Text, View, TextInput, TouchableWithoutFeedback } from 'react-native';
 import DateHead from './dateHead';
@@ -19,13 +10,14 @@ const DiaryComponent = ({navigation}) =>  {
 
   const today = new Date();
 
-  const onChangeText = (inputText) => {
-    setText(inputText);
-  };
+  // const onChangeText = (text) => {
+  //   setText(inputText);
+  // };
 
   const onSaveButton = () => {
-    const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-    diaryData(formattedDate, text, navigation);
+    // const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+    // diaryData(formattedDate, text, navigation);
+    diaryData(text);
   }
 
   return (
@@ -35,7 +27,7 @@ const DiaryComponent = ({navigation}) =>  {
       </View>
       <View style={{justifyContent: 'center', alignItems: 'center',}}>
         <TextInput
-                onChangeText={onChangeText}
+                onChangeText={text => setText(text)}
                 value={text}
                 placeholder="오늘 하루의 일기를 입력해주세요."
                 placeholderTextColor={'grey'}

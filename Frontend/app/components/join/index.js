@@ -9,10 +9,10 @@ const JoinTabComponent = ({navigation}) =>  {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [birth, setBirth] = useState("");
-    const [checked, setChecked] = useState('first');
+    const [gender, setGender] = useState('');
 
     const accessJoin = () => {
-        setTokens(username, email, birth, password, navigation);
+        setTokens(username, email, birth, password, gender, navigation);
     }
 
 
@@ -43,22 +43,38 @@ const JoinTabComponent = ({navigation}) =>  {
                     placeholder="E-mail"
                     mode='outlined'/>
             <Text style={styles.text}>성별</Text>
-                <RadioButton.Group>
+                {/* <RadioButton.Group>
                     <View style={{ flexDirection: 'row', alignItems: 'center'}}>
                         <RadioButton
                             value="first"
-                            status={ checked === 'first' ? 'checked' : 'unchecked' }
-                            onPress={() => setChecked('first')}
+                            status={ gender === '남성' ? 'checked' : 'unchecked' }
+                            onPress={() => setGender('남성')}
                         />
                         <Text style={styles.text}>남성</Text>
                         <RadioButton
                             value="second"
-                            status={ checked === 'second' ? 'checked' : 'unchecked' }
-                            onPress={() => setChecked('second')}
+                            status={ gender === '여성' ? 'checked' : 'unchecked' }
+                            onPress={() => setGender('여성')}
                         />
                         <Text style={styles.text}>여성</Text>
                     </View>
-                </RadioButton.Group>
+                </RadioButton.Group> */}
+            <RadioButton.Group 
+                value={gender} 
+                onValueChange={newValue => setGender(newValue)} // gender 값을 업데이트
+            >
+                <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+                    <RadioButton
+                        value="남성" // 남성을 선택하면 "남성"이 gender로 설정됨
+                    />
+                    <Text style={styles.text}>남성</Text>
+                    
+                    <RadioButton
+                        value="여성" // 여성을 선택하면 "여성"이 gender로 설정됨
+                    />
+                    <Text style={styles.text}>여성</Text>
+                </View>
+            </RadioButton.Group>
         </View>
         <TouchableWithoutFeedback onPress={accessJoin}>
             <View style={styles.button}>
