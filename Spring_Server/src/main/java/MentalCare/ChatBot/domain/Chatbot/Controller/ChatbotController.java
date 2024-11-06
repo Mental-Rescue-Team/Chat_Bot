@@ -80,15 +80,8 @@ public class ChatbotController {
         return response;
     }
 
-    /* develope later below */
-    /* develope later below */
-    /* develope later below */
-    /* develope later below */
-    /* develope later below */
-
-
-    /* BERT 모델 */
-    //@Operation(summary = " BERT 챗봇 API ", description = " BERT 챗봇 기능")
+    /* 영균학우님이 만든 ChatBot 모델 */
+    @Operation(summary = "  영균학우님이 만든 ChatBot 모델 - 아직 연결못한 api 입니다. ", description = " 채팅 화면에서 전송 버튼을 누르면 호출되는 API이다. GPT 챗봇 기능을 한다.")
     @PostMapping("/bert")
     public String BertChatBot(@RequestBody String message){
 
@@ -96,8 +89,8 @@ public class ChatbotController {
         // 요청을 클라이언트에게 전송
         return null;
     }
-    /* BERT 채팅 종료 */
-    //@Operation(summary = "채팅 종류 API", description =" ")
+    /* 영균학우님이 만든 ChatBot 모델 채팅 종료 */
+    @Operation(summary = " 영균학우님이 만든 ChatBot 모델 채팅 종료 - 아직 미완성 api 입니다.", description ="채팅화면에서 채팅 종료 버튼을 누르면 호출되는 API 이다. 채팅을 종료함과 동시에 AI 레포트를 생성해준다 ")
     @GetMapping("/finish/bert")
     public List<String> finishBert(){
 
