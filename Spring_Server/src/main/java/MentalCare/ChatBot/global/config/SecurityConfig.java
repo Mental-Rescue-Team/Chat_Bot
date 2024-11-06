@@ -44,8 +44,9 @@ public class SecurityConfig {
                         /*무권한 접근 url*/
                         requestMatchers("/login").permitAll().
                         requestMatchers("/register").permitAll().
-                        requestMatchers("/api/auth/login").permitAll().
-                        requestMatchers("/api/member/register").permitAll().
+                        requestMatchers("/member/login").permitAll().
+                        requestMatchers("/member/logout").permitAll().
+                        requestMatchers("/member/register").permitAll().
 
                         //(사용자 용)한 회원 정보 조회
                         requestMatchers(HttpMethod.GET,"/api/member").permitAll().
