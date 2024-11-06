@@ -140,16 +140,15 @@ public class DiaryController {
     }
 
     /* Test Method Below */
-    /* Test Method Below */
-    /* Test Method Below */
 
+    @Operation(summary = "실제 사용할 api가 아닌 백엔드 테스팅 용 api 입니다. 클라이언트 측에서 연결할 필요 없습니다. ", description = "")
     @PostMapping("/summary")
     public  String sumarizeTest(@RequestBody String message){
         String prompt = "다음 일기를 3줄 또는 4줄로 요약해 주세요.";
         String fullMessage = prompt + message;
         return chatClient.call(fullMessage);
     }
-
+    @Operation(summary = "실제 사용할 api가 아닌 백엔드 테스팅 용 api 입니다. 클라이언트 측에서 연결할 필요 없습니다. ", description = "")
     @PostMapping("/comic")
     public PromptResponse getImage(@RequestBody PromptRequest request) {
 
