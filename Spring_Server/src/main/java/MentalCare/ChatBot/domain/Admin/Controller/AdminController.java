@@ -24,11 +24,12 @@ import java.util.Map;
 
 @RestController
 @Tag(name = "Admin", description = " 관리자 페이지 API")
-@RequestMapping("/api")
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController {
 
     // TODO: 보안의 완성을 위해, 추후 권한 설정을 진행한다.
+    // FIXME : httpServerletReqest는 항상 넣어야 하는가?
 
     private final JwtUtil jwtUtil;
     private final AdminService adminService;
@@ -39,7 +40,7 @@ public class AdminController {
 
     /* 모든 사용자 정보 조회 */
     @Operation(summary = "(관리자 용)모든 회원 정보 조회", description = "(관리자 용)모든 회원 정보 조회")
-    @GetMapping("/admin")
+    @GetMapping("")
     public ResponseEntity<ResponseVO<List<EveryMemberResponse>>> getEveryInfo(HttpServletRequest request){
 
         String adminToken =jwtUtil.extractTokenFromRequest(request);
@@ -52,7 +53,7 @@ public class AdminController {
 
     /* 회원 정보 삭제 */
     @Operation(summary = "(관리자 용)회원 정보 삭제", description = " 관리자 페이지에서 삭제 버튼 클릭 시 호출되는 API이다. 삭제 버튼 시 클라이언트 측에서는 서버 측으로 사용자의 고유 번호인 member_no 값을 넘겨줘야 삭제가 가능하다.")
-    @DeleteMapping("/admin/{member_no}")
+    @DeleteMapping("/{member_no}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteMember(@PathVariable("member_no") Long member_no) {
         adminService.deleteMember(member_no);
@@ -61,7 +62,7 @@ public class AdminController {
 
     /* 모든 유저 이름 조회 */
     @Operation(summary = " 모든 유저 이름 조회", description = " 모든 등록된 유저의 이름들을 나열한다 . 이 이름 하나를 클릭 시 해당 인원의 모든 레포트 기록이 표츌이 된다.")
-    @GetMapping("/admin/names")
+    @GetMapping("/names")
     public List<String> getEveryNames(){
 
         List<String> names = memberRepository.findAllUsernames();
@@ -71,7 +72,7 @@ public class AdminController {
 
     /* 해당 사용자의 모든 AI 레포트 조회 */
     @Operation(summary = " 해당 사용자의 모든 AI 레포트 조회", description = " 유저의 이름을 클릭시, 해당 유저의 이름을 서버측에 전달하여, 유저의 모든 Report를 로드해욘다.")
-    @GetMapping("/admin/reports/{username}")
+    @GetMapping("/reports/{username}")
     public List<ReportDTO> getEveryReports(@PathVariable("username") String username){
 
         Member member= memberRepository.findByUsername(username)
@@ -82,8 +83,8 @@ public class AdminController {
     }
 
     /* 일기 분석 통계자료 조회 */
-    @Operation(summary = " 일기 분석 통계자료 조회", description = " ")
-    @GetMapping("/admin/emotions")
+    @Operation(summary = " 일기 분석 통계자료 조회", description = " 서버 측에서 일기 분석 통계자료를 모두 불러온다 ")
+    @GetMapping("/emotions")
     public Map<String, Long> getEveryEmotion(){
 
         //기쁨, 평온, 분노, 슬픔, 불안 각각에 대한 숫자를 가져온다.

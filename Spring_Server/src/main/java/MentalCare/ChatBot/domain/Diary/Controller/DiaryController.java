@@ -32,7 +32,7 @@ import java.util.Map;
 @Tag(name = "Diary", description = "일기 기능 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/diary")
 @CrossOrigin(origins = "http://localhost:8000")
 public class DiaryController {
 
@@ -43,8 +43,9 @@ public class DiaryController {
     private final MemberRepository memberRepository;
     private final DiaryRepository diaryRepository;
 
-    @Operation(summary = " 일기 저장 버튼", description = " 일기 저장 버튼 클릭 시 일기 요약 + 4컷 카툰 제작 + 일기 저장 + 감정 분류 + 분류된 감정을 바탕으로 날씨 이름과 날씨 이모티콘 매칭 후 일기 본문과 만화를 반환하는 API")
-    @PostMapping("/diary")
+
+    @Operation(summary = " 일기 저장 버튼", description = " 일기 저장 버튼 클릭 시 일기 요약 + 4컷 카툰 제작 + 일기 저장 + 감정 분류 + 분류된 감정을 바탕으로 날씨 이름과 날씨를 매칭 후 일기 본문과 만화를 반환하는 API")
+    @PostMapping("")
     public ResponseEntity<LinkedHashMap<String, String>> DiarySave(@RequestBody String text, HttpServletRequest request) {
 
         String diarySummary = diaryService.SummarizeDiary(text);
@@ -54,7 +55,7 @@ public class DiaryController {
 
         Map<String,String> weatherMatch = diaryService.WeatherMatch(diaryEmotion);
         String weather = weatherMatch.get("weather");
-        String weatherEmoji = weatherMatch.get("weatherEmoji");
+        String weatherEmoji = weatherMatch.get("weatherEmoji"); //날씨 이모지는 클라이언트 측에서 준비하기로 함
 
         String userToken =jwtUtil.extractTokenFromRequest(request);
         jwtUtil.validateToken_isTokenValid(userToken);
@@ -81,8 +82,8 @@ public class DiaryController {
         }});
     }
 
-    @Operation(summary = " 일기 조회 ", description = " 클라이언트 측에서 넘어오는 날짜 값을 받아 당일날 일기 본문과 4컷 만화를 반환 ")
-    @GetMapping("/diary")
+    @Operation(summary = " 일기 조회 ", description = " 클라이언트 측에서 넘어오는 날짜 값을 받아 당일날 일기 본문과 4컷 만화를 반환gksek ")
+    @GetMapping("")
     public ResponseEntity<Map<String, String>> DiaryShow(@RequestParam("date") String date){
 
         LocalDate diaryDate;
@@ -103,7 +104,7 @@ public class DiaryController {
         return ResponseEntity.ok().body(response);
     }
 
-    @Operation(summary = "오늘의 날씨 전송 ", description = "오늘 날짜를 받아서, 오늘의 날씨 이름을 클라이언트 측으로 전송 ")
+    @Operation(summary = "메인 페이지 상단에 표시할 오늘의 날씨 전송 ", description = "오늘 날짜를 받아서, 오늘의 날씨 이름을 클라이언트 측으로 전송 - 날씨이름에 맞는 날씨 사진과 메시지는 클라이언트 측에서 준비 ")
     @GetMapping("/today/weather")
     public ResponseEntity<String> todayWeather(){
 
@@ -114,7 +115,7 @@ public class DiaryController {
         return ResponseEntity.ok().body(todayWeather);
     }
 
-    @Operation(summary = "월별 (날짜/날씨 이모티콘) 모두 전송 ", description = "오늘 날짜를 받아서, 오늘의 날씨 이름을 클라이언트 측으로 전송 ")
+    @Operation(summary = " 메인 페이지의 캘린더에 날씨 이모티콘을 띄우는 기능", description = " 서버측에서 클라이언트 측으로 (날짜-날씨 이름) 을 보내줄테니 클라이언트 측에서는 이를 받아, 각 날짜에 맞는 날씨 이모티콘을 삽입")
     @GetMapping("/every/weathers")
     public ResponseEntity<List<DateEmoji>> loadEmojis(@RequestParam("month") int month, HttpServletRequest request){
 
@@ -126,8 +127,8 @@ public class DiaryController {
         return ResponseEntity.ok(diaryService.getEveryDateEmoji(month,member));
     }
 
-    @Operation(summary = "사용자 감정에 따른 채팅 배경화면 매칭 ", description = "이 메서드로 사용자 감정을 클라이언트 측에 보내니, 클라이언트츨에서 감정에 맞는 배경화면을 매칭시킬 것")
-    @GetMapping("/diary/emotion")
+    @Operation(summary = "사용자 감정에 따른 채팅 배경화면 매칭 ", description = "이 메서드로 사용자 감정을 클라이언트 측에 보내니, 클라이언트츨에서 감정에 맞는 채팅 배경화면을 매칭시킬 것")
+    @GetMapping("/background")
     public ResponseEntity<String> getMember_emotion(HttpServletRequest request){
 
         String userToken =jwtUtil.extractTokenFromRequest(request);
@@ -139,15 +140,17 @@ public class DiaryController {
     }
 
     /* Test Method Below */
+    /* Test Method Below */
+    /* Test Method Below */
 
-    @PostMapping("/diary/summary")
+    @PostMapping("/summary")
     public  String sumarizeTest(@RequestBody String message){
         String prompt = "다음 일기를 3줄 또는 4줄로 요약해 주세요.";
         String fullMessage = prompt + message;
         return chatClient.call(fullMessage);
     }
 
-    @PostMapping("/diary/comic")
+    @PostMapping("/comic")
     public PromptResponse getImage(@RequestBody PromptRequest request) {
 
         final String prompt = request.prompt();
