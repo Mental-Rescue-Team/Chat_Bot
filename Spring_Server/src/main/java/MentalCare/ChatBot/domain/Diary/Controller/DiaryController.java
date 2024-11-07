@@ -11,6 +11,8 @@ import MentalCare.ChatBot.domain.Member.Repository.MemberRepository;
 import MentalCare.ChatBot.global.Exception.ErrorCode;
 import MentalCare.ChatBot.global.Exception.MemberException;
 import MentalCare.ChatBot.global.auth.JWt.JwtUtil;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,10 +50,24 @@ public class DiaryController {
     @PostMapping("")
     public ResponseEntity<LinkedHashMap<String, String>> DiarySave(@RequestBody String text, HttpServletRequest request) {
 
-        String diarySummary = diaryService.SummarizeDiary(text);
-        String comicURL = diaryService.DrawComic(text);
-        String diaryText = diaryService.SaveDiary(text);
-        String diaryEmotion = diaryService.ClassifyEmotion(text);
+        // TODO : 이 부분 블로그에 정리하기
+
+        /* JSON 문자열에서 "message" 필드 값만 추출*/
+        String message;
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(text);
+            message = rootNode.get("message").asText();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new LinkedHashMap<String, String>() {{
+                put("error", "Invalid JSON format");
+            }});
+        }
+
+        String diarySummary = diaryService.SummarizeDiary(message);
+        String comicURL = diaryService.DrawComic(message);
+        String diaryText = diaryService.SaveDiary(message);
+        String diaryEmotion = diaryService.ClassifyEmotion(message);
 
         Map<String,String> weatherMatch = diaryService.WeatherMatch(diaryEmotion);
         String weather = weatherMatch.get("weather");
