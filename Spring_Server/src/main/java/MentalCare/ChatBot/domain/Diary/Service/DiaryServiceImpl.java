@@ -142,7 +142,7 @@ public class DiaryServiceImpl implements DiaryService {
 
         return diaryRepository.findByMemberAndDiaryDate(member,LocalDate.now())
                 .map(Diary::getDiaryEmotion)
-                .orElseThrow(() -> new DiaryException(ErrorCode.DIARY_NOT_FOUND_FOR_DATE));
+                .orElse("[\"아직 오늘의 감정이 없음\"]");
     }
 
     @Override
