@@ -143,7 +143,8 @@ public class DiaryController {
         return ResponseEntity.ok(diaryService.getEveryDateEmoji(month,member));
     }
 
-    @Operation(summary = "사용자 감정에 따른 채팅 배경화면 매칭 ", description = "이 메서드로 사용자 감정을 클라이언트 측에 보내니, 클라이언트츨에서 감정에 맞는 채팅 배경화면을 매칭시킬 것")
+    // TODO : 사용자가 일기를 작성하지 않고 , 바로 채팅을 하러 가능 경우를 계산
+    @Operation(summary = "사용자가 오늘 작성한 일기의 감정에 따른 채팅 배경화면 매칭 ", description = "이 메서드로 사용자의 일기에서 도출된 감정을 클라이언트 측에 보내니, 클라이언트츨에서 감정에 맞는 채팅 배경화면을 매칭시킬 것, 만약 사용자가 아직 일기를 작성하지 않아 감정이 없는 경우는 [아직 오늘의 감정이 없음]이라는 메시지를 클라이언트에 보냅니다. 그럼 배경화면은 기본배경화면으로 해주면 좋을 것 같습니다")
     @GetMapping("/background")
     public ResponseEntity<String> getMember_emotion(HttpServletRequest request){
 
