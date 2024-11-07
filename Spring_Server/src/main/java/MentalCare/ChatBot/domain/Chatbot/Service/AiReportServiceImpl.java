@@ -65,64 +65,64 @@ public class AiReportServiceImpl implements AiReportService{
         // 감정에 따른 유튜브 링크 설정
         switch (emotion) {
             case "기쁨" -> youtubeLinks = new ArrayList<>(List.of(
-                    "https://youtube.com/link1",
-                    "https://youtube.com/link2",
-                    "https://youtube.com/link3",
-                    "https://youtube.com/link4",
-                    "https://youtube.com/link5",
-                    "https://youtube.com/link6",
-                    "https://youtube.com/link7",
-                    "https://youtube.com/link8",
-                    "https://youtube.com/link9",
-                    "https://youtube.com/link10"
+                    "https://www.youtube.com/watch?v=_JsemaQu-5w",
+                    "https://www.youtube.com/watch?v=b6K50YlMBe4",
+                    "https://www.youtube.com/watch?v=ZbZSe6N_BXs",
+                    "https://www.youtube.com/watch?v=nwAYpLVyeFU",
+                    "https://www.youtube.com/watch?v=L5pUd2VuRnI",
+                    "https://www.youtube.com/watch?v=cIg6odS-fA0",
+                    "https://www.youtube.com/watch?v=taj1WzeKUSw",
+                    "https://www.youtube.com/watch?v=KL-AQbhtNn0",
+                    "https://www.youtube.com/watch?v=d1txDGWgMr8",
+                    "https://www.youtube.com/watch?v=8BrCACPmdo4"
             ));
             case "슬픔" -> youtubeLinks = new ArrayList<>(List.of(
-                    "https://youtube.com/link11",
-                    "https://youtube.com/link12",
-                    "https://youtube.com/link13",
-                    "https://youtube.com/link14",
-                    "https://youtube.com/link15",
-                    "https://youtube.com/link16",
-                    "https://youtube.com/link17",
-                    "https://youtube.com/link18",
-                    "https://youtube.com/link19",
-                    "https://youtube.com/link20"
+                    "https://www.youtube.com/watch?v=oGMoT0BlOvs&pp=ygUQ7Iqs7ZSU7J2EIOq3ueuztQ%3D%3D",
+                    "https://www.youtube.com/watch?v=4ALlNKg0fUo&pp=ygUQ7Iqs7ZSU7J2EIOq3ueuztQ%3D%3D",
+                    "https://www.youtube.com/watch?v=MB5IX-np5fE",
+                    "https://www.youtube.com/watch?v=Gljq2FHzTvY",
+                    "https://www.youtube.com/watch?v=aJBDj-cS3Ls",
+                    "https://www.youtube.com/watch?v=ATi551n86HI",
+                    "https://www.youtube.com/watch?v=m7GOmncIU5A",
+                    "https://www.youtube.com/watch?v=Y9A5wuTtblw",
+                    "https://www.youtube.com/watch?v=P_CWjaaHDkM&pp=ygUQ7Iqs7ZSU7J2EIOq3ueuztQ%3D%3D",
+                    "https://www.youtube.com/watch?v=bQgMmbfdJEc&pp=ygUQ7Iqs7ZSU7J2EIOq3ueuztQ%3D%3D"
             ));
             case "평온" -> youtubeLinks = new ArrayList<>(List.of(
-                    "https://youtube.com/link21",
-                    "https://youtube.com/link22",
-                    "https://youtube.com/link23",
-                    "https://youtube.com/link24",
-                    "https://youtube.com/link25",
-                    "https://youtube.com/link26",
-                    "https://youtube.com/link27",
-                    "https://youtube.com/link28",
-                    "https://youtube.com/link29",
-                    "https://youtube.com/link30"
+                    "https://www.youtube.com/watch?v=quUl8dlKA8E&pp=ygUa7Y-J7Jio7ZWg65WMIOuTo-uKlCDrhbjrnpg%3D",
+                    "https://www.youtube.com/watch?v=ZQWrleq-NhQ&pp=ygUa7Y-J7Jio7ZWg65WMIOuTo-uKlCDrhbjrnpg%3D",
+                    "https://www.youtube.com/watch?v=m7GOmncIU5A&t=57s&pp=ygUa7Y-J7Jio7ZWg65WMIOuTo-uKlCDrhbjrnpg%3D",
+                    "https://www.youtube.com/watch?v=18NHV4nJLQc",
+                    "https://www.youtube.com/watch?v=G51VCzXGsJ4",
+                    "https://www.youtube.com/watch?v=gKVy9lEi3Zc",
+                    "https://www.youtube.com/watch?v=RD36uQYN1vM&pp=ygUQ7Y647JWI7ZWcIOyYgeyDgQ%3D%3D",
+                    "https://www.youtube.com/watch?v=iRsDNfGrN30&pp=ygUQ7Y647JWI7ZWcIOyYgeyDgQ%3D%3D",
+                    "https://www.youtube.com/watch?v=VGkoaHyVUdg",
+                    "https://www.youtube.com/watch?v=w89Hqm1IG8M&pp=ygUQ7Y647JWI7ZWcIOyYgeyDgQ%3D%3D"
             ));
             case "분노" -> youtubeLinks = new ArrayList<>(List.of(
-                    "https://youtube.com/link31",
-                    "https://youtube.com/link32",
-                    "https://youtube.com/link33",
-                    "https://youtube.com/link34",
-                    "https://youtube.com/link35",
-                    "https://youtube.com/link36",
-                    "https://youtube.com/link37",
-                    "https://youtube.com/link38",
-                    "https://youtube.com/link39",
-                    "https://youtube.com/link40"
+                   "https://www.youtube.com/watch?v=zpucCXdOSH8",
+                    "https://www.youtube.com/watch?v=T6eQz7J7xSY",
+                    "https://www.youtube.com/watch?v=CPJlLmlyc60",
+                    "https://www.youtube.com/watch?v=muDQm3S7mEI",
+                    "https://www.youtube.com/watch?v=A7DvbZ8ORbM",
+                    "https://www.youtube.com/watch?v=PnjEwU24D2g",
+                    "https://www.youtube.com/watch?v=86NXF5YzSHg",
+                    "https://www.youtube.com/watch?v=eDNTuDBqHSY&pp=ygUa67aE64W466W8IOuLpOyKpOumrOuKlCDrspU%3D",
+                    "https://www.youtube.com/watch?v=cOdzCMEengo&pp=ygUa67aE64W466W8IOuLpOyKpOumrOuKlCDrspU%3D",
+                    "https://www.youtube.com/watch?v=71hZutqP_cM&pp=ygUY7ZmU64KgIOuVjCDrk6PripQg64W4656Y"
             ));
             case "불안" -> youtubeLinks = new ArrayList<>(List.of(
-                    "https://youtube.com/link41",
-                    "https://youtube.com/link42",
-                    "https://youtube.com/link43",
-                    "https://youtube.com/link44",
-                    "https://youtube.com/link45",
-                    "https://youtube.com/link46",
-                    "https://youtube.com/link47",
-                    "https://youtube.com/link48",
-                    "https://youtube.com/link49",
-                    "https://youtube.com/link50"
+                   "https://www.youtube.com/watch?v=WWloIAQpMcQ",
+                    "https://www.youtube.com/watch?v=kmdqb6Iv5-4&pp=ygUU67aI7JWIIOq3ueuztSDrqoXsg4E%3D",
+                    "https://www.youtube.com/watch?v=AHv3XC9tXcs&pp=ygUU67aI7JWIIOq3ueuztSDrqoXsg4E%3D",
+                    "https://www.youtube.com/watch?v=at4NzMuQiP4&pp=ygUU67aI7JWIIOq3ueuztSDrqoXsg4E%3D",
+                    "https://www.youtube.com/watch?v=zAIZpNbYytI",
+                    "https://www.youtube.com/watch?v=7XCx1XcVP5w&pp=ygUX67aI7JWIIO2VtOyGjO2VmOuKlCDrspU%3D",
+                    "https://www.youtube.com/watch?v=fMygYb9njvI&pp=ygUX67aI7JWIIO2VtOyGjO2VmOuKlCDrspU%3D",
+                    "https://www.youtube.com/watch?v=7cfn8-SgVbA&pp=ygUX67aI7JWIIO2VtOyGjO2VmOuKlCDrspU%3D",
+                    "https://www.youtube.com/watch?v=cRbYxsLHyJU&pp=ygUa67aI7JWIIO2VtOyGjO2VmOuKlCDrhbjrnpg%3D",
+                    "https://www.youtube.com/watch?v=TyT02nwr8Ss&pp=ygUa67aI7JWIIO2VtOyGjO2VmOuKlCDrhbjrnpg%3D"
             ));
         }
 
