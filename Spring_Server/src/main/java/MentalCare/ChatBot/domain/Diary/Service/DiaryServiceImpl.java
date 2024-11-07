@@ -16,6 +16,7 @@ import org.springframework.ai.image.ImagePrompt;
 import org.springframework.ai.openai.OpenAiImageOptions;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,9 +68,22 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     public String ClassifyEmotion(String text) {
         //String message = diaryRequest.toString();
-        String prompt ="이 일기를 (기쁨,슬픔, 평온, 분노, 불안) 중 하나의 감정으로 감정을 분류해줘. 대답할때는 기쁨,슬픔 이렇게 단어로 답변을 해줘.-> ";
+        String prompt ="이 일기를 (기쁨,슬픔, 평온, 분노, 불안) 중 하나의 감정으로 감정을 분류해줘. 대답할때는 기쁨,슬픔 이렇게 두 글자의 단어로 답변을 해줘.-> ";
         String fullMessage = prompt + text;
         return apiClient.sendData(fullMessage);
+    }
+
+    public static List<String> extractEmotions(String text) {
+        List<String> result = new ArrayList<>();
+        String[] emotionKeywords = {"기쁨", "슬픔", "평온", "분노", "불안"};
+
+        for (String emotion : emotionKeywords) {
+            if (text.contains(emotion)) {
+                result.add(emotion);
+            }
+        }
+
+        return result;
     }
 
     /*감정에 따른 날씨 매칭 메서드 */
@@ -78,6 +92,7 @@ public class DiaryServiceImpl implements DiaryService {
 
         /* 계속 diaryEmotion에 [ 과 ] 가 붙어서 와서 매칭이 안된다, 그래서 제거하는 로직을 추가함 */
         String cleanEmotion = diaryEmotion.replaceAll("\\[|\\]|\"", "").trim();
+        //String cleanEmotion = extractEmotions(diaryEmotion);
         String weather;
         String weatherEmoji;
 
@@ -105,6 +120,9 @@ public class DiaryServiceImpl implements DiaryService {
         return diaryRepository.findByDiaryDate(date);
     }
 
+
+    // FIXME : 이모지가 아닌 날씨 이름 보내주기 -완료
+
     @Override
     public List<DateEmoji> getEveryDateEmoji(int month, Member member) {
 
@@ -112,7 +130,7 @@ public class DiaryServiceImpl implements DiaryService {
 
         return diaries.stream()
                 .filter(diary -> diary.getDiaryDate().getMonthValue() == month) // 특정 월 필터링
-                .map(diary -> new DateEmoji(diary.getDiaryDate(), diary.getWeatherEmoji())) // DateEmoji로 변환
+                .map(diary -> new DateEmoji(diary.getDiaryDate(), diary.getWeather())) // DateEmoji로 변환
                 .collect(Collectors.toList());
     }
 
