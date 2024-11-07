@@ -64,6 +64,7 @@ public class DiaryServiceImpl implements DiaryService {
         return text;
     }
 
+    // TODO : fast-api의 코드로 변환하기
     /*감정 분류 메서드 - 우선 fast-api 의 gpt 에게 맡김*/
     @Override
     public String ClassifyEmotion(String text) {
@@ -73,17 +74,19 @@ public class DiaryServiceImpl implements DiaryService {
         return apiClient.sendData(fullMessage);
     }
 
-    public static List<String> extractEmotions(String text) {
-        List<String> result = new ArrayList<>();
-        String[] emotionKeywords = {"기쁨", "슬픔", "평온", "분노", "불안"};
+    public String extractEmotion(String response) {
+        // 감정 리스트 정의
+        String[] emotions = {"기쁨", "슬픔", "평온", "분노", "불안"};
 
-        for (String emotion : emotionKeywords) {
-            if (text.contains(emotion)) {
-                result.add(emotion);
+        // 감정 추출
+        for (String emotion : emotions) {
+            if (response.contains(emotion)) {
+                return emotion;  // 감정을 찾으면 해당 감정 반환
             }
         }
 
-        return result;
+        // 감정이 없을 경우 null 반환
+        return null;
     }
 
     /*감정에 따른 날씨 매칭 메서드 */
@@ -91,8 +94,8 @@ public class DiaryServiceImpl implements DiaryService {
     public Map<String, String> WeatherMatch(String diaryEmotion) {
 
         /* 계속 diaryEmotion에 [ 과 ] 가 붙어서 와서 매칭이 안된다, 그래서 제거하는 로직을 추가함 */
-        String cleanEmotion = diaryEmotion.replaceAll("\\[|\\]|\"", "").trim();
-        //String cleanEmotion = extractEmotions(diaryEmotion);
+        //String cleanEmotion = diaryEmotion.replaceAll("\\[|\\]|\"", "").trim();
+        String cleanEmotion = extractEmotion(diaryEmotion);
         String weather;
         String weatherEmoji;
 
