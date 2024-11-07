@@ -15,30 +15,30 @@ const WeatherTab = () =>  {
   useEffect(() => {
     const loadEmotionData = async () => {
       try {
-        const value = await AsyncStorage.getItem('DiaryData');
+        const value = await AsyncStorage.getItem('emotionData');
         if (value !== null) {
           const parsedValue = JSON.parse(value);
-          const emotion = parsedValue.emotion;
+          const emotion = parsedValue.weather;
 
           // 감정에 따라 메시지와 이미지를 설정
           switch (emotion) {
-            case '기쁨':
+            case 'Sunny':
               setMessage('오늘은 정말 기쁜 날이군요!');
               setImage(Sunny);
               break;
-            case '평온':
+            case 'Cloudy':
               setMessage('평온한 하루를 보내고 있군요.');
               setImage(Normal);
               break;
-            case '슬픔':
+            case 'Rainy':
               setMessage('조금 슬픈 하루인 것 같아요.');
               setImage(Sad);
               break;
-            case '분노':
+            case 'Stormy':
               setMessage('화가 나는 하루인가요? 차분해지세요.');
               setImage(Angry);
               break;
-            case '불안':
+            case 'Windy':
               setMessage('오늘은 불안하군요.');
               setImage(Rain);
               break;

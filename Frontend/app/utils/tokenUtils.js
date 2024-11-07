@@ -36,6 +36,8 @@ export const getTokens = async (username, password, navigation) => {
         "username":username,
         "password":password
       });
+
+      console.log(res.data);
       // 서버에서 받은 토큰 데이터
       const { accessToken, refreshToken } = res.data.token;
   
@@ -47,6 +49,9 @@ export const getTokens = async (username, password, navigation) => {
           refreshToken
         })
       );
+
+      const storedTokens = await AsyncStorage.getItem('Tokens');
+      console.log("저장된 Tokens:", JSON.parse(storedTokens));
   
       console.log("Access Token:", accessToken);
       console.log("Refresh Token:", refreshToken);
@@ -92,8 +97,26 @@ export const getTokens = async (username, password, navigation) => {
 
 export const diaryData = async (text) => {
     try {
+        const tokenData = await AsyncStorage.getItem('Tokens');
+        const parsedTokenData = tokenData ? JSON.parse(tokenData) : null;
+        const accessToken = parsedTokenData?.accessToken;
+
+        if (!accessToken) {
+          console.error('Access token이 없습니다. 로그인 후 다시 시도하세요.');
+          alert("로그인이 필요합니다.");
+          return;
+      }
+
+        console.log("보낼 데이터:", { text });
+        console.log("Authorization 헤더:", `Bearer ${accessToken}`);
+
         const response = await axios.post('http://ceprj.gachon.ac.kr:60016/diary', 
-             text 
+            {text} ,
+            {
+              headers: {
+                  Authorization: `Bearer ${accessToken}`,
+              }
+          }
             
           );
           console.log('서버 응답:', response.data);
