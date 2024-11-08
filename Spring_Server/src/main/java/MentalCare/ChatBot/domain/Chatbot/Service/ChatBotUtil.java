@@ -80,6 +80,15 @@ public class ChatBotUtil {
         return previousMessagesSummary;  // 요약된 메시지를 반환
     }
 
+    /* ConcurrentHashMap에 사용자와 챗봇의 메시지 저장 */
+    public void saveMessageInMap(String username, String userMessage, String response) {
+        // ConcurrentHashMap에 사용자와 챗봇의 메시지 저장
+        chattingMemory.saveMessage(username, userMessage, "user");
+        chattingMemory.saveMessage(username, response, "chatbot");
+    }
+
+
+    /* Redis Code Below */
 
 //    /* Redis에서 이전 메시지 가져오기 */
 //    // 이전 메시지를 요약하여 문자열로 반환하는 메서드
@@ -99,16 +108,6 @@ public class ChatBotUtil {
 //
 //        return previousMessagesSummary;  // 요약된 메시지를 반환
 //    }
-
-    /* ConcurrentHashMap에 사용자와 챗봇의 메시지 저장 */
-    public void saveMessageInMap(String username, String userMessage, String response) {
-        // ConcurrentHashMap에 사용자와 챗봇의 메시지 저장
-        chattingMemory.saveMessage(username, userMessage, "user");
-        chattingMemory.saveMessage(username, response, "chatbot");
-    }
-
-
-
 
 //    /* Redis에서 사용자와 챗봇의 메시지 저장*/
 //    public void saveMessageInRedis(String username,String userMessage ,String response){
