@@ -2,6 +2,7 @@ package MentalCare.ChatBot.domain.Chatbot.Controller;
 
 import MentalCare.ChatBot.domain.Chatbot.Service.AiReportService;
 import MentalCare.ChatBot.domain.Chatbot.Service.ChatbotService;
+import MentalCare.ChatBot.domain.Chatbot.Service.ChattingMemory;
 import MentalCare.ChatBot.domain.Member.Entity.Member;
 import MentalCare.ChatBot.domain.Member.Repository.MemberRepository;
 import MentalCare.ChatBot.global.Exception.ErrorCode;
@@ -26,39 +27,60 @@ public class ChatbotController {
     private final ChatbotService chatbotService;
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
-    private final ChatClient chatClient;
     private final AiReportService aiReportService;
+    private final ChattingMemory chattingMemory;
 
-    /* GPT 모델 */
-    /*친근한 친구 모드*/
-    @Operation(summary = " 챗봇 API - 친근한 친구 모드 ", description = " 채팅 화면에서 전송 버튼을 누르면 호출되는 API이다. GPT 챗봇 기능을 한다. ")
+    /* 상담사 모드 - AI Model */
+    @Operation(summary = " 챗봇 - 일반 상담사 모드 ", description = " 채팅 화면에서 전송 버튼을 누르면 호출되는 API이다. 일반 상담사 모드를 지원한다.")
+    @PostMapping("/counselor")
+    public String counselorChatBot(@RequestBody String message , HttpServletRequest request ){
+
+        String userToken =jwtUtil.extractTokenFromRequest(request);             jwtUtil.validateToken_isTokenValid(userToken);
+        String username = jwtUtil.extractUsername(userToken);                   System.out.println("username : " +username);
+
+        return chatbotService.counselorChatting(username, message);
+    }
+
+    /* 친근한 친구 모드 - GPT */
+    @Operation(summary = " 챗봇 - 친근한 친구 모드 ", description = " 채팅 화면에서 전송 버튼을 누르면 호출되는 API이다. GPT 챗봇 기능을 한다. ")
     @PostMapping("/friend")
-    public String GptChatBot(@RequestBody String message, HttpServletRequest request){
+    public String friendChatBot(@RequestBody String message, HttpServletRequest request){
 
-        String userToken =jwtUtil.extractTokenFromRequest(request);
-        jwtUtil.validateToken_isTokenValid(userToken);
-        String username = jwtUtil.extractUsername(userToken);System.out.println("username : " +username);
+        String userToken =jwtUtil.extractTokenFromRequest(request);             jwtUtil.validateToken_isTokenValid(userToken);
+        String username = jwtUtil.extractUsername(userToken);                   System.out.println("username : " +username);
 
         return chatbotService.gptChatting(username,message);
     }
 
-
-    /* GPT 채팅 종료 + AI 레포트 생성 */
+    /* 채팅 종료 + AI 레포트 생성 */
     @Operation(summary = "채팅 종료 + AI 레포트 생성 API", description =" 채팅화면에서 채팅 종료 버튼을 누르면 호출되는 API 이다. 채팅을 종료함과 동시에 AI 레포트를 생성해준다")
-    @GetMapping("/friend/finish")
-    public Map<String, Object> finishGpt(HttpServletRequest request){
+    @GetMapping("/finish")
+    public Map<String, Object> finishFriendChatBot(HttpServletRequest request){
 
         Map<String, Object> response = new LinkedHashMap<>(); //순서가 보장이 되는 LinkedHashMap<> 자료구조를 선택
 
-        String userToken =jwtUtil.extractTokenFromRequest(request);
-        jwtUtil.validateToken_isTokenValid(userToken);
+        String userToken =jwtUtil.extractTokenFromRequest(request);             jwtUtil.validateToken_isTokenValid(userToken); //트콘 유효성 검사
         String username = jwtUtil.extractUsername(userToken);                   System.out.println("username : " + username);
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(()-> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
 
+        /*
+        * 1. 메모리에서 모든 메시지 호출
+        * 2. 메모리 초기화
+        * 3. GPT에게 AI 레포트 생성 요청
+        * 4. 사용자의 현재 감정을 추출
+        */
+
         List<String> everyMessage= chatbotService.finishChatting(username);
-        String[] reportResult = aiReportService.report(everyMessage); //GPT에게 AI 레포트 생성 요청하기
-        String emotion =  aiReportService.getEmotion(reportResult[1]); // 피상담자의 현재 감정을 추출
+        chattingMemory.clearMessages(username);
+        String[] reportResult = aiReportService.report(everyMessage);
+        String emotion =  aiReportService.getEmotion(reportResult[1]);
+
+        /*
+        * 1. AI 레포트 생성
+        * 2. 감정 분류 (GPT)
+        * 3. 감정 값에 맞추어 비디오 링크 2개 랜덤 반환
+        */
 
         String currentDifficulty = reportResult[0];                             System.out.println(currentDifficulty);
         String currentEmotion = reportResult[1] ;                               System.out.println(currentEmotion);
@@ -78,23 +100,6 @@ public class ChatbotController {
         response.put("video_link2", video_link2);
 
         return response;
-    }
-
-    /* 영균학우님이 만든 ChatBot 모델 */
-    @Operation(summary = "  영균학우님이 만든 ChatBot 모델 - 아직 연결못한 api 입니다. ", description = " 채팅 화면에서 전송 버튼을 누르면 호출되는 API이다. GPT 챗봇 기능을 한다.")
-    @PostMapping("/bert")
-    public String BertChatBot(@RequestBody String message){
-
-        // 메시지를 BERT에게 전송
-        // 요청을 클라이언트에게 전송
-        return null;
-    }
-    /* 영균학우님이 만든 ChatBot 모델 채팅 종료 */
-    @Operation(summary = " 영균학우님이 만든 ChatBot 모델 채팅 종료 - 아직 미완성 api 입니다.", description ="채팅화면에서 채팅 종료 버튼을 누르면 호출되는 API 이다. 채팅을 종료함과 동시에 AI 레포트를 생성해준다 ")
-    @GetMapping("/finish/bert")
-    public List<String> finishBert(){
-
-        return null;
     }
 
 }

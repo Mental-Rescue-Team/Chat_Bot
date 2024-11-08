@@ -1,5 +1,6 @@
 package MentalCare.ChatBot.domain.Chatbot.Service;
 
+import MentalCare.ChatBot.domain.FastAPIConnection.Client.ApiClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.ChatClient;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,6 +15,21 @@ public class ChatbotServiceImpl implements ChatbotService{
     private final RedisTemplate<String, String> redisTemplate;
     private final ChatBotUtil chatBotUtil;
     private final ChattingMemory chattingMemory;
+    private final ApiClient apiClient;
+
+    /* 채팅 모드 - 일반 상담사 모드  */
+    @Override
+    public String counselorChatting(String username, String message) {
+
+        String userMessage = chatBotUtil.extractUserMessageFromJson(message);//Json에서 메시지 파싱
+        StringBuilder previousMessagesSummary =chatBotUtil.getPreviousMessagesSummary(username);//이전의 메시지들중 4개 까지만 받아오기
+        chatBotUtil.getLogFromFourMessageFromRedis(previousMessagesSummary);//이전 4개의 메시지 로그 확인
+        String response = apiClient.sendData(message);
+        chatBotUtil.getLogFromGeneratedMessage(userMessage,response); //이번에 도출된 메시지 로그 확인
+        chatBotUtil.saveMessageInMap(username,userMessage,response); //메모리에 이번 메시지 저장
+
+        return response;
+    }
 
     /* 채팅 모드 - 친근한 친구 모드 */
     @Override
@@ -26,10 +42,11 @@ public class ChatbotServiceImpl implements ChatbotService{
         String fullMessage = prompt + userMessage;
         String response = chatClient.call(fullMessage);
         chatBotUtil.getLogFromGeneratedMessage(userMessage,response); //이번에 도출된 메시지 로그 확인
-        chatBotUtil.saveMessageInMap(username,userMessage,response); //Redis 메모디에 이번 메시지 저장
+        chatBotUtil.saveMessageInMap(username,userMessage,response); //메모리에 이번 메시지 저장
 
         return response;
     }
+
 
     /* GPT 채팅 종료 + ConcurrentHashMap에서 대화 내용 가져오기 */
     public List<String> finishChatting(String username) {
