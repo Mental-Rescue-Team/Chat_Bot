@@ -18,9 +18,16 @@ public class ChattingMemory {
         String taggedMessage = sender + ": " + message;
         chatMessagesMap.get(username).add(taggedMessage);
     }
+
     /* 사용자별로 메시지 리스트를 가져오거나 기본값으로 빈 리스트 반환 */
     public List<String> getOrDefault(String username) {
         // username에 해당하는 메시지 리스트가 없으면 빈 리스트 반환
         return chatMessagesMap.getOrDefault(username, new ArrayList<>());
+    }
+
+    /* username에 해당하는 메시지 리스트를 전부 삭제 */
+    public void clearMessages(String username) {
+        // username에 해당하는 메시지 리스트를 제거
+        chatMessagesMap.remove(username);
     }
 }
