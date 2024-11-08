@@ -16,7 +16,6 @@ import org.springframework.ai.image.ImagePrompt;
 import org.springframework.ai.openai.OpenAiImageOptions;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     public String SummarizeDiary(String text) {
         //String message = diaryRequest.toString();
-        String prompt = "다음 일기를 3줄 또는 4줄로 요약해 줘->"; //prompt message
+        String prompt = "다음 일기를 1줄 또는 2줄로 요약해 줘->"; //prompt message
         String fullMessage = prompt + text;
         return chatClient.call(fullMessage);
     }
@@ -43,16 +42,19 @@ public class DiaryServiceImpl implements DiaryService {
     // TODO : 4컷 만화 생성 후 어떻게 저장하고 전송할지 확인
     /*4칸 만화 생성 메서드 */
     @Override
-    public String DrawComic(String text) {
-        //String message = diaryRequest.toString();
-        String prompt = "다음 일기를 분석하여 재미있는 4칸짜리 만화를 그려줘->";
+    public String DrawComic(String text ,String gender) {
+        String prompt = " 이 일기의 당사자의 성별은 "+  gender +" 이다. \n "
+                + "이어지는 일기를 분석하여 이 일기 내용을 요약하는 재미있는 4칸짜리 만화를 그려주되,"
+                + "만화를 그려줄때는 색깔을 좀 넣어서 보기 좋게 만들어 주고, 만화에 절대 글자는 넣지 말아줘, \n"
+                + "만화의 주인공의 성별은 " +gender + "로 그려라. \n "
+                + "사용자의 일기는 다음과 같다 : ";
         String fullMessage = prompt + text;
         if (StringUtils.isEmpty(text)) {throw new DiaryException(ErrorCode.EMPTY_DIARY_CONTENT);}
         OpenAiImageOptions imageOptions = OpenAiImageOptions.builder()
                 .withQuality("standard")
                 .withHeight(1024)
                 .withN(1)
-                .withWidth(1792)
+                .withWidth(1024)
                 .build();
         ImagePrompt imagePrompt = new ImagePrompt(fullMessage, imageOptions);
         Image img = imageClient.call(imagePrompt).getResult().getOutput();

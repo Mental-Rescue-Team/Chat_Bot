@@ -46,7 +46,7 @@ public class DiaryController {
     private final DiaryRepository diaryRepository;
 
 
-    @Operation(summary = " 일기 저장 버튼", description = " 일기 저장 버튼 클릭 시 일기 요약 + 4컷 카툰 제작 + 일기 저장 + 감정 분류 + 분류된 감정을 바탕으로 날씨 이름과 날씨를 매칭 후 일기 본문과 만화를 반환하는 API")
+    @Operation(summary = "일기 저장 버튼 - 왠지 모르게 일기값을 입력할때 , 변수명을 message로 입력을 해야지 오류가 안납니다. text가 아닌 message로 보내주십시요. ", description = " 일기 저장 버튼 클릭 시 일기 요약 + 4컷 카툰 제작 + 일기 저장 + 감정 분류 + 분류된 감정을 바탕으로 날씨 이름과 날씨를 매칭 후 일기 본문과 만화를 반환하는 API")
     @PostMapping("")
     public ResponseEntity<LinkedHashMap<String, String>> DiarySave(@RequestBody String text, HttpServletRequest request) {
 
@@ -63,22 +63,20 @@ public class DiaryController {
                 put("error", "Invalid JSON format");
             }});
         }
+        String userToken =jwtUtil.extractTokenFromRequest(request);                 jwtUtil.validateToken_isTokenValid(userToken);
+        String username = jwtUtil.extractUsername(userToken);
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+        String gender = member.getGender(); ;
 
         String diarySummary = diaryService.SummarizeDiary(message);
-        String comicURL = diaryService.DrawComic(message);
+        String comicURL = diaryService.DrawComic(message,gender);
         String diaryText = diaryService.SaveDiary(message);
         String diaryEmotion = diaryService.ClassifyEmotion(message);
 
         Map<String,String> weatherMatch = diaryService.WeatherMatch(diaryEmotion);
         String weather = weatherMatch.get("weather");
         String weatherEmoji = weatherMatch.get("weatherEmoji"); //날씨 이모지는 클라이언트 측에서 준비하기로 함
-
-        String userToken =jwtUtil.extractTokenFromRequest(request);
-        jwtUtil.validateToken_isTokenValid(userToken);
-
-        String username = jwtUtil.extractUsername(userToken);
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
 
         Diary diary = Diary.builder()
                 .member(member)
