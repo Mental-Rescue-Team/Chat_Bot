@@ -47,6 +47,38 @@ public class ChatbotServiceImpl implements ChatbotService{
         return response;
     }
 
+    /* 채팅 모드 - MBTI - T 모드 */
+    @Override
+    public String MBTI_T_Chatting(String username, String message) {
+
+        String userMessage = chatBotUtil.extractUserMessageFromJson(message);//Json에서 메시지 파싱
+        StringBuilder previousMessagesSummary =chatBotUtil.getPreviousMessagesSummary(username);//이전의 메시지들중 4개 까지만 받아오기
+        chatBotUtil.getLogFromFourMessageFromRedis(previousMessagesSummary);//이전 4개의 메시지 로그 확인
+        String prompt = chatBotUtil.getPromptMessage("T 모드",previousMessagesSummary); //모드에 따른 프롬프팅
+        String fullMessage = prompt + userMessage;
+        String response = chatClient.call(fullMessage);
+        chatBotUtil.getLogFromGeneratedMessage(userMessage,response); //이번에 도출된 메시지 로그 확인
+        chatBotUtil.saveMessageInMap(username,userMessage,response); //메모리에 이번 메시지 저장
+
+        return response;
+    }
+
+    /* 채팅 모드 - MBTI - F 모드 */
+    @Override
+    public String MBTI_F_Chatting(String username, String message) {
+
+        String userMessage = chatBotUtil.extractUserMessageFromJson(message);//Json에서 메시지 파싱
+        StringBuilder previousMessagesSummary =chatBotUtil.getPreviousMessagesSummary(username);//이전의 메시지들중 4개 까지만 받아오기
+        chatBotUtil.getLogFromFourMessageFromRedis(previousMessagesSummary);//이전 4개의 메시지 로그 확인
+        String prompt = chatBotUtil.getPromptMessage("F 모드",previousMessagesSummary); //모드에 따른 프롬프팅
+        String fullMessage = prompt + userMessage;
+        String response = chatClient.call(fullMessage);
+        chatBotUtil.getLogFromGeneratedMessage(userMessage,response); //이번에 도출된 메시지 로그 확인
+        chatBotUtil.saveMessageInMap(username,userMessage,response); //메모리에 이번 메시지 저장
+
+        return response;
+    }
+
 
     /* GPT 채팅 종료 + ConcurrentHashMap에서 대화 내용 가져오기 */
     public List<String> finishChatting(String username) {

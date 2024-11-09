@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +30,7 @@ public class DiaryServiceImpl implements DiaryService {
     private final ChatClient chatClient;
     private final ImageClient imageClient;
     private final ApiClient apiClient;
+    private final SetImagePath setImagePath;
 
     /*일기 요약 메서드 */
     @Override
@@ -58,7 +60,20 @@ public class DiaryServiceImpl implements DiaryService {
                 .build();
         ImagePrompt imagePrompt = new ImagePrompt(fullMessage, imageOptions);
         Image img = imageClient.call(imagePrompt).getResult().getOutput();
-        return img.getUrl();
+
+        /* 이미지 임시 url을 특정 폴더에 저장 후 폴더의 경로를 반환 */
+        String saveDir = "C:\\Users\\류성열\\Desktop\\CB0928\\spring_server\\Spring_Server\\src\\main\\resources\\static\\images";
+        String imagePath = null;
+        try {
+            imagePath = setImagePath.saveImagePath(img.getUrl(), saveDir);
+            // imagePath 사용
+        } catch (IOException e) {
+            // 예외 처리 로직
+            e.printStackTrace();
+            // 예를 들어, 로그를 남기거나 사용자에게 오류 메시지를 보낼 수 있습니다.
+        }
+
+        return imagePath;
     }
 
     @Override

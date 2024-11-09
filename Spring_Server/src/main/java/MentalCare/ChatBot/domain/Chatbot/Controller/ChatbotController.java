@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ai.chat.ChatClient;
 import org.springframework.web.bind.annotation.*;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -50,6 +49,28 @@ public class ChatbotController {
         String username = jwtUtil.extractUsername(userToken);                   System.out.println("username : " +username);
 
         return chatbotService.gptChatting(username,message);
+    }
+
+    /* MBTI - T 모드 - GPT */
+    @Operation(summary = " 챗봇 - MBTI - T 모드 ", description = " 채팅 화면에서 전송 버튼을 누르면 호출되는 API이다. GPT 챗봇 기능을 한다. ")
+    @PostMapping("/T")
+    public String MBTI_T_ChatBot(@RequestBody String message, HttpServletRequest request){
+
+        String userToken =jwtUtil.extractTokenFromRequest(request);             jwtUtil.validateToken_isTokenValid(userToken);
+        String username = jwtUtil.extractUsername(userToken);                   System.out.println("username : " +username);
+
+        return chatbotService.MBTI_T_Chatting(username,message);
+    }
+
+    /* MBTI - F 모드 - GPT */
+    @Operation(summary = " 챗봇 - MBTI - F 모드 ", description = " 채팅 화면에서 전송 버튼을 누르면 호출되는 API이다. GPT 챗봇 기능을 한다. ")
+    @PostMapping("/F")
+    public String MBTI_F_ChatBot(@RequestBody String message, HttpServletRequest request){
+
+        String userToken =jwtUtil.extractTokenFromRequest(request);             jwtUtil.validateToken_isTokenValid(userToken);
+        String username = jwtUtil.extractUsername(userToken);                   System.out.println("username : " +username);
+
+        return chatbotService.MBTI_F_Chatting(username,message);
     }
 
     /* 채팅 종료 + AI 레포트 생성 */
