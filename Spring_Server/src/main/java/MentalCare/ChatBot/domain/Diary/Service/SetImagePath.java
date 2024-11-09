@@ -32,7 +32,8 @@ public class SetImagePath {
         try (InputStream in = url.openStream()) {
             Files.copy(in, targetPath, StandardCopyOption.REPLACE_EXISTING); // 파일 저장
         }
+        String urlPath="http://localhost:8080/images/";
 
-        return targetPath.toString();  // 저장한 파일 경로 반환
+        return urlPath + fileName;  // 저장한 파일 경로가 아닌 사용자가 인식 할 수 있는 경로 반환
     }
 }
