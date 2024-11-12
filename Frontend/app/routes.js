@@ -1,7 +1,7 @@
 import * as React from 'react';
-
 import { createStackNavigator } from '@react-navigation/stack'; 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 //Screens
 import SignIn from './components/auth';
@@ -9,14 +9,26 @@ import SignUp from './components/join';
 import Profile from './components/profile';
 import Home from './components/home';
 import Diary from './components/diary';
-import ChatBot from './components/chat_bot';
+import ChatBot from './components/chat_bot/chatbot';
 import Check from './components/check';
-import Icon from 'react-native-vector-icons/Ionicons';
+import ModeSelect from './components/chat_bot';
+import Report from './components/chat_bot/report';
 
 const AuthStack = createStackNavigator();
-const MainScreenTab = createBottomTabNavigator();  
+const MainScreenTab = createBottomTabNavigator();
+const ChatStack = createStackNavigator();  
 
 const isLoggedIn = false;
+
+const ChatStackComponent = () => {
+    return (
+        <ChatStack.Navigator screenOptions={{ headerShown: false }}>
+            <ChatStack.Screen name="ModeSelect" component={ModeSelect} />
+            <ChatStack.Screen name="ChatBot" component={ChatBot} />
+            <ChatStack.Screen name="Report" component={Report} />
+        </ChatStack.Navigator>
+    );
+};
 
 const AppTabComponent = () => {
     return (
@@ -38,7 +50,7 @@ const AppTabComponent = () => {
                 tabBarIcon: ({color, size}) => (
                   <Icon name="book" color={color} size={size} />
                 )}}/>
-            <MainScreenTab.Screen name="Chat" component={ChatBot}
+            <MainScreenTab.Screen name="Chat" component={ChatStackComponent}
             options={{
                 title: 'Chat', 
                 tabBarIcon: ({color, size}) => (
@@ -66,7 +78,9 @@ export const RootNavigator = () => {
         screenOptions={{headerShown: false}}
         >
             {isLoggedIn ? (
-                <AuthStack.Screen name="Main" component={AppTabComponent}/>
+                <>
+                    <AuthStack.Screen name="AppTabComponent" component={AppTabComponent}/>
+                </>
             ) : ( 
                 <>       
                     <AuthStack.Screen name="SignIn" component={SignIn}/>

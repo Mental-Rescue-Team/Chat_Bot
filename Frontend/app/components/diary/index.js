@@ -17,7 +17,7 @@ const DiaryComponent = ({navigation}) =>  {
   const onSaveButton = () => {
     // const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
     // diaryData(formattedDate, text, navigation);
-    diaryData(text);
+    diaryData(text, navigation);
   }
 
   return (

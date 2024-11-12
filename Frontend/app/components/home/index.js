@@ -22,7 +22,7 @@ function HomeComponent() {
 
   return (
     <MainStack.Navigator screenOptions={{headerShown: false}}>
-      <MainStack.Screen name='Home' component={MainComponent}/>
+      <MainStack.Screen name='Main' component={MainComponent}/>
       <MainStack.Screen name='DiaryView' component={DiaryView}/>
     </MainStack.Navigator>
     

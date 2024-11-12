@@ -16,22 +16,21 @@ function CalendarTab({navigation}) {
   const [emotionData, setEmotionData] = useState({});
   const [lastClickedDate, setLastClickedDate] = useState(null);
 
-  const emotionToEmoji = {
-    "Sunny": "☀",
-    "Rainy": "🌧",
-    "Stormy": "🌩",
-    "Cloudy": "☁",
-    "Windy": "🌬",
-  };
+  // const emotionToEmoji = {
+  //   "Sunny": "☀",
+  //   "Rainy": "🌧",
+  //   "Stormy": "🌩",
+  //   "Cloudy": "☁",
+  //   "Windy": "🌬",
+  // };
 
-//   switch (cleanEmotion) {
-//     case "기쁨" -> {weather = "Sunny";weatherEmoji = "☀";}
-//     case "슬픔" -> {weather = "Rainy";weatherEmoji = "🌧";}
-//     case "분노" -> {weather = "Stormy";weatherEmoji = "🌩";}
-//     case "평온" -> {weather = "Cloudy";weatherEmoji = "☁";}
-//     case "불안" -> {weather = "Windy";weatherEmoji = "🌬";}
-//     default -> {weather = "Unknown";weatherEmoji = "❓";}
-// }
+  const emotionToEmoji = {
+    "Sunny": "🌞",    // 기쁨
+    "Rainy": "🌧️",   // 슬픔
+    "Stormy": "🌩️",  // 분노
+    "Cloudy": "☁️",   // 평온
+    "Windy": "🌬️",   // 불안
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,7 +64,9 @@ function CalendarTab({navigation}) {
 
         // **emotionData 상태 설정** (각 날짜에 맞는 이모지 저장)
         const emotionMap = data.reduce((acc, entry) => {
-          acc[entry.diaryDate] = { emoji: entry.weather };
+          // acc[entry.diaryDate] = { emoji: entry.weather };
+          const emoji = emotionToEmoji[entry.weather] || "❓";  // 변환된 이모지 또는 기본값
+          acc[entry.diaryDate] = { emoji };
           return acc;
         }, {});
         setEmotionData(emotionMap);
@@ -80,7 +81,7 @@ function CalendarTab({navigation}) {
 
   const handleDayPress = (day) => {
     if (lastClickedDate === day.dateString) {
-      navigation.navigate('DiaryView'); 
+      navigation.navigate('DiaryView', { selectedDate: day.dateString }); 
     } else {
       setLastClickedDate(day.dateString); 
       setSelectedDate(day.dateString);
@@ -144,7 +145,7 @@ function CalendarTab({navigation}) {
                     }}>
                     {date.day}
                   </Text>
-                  {marking?.emoji ? <Text style={{ fontSize: 16 }}>{marking.emoji}</Text> : null}
+                  {marking?.emoji ? <Text style={{ fontSize: 18 }}>{marking.emoji}</Text> : null}
                 </View>
               </TouchableOpacity>
               

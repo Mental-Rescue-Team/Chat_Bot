@@ -1,11 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-const URL = 'https://a04db67f-68f0-4131-a8bd-0504a248a1ca.mock.pstmn.io'
-// const URL = 'http://ceprj.gachon.ac.kr:60016'
+// const URL = 'https://a04db67f-68f0-4131-a8bd-0504a248a1ca.mock.pstmn.io'
+const URL = 'http://ceprj.gachon.ac.kr:60016'
 
 export const setTokens = (username, email, birth, password, gender, navigation) => {
-    // axios.post(`${URL}/member/register`,
-    axios.post('http://ceprj.gachon.ac.kr:60016/member/register',    
+    axios.post(`${URL}/member/register`,   
     {
         "username":username,
         "password":password,
@@ -28,14 +27,11 @@ export const setTokens = (username, email, birth, password, gender, navigation) 
 
 export const getTokens = async (username, password, navigation) => {
     try {
-    //   const res = await axios.post(`${URL}/api/auth/login`, {
-    
-    const res = await axios.post('http://ceprj.gachon.ac.kr:60016/member/login', {
-
-        
-        "username":username,
-        "password":password
-      });
+      const res = await axios.post(`${URL}/member/login`, 
+        {
+          "username":username,
+          "password":password
+        });
 
       console.log(res.data);
       // 서버에서 받은 토큰 데이터
@@ -66,36 +62,7 @@ export const getTokens = async (username, password, navigation) => {
     }
 };
 
-// export const diaryData = (text, navigation) => {
-//     axios.post(`${URL}/api/diary`,
-//         {
-//             "text":text
-//         }
-//     )
-//     .then(res=>{{
-//         if (res.status === 200){
-//             AsyncStorage.setItem('DiaryData', JSON.stringify({
-//               'date': res.data.date,
-//               'emotion': res.data.emotion,
-//               'weather': res.data.weather,
-//               'emoji': res.data.emoji
-//             }))
-//         }
-
-//         console.log(res.data);
-//         alert("저장되었습니다");
-        
-//         navigation.navigate('Home');
-        
-//     }
-//         // return response.data;
-//     }).catch(err=>{
-//         alert("에러 발생");
-//         return false;
-//     })
-// }
-
-export const diaryData = async (text) => {
+export const diaryData = async (message, navigation) => {
     try {
         const tokenData = await AsyncStorage.getItem('Tokens');
         const parsedTokenData = tokenData ? JSON.parse(tokenData) : null;
@@ -105,56 +72,30 @@ export const diaryData = async (text) => {
           console.error('Access token이 없습니다. 로그인 후 다시 시도하세요.');
           alert("로그인이 필요합니다.");
           return;
-      }
+        }
 
-        console.log("보낼 데이터:", { text });
+        console.log("보낼 데이터:", { message });
         console.log("Authorization 헤더:", `Bearer ${accessToken}`);
 
-        const response = await axios.post('http://ceprj.gachon.ac.kr:60016/diary', 
-            {text} ,
+        const response = await axios.post(`${URL}/diary`, 
+            {
+              message
+            },
             {
               headers: {
                   Authorization: `Bearer ${accessToken}`,
               }
-          }
-            
-          );
-          console.log('서버 응답:', response.data);
-          alert("저장되었습니다");
+            });
+
+        console.log('서버 응답:', response.data);
+        alert("저장되었습니다");
+        navigation.navigate('DiaryView');
+
     } catch (error) {
       console.error('데이터 전송 실패:', error);
     }
   };
 
-// export const diaryData = async (formattedDate, text, navigation) => {
-//     try {
-//       const res = await axios.post(`${URL}/api/diary`, {
-//         "date": formattedDate,
-//         "text": text
-//       });
-  
-//       if (res.status === 200) {
-//         try {
-//           await AsyncStorage.setItem('DiaryData', JSON.stringify({
-//             'date': res.data.date,
-//             'emotion': res.data.emotion,
-//             // 'weather': res.data.weather,
-//             // 'emoji': res.data.emoji
-//           }));
-//           console.log(res.data);
-//           alert("저장되었습니다");
-//           navigation.navigate('Home');
-//         } catch (storageError) {
-//           console.error('Error saving data to AsyncStorage:', storageError);
-//           alert("저장 중 에러가 발생했습니다.");
-//         }
-//       }
-//     } catch (err) {
-//       console.error('Error during request:', err);
-//       alert("에러 발생");
-//       return false;
-//     }
-//   };
 
   export const loadDiaryData = async () => {
     try {

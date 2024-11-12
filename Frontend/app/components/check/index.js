@@ -1,58 +1,16 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View, FlatList, TouchableWithoutFeedback} from 'react-native';
-import { RadioButton } from 'react-native-paper';
+import {StyleSheet, Text, View, FlatList, TouchableWithoutFeedback, Alert} from 'react-native';
+import { RadioButton, Button } from 'react-native-paper';
+import { questionSets } from './questions';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CheckComponent = () =>  {
-  // 진단검사 질문과 선택지
-  const questions = [
-    { 
-      id: '1', 
-      question: "기분이 가라앉거나, 우울하거나, 희망이 없다고 느꼈다.", 
-      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
-    },
-    { 
-      id: '2', 
-      question: "평소 하던 일에 대한 흥미가 없어지거나 즐거움을 느끼지 못했다.", 
-      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
-    },
-    { 
-      id: '3', 
-      question: "잠들기가 어렵거나 자주 깼다 / 혹은 너무 많이 잤다.", 
-      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
-    },
-    { 
-      id: '4', 
-      question: "평소보다 식욕이 줄었다 / 혹은 평소보다 많이 먹었다.", 
-      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
-    },
-    { 
-      id: '5', 
-      question: "다른 사람들이 눈치 챌 정도로 평소보다 말과 행동이 느려졌다.", 
-      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
-    },
-    { 
-      id: '6', 
-      question: "피곤하고 기운이 없었다.", 
-      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
-    },
-    { 
-      id: '7', 
-      question: "내가 잘못 했거나, 실패했다는 생각이 들었다.", 
-      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
-    },
-    { 
-      id: '8', 
-      question: "신문을 읽거나 TV를 보는 것과 같은 일상적인 일에도 집중 할 수가 없었다.", 
-      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
-    },
-    { 
-      id: '9', 
-      question: "차라리 죽는 것이 더 낫겠다고 생각했다 / 혹은 자해할 생각을 했다.", 
-      options: ["없음", "2-6일", "7-12일", "거의 매일"] 
-    },
-  ];
 
+  const [selectedTestType, setSelectedTestType] = useState(1); // 기본 검사 종류 설정
   const [answers, setAnswers] = useState([]);
+
+  const questions = questionSets[selectedTestType];
 
   // 응답을 처리
   const handleSelectOption = (questionId, option) => {
@@ -60,6 +18,66 @@ const CheckComponent = () =>  {
       ...prevAnswers,
       [questionId]: option,
     }));
+  };
+
+
+  // 점수 계산 함수
+  const calculateScore = () => {
+    let totalScore = 0;
+    questions.forEach((q) => {
+      totalScore += q.scoreMap[answers[q.id]] || 0;
+    });
+    return totalScore;
+  };
+
+  // 결과 서버로 전송
+  const submitResults = async () => {
+    const score = calculateScore();
+
+    try {
+
+      const tokenData = await AsyncStorage.getItem('Tokens');
+      const parsedTokenData = tokenData ? JSON.parse(tokenData) : null;
+      const accessToken = parsedTokenData?.accessToken;
+
+      if (!accessToken) {
+        console.error('Access token이 없습니다. 로그인 후 다시 시도하세요.');
+        alert("로그인이 필요합니다.");
+        return;
+      }
+
+      console.log("보낼 데이터:", score);
+      console.log("Authorization 헤더:", `Bearer ${accessToken}`);
+
+      const response = await axios.post(`http://ceprj.gachon.ac.kr:60016/diagnose/${selectedTestType}`, 
+        score,
+      {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+        }
+      }
+    );
+      console.log('서버 응답:', response.data);
+      // 서버 응답에 따라 알림 표시
+      Alert.alert('검사 결과', `${response.data}`, [
+        { text: '확인' },
+      ]);
+    } catch (error) {
+      if (error.response) {
+        // 서버에서 응답이 왔을 경우 (status 코드 포함)
+        console.error('서버 응답 오류:', error.response.data);
+        Alert.alert('서버 오류', `서버 오류 발생: ${error.response.status} - ${error.response.data}`);
+      } else if (error.request) {
+        // 요청이 보내졌지만 응답을 받지 못했을 경우
+        console.error('요청 오류:', error.request);
+        Alert.alert('요청 오류', '서버로부터 응답을 받지 못했습니다.');
+      } else {
+        // 기타 오류
+        console.error('알 수 없는 오류:', error.message);
+        Alert.alert('알 수 없는 오류', '오류가 발생했습니다. 다시 시도해 주세요.');
+      }
+    }
   };
 
   const renderItem = ({ item }) => (
@@ -85,6 +103,32 @@ const CheckComponent = () =>  {
   return (
       <View style={styles.container}>
         <Text style={styles.title}>진단검사</Text>
+        <View style={styles.testSelector}>
+          <Button
+          mode="outlined"
+          style={styles.selectButton}
+          labelStyle={styles.selectButText}
+          onPress={() => setSelectedTestType(1)} >
+          우울증(PHQ-9)</Button>
+          <Button
+          mode="outlined"
+          style={styles.selectButton}
+          labelStyle={styles.selectButText} 
+          onPress={() => setSelectedTestType(2)} >
+          불안(PSWQ-CK)</Button>
+          <Button
+          mode="outlined"
+          style={styles.selectButton}
+          labelStyle={styles.selectButText} 
+          onPress={() => setSelectedTestType(3)}>
+          자존감(RSES)</Button>
+          <Button
+          mode="outlined"
+          style={styles.selectButton}
+          labelStyle={styles.selectButText}
+          onPress={() => setSelectedTestType(4)}>
+          불면증(ISI-K)</Button>
+        </View>
         <FlatList
         style={{width: '90%'}}
           data={questions}
@@ -92,7 +136,7 @@ const CheckComponent = () =>  {
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.flatListContainer}
         />
-        <TouchableWithoutFeedback onPress={() => alert("검사가 완료되었습니다.")}>
+        <TouchableWithoutFeedback onPress={submitResults}>
             <View style={styles.button}>
                 <Text style={styles.buttext}>검사결과 확인</Text>
             </View>
@@ -114,29 +158,44 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontFamily: 'Paperlogy-7Bold'
   },
+  testSelector: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    width: '100%'
+  },
+  selectButton: {
+    width: '45%', // 버튼을 2x2로 배치
+    margin: 5,
+    borderColor: '#F2F2F2',
+    borderWidth: 1
+  },
   flatListContainer: {
-    paddingBottom: 20,
+    paddingBottom: 10,
   },
   questionContainer: {
-    marginBottom: 20,
+    marginBottom: 10,
     width: '100%',
   },
   question: {
-    fontSize: 18,
-    marginBottom: 10,
+    fontSize: 16,
+    marginBottom: 5,
+    color: 'black',
+    fontWeight: 'bold'
   },
   radioButton: {
     backgroundColor: 'transparent',
   },
   radioLabel: {
-    fontSize: 16,
+    fontSize: 14,
   },
   button: {
     backgroundColor: '#7A5ADB',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 10,
-    marginBottom: 20,
     width: '100%',
     alignItems: 'center',
   },
@@ -144,6 +203,9 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 15,
     fontWeight: 'bold',
+  },
+  selectButText: {
+    fontSize: 16,
   },
 
 });
