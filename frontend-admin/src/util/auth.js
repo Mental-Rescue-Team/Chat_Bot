@@ -3,11 +3,11 @@ import axios from 'axios';
 // import { useNavigate } from 'react-router-dom';
 
 // 서버 URL을 설정합니다.
-const URL = 'http://ceprj.gachon.ac.kr:60016';
+// const URL = 'http://ceprj.gachon.ac.kr:60016';
 
 export const getTokens = async (username, password) => {
   try {
-    const res = await axios.post(`${URL}/member/login`, {
+    const res = await axios.post(`/member/login`, {
       "username": username,
       "password": password,
     });
