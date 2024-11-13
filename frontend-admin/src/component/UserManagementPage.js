@@ -32,9 +32,31 @@ function UserManagementPage() {
     }
   }, []); // 컴포넌트가 처음 마운트될 때 한 번만 실행
 
+  const handleDelete = (member_no) => {
+    const storedTokens = JSON.parse(localStorage.getItem('Tokens'));
+    if (storedTokens && storedTokens.accessToken) {
+      const token = storedTokens.accessToken;
+
+      axios.delete(`/admin/${member_no}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+        .then(() => {
+          setUsers(prevUsers => prevUsers.filter(user => user.member_no !== member_no));
+        })
+        .catch(error => {
+          console.error('Error deleting user:', error);
+          setError('유저를 삭제하는 데 실패했습니다.');
+        });
+    } else {
+      setError('No access token found');
+    }
+  };
+
   return (
     <div className="user-management">
-      <h1>User Management Page</h1>
+      <h1>User Management</h1>
       
       {error && <p>{error}</p>} {/* 에러 메시지 출력 */}
 
@@ -43,10 +65,10 @@ function UserManagementPage() {
           <tr>
             <th>Member No</th>
             <th>Username</th>
-            <th>Email</th>
+            <th>E-mail</th>
             <th>Register Date</th>
             <th>Role</th>
-            <th>Action</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -59,7 +81,12 @@ function UserManagementPage() {
                 <td>{new Date(user.registerDate).toLocaleString()}</td> {/* 날짜 포맷 변경 */}
                 <td>{user.role}</td>
                 <td>
-                  <button className="delete-button">Delete</button>
+                  <button 
+                  className="delete-button"
+                  onClick={() => handleDelete(user.member_no)}
+                  >
+                    Delete
+                    </button>
                 </td>
               </tr>
             ))

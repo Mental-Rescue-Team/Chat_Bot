@@ -1,4 +1,4 @@
-
+/* 
 .layout {
     display: flex;
     height: 100vh;
@@ -76,4 +76,52 @@
     width: 100%;
     overflow-y: auto;
   }
-  
+   */
+
+   /* Layout.css */
+
+.layout {
+  display: flex;
+}
+
+.sidebar {
+  width: '20%'; /* 원하는 너비로 설정 */
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  height: 100vh; /* 화면 높이에 맞춤 */
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 15px 0;
+}
+
+.sidebar a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.sidebar .logout-button {
+  margin-top: 20px;
+  padding: 10px 15px;
+  color: #fff;
+  background-color: #555;
+  border: none;
+  cursor: pointer;
+}
+
+.content {
+  margin-left: 250px; /* 사이드바 너비만큼 왼쪽 여백을 줌 */
+  padding: 20px;
+  flex: 1;
+}
+

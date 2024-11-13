@@ -18,11 +18,11 @@ function LoginPage() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
+    <div class='login'>
+      {/* <h1>Login</h1> */}
       <form onSubmit={handleLogin}>
         <div>
-          <label>Username:</label>
+          <label>Username</label>
           <input
             type="text"
             value={username}
@@ -31,7 +31,7 @@ function LoginPage() {
           />
         </div>
         <div>
-          <label>Password:</label>
+          <label>Password</label>
           <input
             type="password"
             value={password}

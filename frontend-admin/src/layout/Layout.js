@@ -4,12 +4,12 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import './Layout.css'; // 스타일을 위한 CSS 파일
 
 function Layout() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  // const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
+  // const toggleMenu = () => {
+  //   setMenuOpen(!menuOpen);
+  // };
 
   const handleLogout = () => {
     // 로그아웃 로직 (예: 토큰 삭제)
@@ -19,11 +19,11 @@ function Layout() {
 
   return (
     <div className="layout">
-      <button className="menu-button" onClick={toggleMenu}>
+      {/* <button className="menu-button" onClick={toggleMenu}>
         ☰
       </button>
 
-      {menuOpen && (
+      {menuOpen && ( */}
         <div className="sidebar">
           <ul>
             <li>
@@ -40,7 +40,7 @@ function Layout() {
             LOG OUT
           </button>
         </div>
-      )}
+      {/* )} */}
 
       <div className="content">
         <Outlet />

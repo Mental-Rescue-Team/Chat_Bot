@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('./fonts/Paperlogy-7Bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .user-management {
   font-family: Arial, sans-serif;
   padding: 20px;
@@ -65,6 +72,7 @@
 h1 {
   text-align: center;
   margin-bottom: 20px;
+  font-family: 'Paperlogy';
 }
 
 table {
@@ -93,4 +101,105 @@ th {
 
 .delete-button:hover {
   background-color: #d32f2f;
+}
+
+.report-page {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.user-list {
+  width: 150px;
+  /* border-right: 1px solid #ddd; */
+  padding: 10px;
+  background-color: #fff;
+}
+
+.user-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 16px;
+  color: black;
+}
+
+.user-button:hover {
+  background-color: #9142F8;
+  color: #fff;
+}
+
+.user-details {
+  width: 1500px;
+  padding: 10px;
+  overflow-x: auto; /* 가로 스크롤 활성화 */
+  border-left: 1px solid #ddd; /* 왼쪽 구분선 */
+}
+
+.user-details h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.user-details pre {
+  font-size: 14px;
+  line-height: 1.5;
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.login {
+  display: flex;
+  justify-content: center; /* 수평 중앙 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+  height: 100vh; /* 화면 전체 높이 */
+  background-color: #f4f4f4; /* 배경색 (옵션) */
+}
+
+form {
+  background-color: #fff; /* 폼 배경색 */
+  padding: 20px;
+  border-radius: 8px; /* 테두리 둥글게 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+  width: 300px; /* 폼 너비 */
+  display: flex;
+  flex-direction: column; /* 세로로 정렬 */
+  gap: 15px; /* 각 항목 사이에 간격 추가 */
+}
+
+div {
+  margin-bottom: 15px; /* 입력 필드 간 간격 */
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold; /* 레이블 텍스트 강조 */
+}
+
+input {
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px; /* 입력 필드 테두리 둥글게 */
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #9142F8;
+  color: #fff;
+  border: none;
+  border-radius: 4px; /* 버튼 테두리 둥글게 */
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #8125f8; /* 버튼 hover 시 색상 변경 */
 }
