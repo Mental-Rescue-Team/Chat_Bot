@@ -1,23 +1,18 @@
 // src/pages/LoginPage.js
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { getTokens } from '../util/auth';
 
 function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post('http://ceprj.gachon.ac.kr:60016/member/login', {
-        username,
-        password,
-      });
-      console.log('Login successful:', response.data);
-      // 로그인 성공 시 처리 로직 추가
-    } catch (error) {
-      console.error('Login failed:', error);
-      // 로그인 실패 시 처리 로직 추가
+    const loginSuccess = await getTokens(username, password);
+    if (loginSuccess) {
+      navigate('/user-management');
     }
   };
 
