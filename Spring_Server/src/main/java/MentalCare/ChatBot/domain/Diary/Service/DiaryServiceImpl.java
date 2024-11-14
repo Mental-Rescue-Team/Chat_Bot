@@ -136,8 +136,9 @@ public class DiaryServiceImpl implements DiaryService {
 
     /*날짜로 일기 조회 메서드*/
     @Override
-    public Diary getDiaryByDate(LocalDate date) {
-        return diaryRepository.findByDiaryDate(date);
+    public Diary getDiaryByDate(LocalDate date ,Long member_no) {
+
+        return diaryRepository.findByDiaryDateAndMemberNo(date, member_no);
     }
 
 

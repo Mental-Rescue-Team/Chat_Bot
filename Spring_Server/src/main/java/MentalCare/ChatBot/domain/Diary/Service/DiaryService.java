@@ -29,7 +29,7 @@ public interface DiaryService {
     void saveDiary(Diary diary);
 
     /*날짜 기반 일기 조회 메서드*/
-    Diary getDiaryByDate(LocalDate date);
+    Diary getDiaryByDate(LocalDate date,Long member_no);
 
     /*월별 (날짜/날씨 이모티콘) 모두 전송 메서드*/
     List<DateEmoji> getEveryDateEmoji(int month, Member member);
