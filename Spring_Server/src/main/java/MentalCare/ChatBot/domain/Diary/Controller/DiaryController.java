@@ -98,7 +98,7 @@ public class DiaryController {
 
     @Operation(summary = " 일기 조회 ", description = " 클라이언트 측에서 넘어오는 날짜 값을 받아 당일날 일기 본문과 4컷 만화를 반환gksek ")
     @GetMapping("")
-    public ResponseEntity<Map<String, String>> DiaryShow(@RequestParam("date") String date){
+    public ResponseEntity<Map<String, String>> DiaryShow(@RequestParam("date") String date,HttpServletRequest request){
 
         LocalDate diaryDate;
         try {
@@ -107,7 +107,13 @@ public class DiaryController {
             return ResponseEntity.badRequest().body(Map.of("error", "Invalid date format"));
         }
 
-        Diary diary = diaryService.getDiaryByDate(diaryDate);
+        String userToken =jwtUtil.extractTokenFromRequest(request);
+        String username = jwtUtil.extractUsername(userToken);
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+        Long member_no =member.getMember_no();
+
+        Diary diary = diaryService.getDiaryByDate(diaryDate,member_no);
         if (diary == null) {return ResponseEntity.notFound().build();}
 
         Map<String, String> response = Map.of(
@@ -120,10 +126,16 @@ public class DiaryController {
 
     @Operation(summary = "메인 페이지 상단에 표시할 오늘의 날씨 전송 ", description = "오늘 날짜를 받아서, 오늘의 날씨 이름을 클라이언트 측으로 전송 - 날씨이름에 맞는 날씨 사진과 메시지는 클라이언트 측에서 준비 ")
     @GetMapping("/today/weather")
-    public ResponseEntity<String> todayWeather(){
+    public ResponseEntity<String> todayWeather(HttpServletRequest request){
+
+        String userToken =jwtUtil.extractTokenFromRequest(request);
+        String username = jwtUtil.extractUsername(userToken);
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+        Long member_no =member.getMember_no();
 
         LocalDate diaryDate = LocalDate.now();
-        Diary diary = diaryRepository.findByDiaryDate(diaryDate);
+        Diary diary = diaryRepository.findByDiaryDateAndMemberNo(diaryDate, member_no);
         String todayWeather = diary.getWeather();
 
         return ResponseEntity.ok().body(todayWeather);
