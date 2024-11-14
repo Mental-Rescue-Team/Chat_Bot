@@ -48,7 +48,7 @@ const ChatbotScreen = ({route, navigation}) => {
       // 서버로 메시지 전송 및 응답 수신
       const serverUrl = getServerUrl();
       const response = await axios.post(serverUrl, {
-        inputText
+        "message": inputText
       },
       {
         headers: {

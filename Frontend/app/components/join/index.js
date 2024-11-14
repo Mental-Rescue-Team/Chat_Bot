@@ -65,12 +65,12 @@ const JoinTabComponent = ({navigation}) =>  {
             >
                 <View style={{ flexDirection: 'row', alignItems: 'center'}}>
                     <RadioButton
-                        value="남성" // 남성을 선택하면 "남성"이 gender로 설정됨
+                        value="male" // 남성을 선택하면 "남성"이 gender로 설정됨
                     />
                     <Text style={styles.text}>남성</Text>
                     
                     <RadioButton
-                        value="여성" // 여성을 선택하면 "여성"이 gender로 설정됨
+                        value="female" // 여성을 선택하면 "여성"이 gender로 설정됨
                     />
                     <Text style={styles.text}>여성</Text>
                 </View>

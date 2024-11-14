@@ -119,6 +119,7 @@ function CalendarTab({navigation}) {
           arrowColor: '#7A5ADB',
           dotColor: '#7A5ADB',
           todayTextColor: '#7A5ADB',
+          textSectionTitleColor: 'black',
         }} 
         onDayPress={(day) => {
           handleDayPress(day)
