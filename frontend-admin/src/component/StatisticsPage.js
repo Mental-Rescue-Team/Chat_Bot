@@ -117,10 +117,10 @@ function StatisticsPage() {
     cutout: '65%', // 도넛의 너비 조절 (숫자를 조정해 너비 변경 가능)
   };
 
-  ChartJS.register({
-    id: 'centerText',
-    beforeDraw: chartOptions.plugins.customCanvasBackgroundColor.beforeDraw,
-  });
+  // ChartJS.register({
+  //   id: 'centerText',
+  //   beforeDraw: chartOptions.plugins.customCanvasBackgroundColor.beforeDraw,
+  // });
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', justifyContent: 'center' }}>
