@@ -47,6 +47,7 @@ public class SecurityConfig {
                         requestMatchers("/member/login").permitAll().
                         requestMatchers("/member/logout").permitAll().
                         requestMatchers("/member/register").permitAll().
+                        requestMatchers("/images/**").permitAll().
 
                         //(사용자 용)한 회원 정보 조회
                         requestMatchers(HttpMethod.GET,"/api/member").permitAll().
