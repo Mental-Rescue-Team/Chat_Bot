@@ -28,6 +28,7 @@ public class Diary {
     private String diarySummary;
     @Column(length = 500)  // 길이를 500으로 설정
     private String comicURL;
+    private String temporaryURL;
     private String diaryEmotion;
     private String weather;
     private String weatherEmoji; //이모티콘은 본질적으로 유니코드 문자로 표현되며, String 타입으로 진행
@@ -38,11 +39,12 @@ public class Diary {
 
     // 생성자 추가
     /*DiaryController에서 생성자를 사용하려고 여기에 생성자 추가 메서드 작성*/
-    public Diary( Member member ,String diaryText, String diarySummary, String comicURL, String diaryEmotion, String weather, String weatherEmoji, LocalDate diaryDate) {
+    public Diary( Member member ,String diaryText, String diarySummary, String comicURL,String temporaryURL, String diaryEmotion, String weather, String weatherEmoji, LocalDate diaryDate) {
         this.member = member ;
         this.diaryText = diaryText;
         this.diarySummary = diarySummary;
         this.comicURL = comicURL;
+        this.temporaryURL =temporaryURL;
         this.diaryEmotion = diaryEmotion;
         this.weather = weather;
         this.weatherEmoji = weatherEmoji;

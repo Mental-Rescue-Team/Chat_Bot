@@ -1,6 +1,7 @@
 package MentalCare.ChatBot.domain.Diary.Service;
 
 import MentalCare.ChatBot.domain.Diary.DTO.Response.DateEmoji;
+import MentalCare.ChatBot.domain.Diary.DTO.Response.ImageResult;
 import MentalCare.ChatBot.domain.Diary.Entity.Diary;
 import MentalCare.ChatBot.domain.Member.Entity.Member;
 
@@ -14,7 +15,7 @@ public interface DiaryService {
     String SummarizeDiary(String text);
 
     /*일기 기반 4칸 만화 생성*/
-    String DrawComic(String text , String gender);
+    ImageResult DrawComic(String text , String gender);
 
     /*저장 메서드  */
     String SaveDiary(String text);
