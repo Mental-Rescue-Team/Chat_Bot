@@ -1,6 +1,7 @@
 package MentalCare.ChatBot.domain.Diary.Service;
 
 import MentalCare.ChatBot.domain.Diary.DTO.Response.DateEmoji;
+import MentalCare.ChatBot.domain.Diary.DTO.Response.ImageResult;
 import MentalCare.ChatBot.domain.Diary.Entity.Diary;
 import MentalCare.ChatBot.domain.Diary.Repository.DiaryRepository;
 import MentalCare.ChatBot.domain.FastAPIConnection.Client.ApiClient;
@@ -44,7 +45,7 @@ public class DiaryServiceImpl implements DiaryService {
     // TODO : 4컷 만화 생성 후 어떻게 저장하고 전송할지 확인
     /*4칸 만화 생성 메서드 */
     @Override
-    public String DrawComic(String text ,String gender) {
+    public ImageResult DrawComic(String text , String gender) {
         String prompt = " 이 일기의 당사자의 성별은 "+  gender +" 이다. \n "
                 + "이어지는 일기를 분석하여 이 일기 내용을 요약하는 재미있는 4칸짜리 만화를 그려주되,"
                 + "만화를 그려줄때는 색깔을 좀 넣어서 보기 좋게 만들어 주고, 만화에 절대 글자는 넣지 말아줘, \n"
@@ -73,7 +74,7 @@ public class DiaryServiceImpl implements DiaryService {
             // 예를 들어, 로그를 남기거나 사용자에게 오류 메시지를 보낼 수 있습니다.
         }
 
-        return imagePath;
+        return new ImageResult(imagePath, img.getUrl());
     }
 
     @Override
@@ -81,7 +82,6 @@ public class DiaryServiceImpl implements DiaryService {
         return text;
     }
 
-    // TODO : fast-api의 코드로 변환하기
     /*감정 분류 메서드 - 우선 fast-api 의 gpt 에게 맡김*/
     @Override
     public String ClassifyEmotion(String text) {

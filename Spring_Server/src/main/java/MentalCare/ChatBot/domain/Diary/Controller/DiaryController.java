@@ -2,6 +2,7 @@ package MentalCare.ChatBot.domain.Diary.Controller;
 
 import MentalCare.ChatBot.domain.Diary.DTO.Request.PromptRequest;
 import MentalCare.ChatBot.domain.Diary.DTO.Response.DateEmoji;
+import MentalCare.ChatBot.domain.Diary.DTO.Response.ImageResult;
 import MentalCare.ChatBot.domain.Diary.DTO.Response.PromptResponse;
 import MentalCare.ChatBot.domain.Diary.Entity.Diary;
 import MentalCare.ChatBot.domain.Diary.Repository.DiaryRepository;
@@ -45,8 +46,8 @@ public class DiaryController {
     private final MemberRepository memberRepository;
     private final DiaryRepository diaryRepository;
 
-
-    @Operation(summary = "일기 저장 버튼 - 왠지 모르게 일기값을 입력할때 , 변수명을 message로 입력을 해야지 오류가 안납니다. text가 아닌 message로 보내주십시요. ", description = " 일기 저장 버튼 클릭 시 일기 요약 + 4컷 카툰 제작 + 일기 저장 + 감정 분류 + 분류된 감정을 바탕으로 날씨 이름과 날씨를 매칭 후 일기 본문과 만화를 반환하는 API")
+    @Operation(summary = "일기 저장 버튼 - 왠지 모르게 일기값을 입력할때 , 변수명을 message로 입력을 해야지 오류가 안납니다. text가 아닌 message로 보내주십시요. ",
+            description = " 여기서는 일기텍스트와 만화를 반환하지 않고, 저장 후 200 ok만 반환한다.")
     @PostMapping("")
     public ResponseEntity<LinkedHashMap<String, String>> DiarySave(@RequestBody String text, HttpServletRequest request) {
 
@@ -59,18 +60,18 @@ public class DiaryController {
             JsonNode rootNode = objectMapper.readTree(text);
             message = rootNode.get("message").asText();
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new LinkedHashMap<String, String>() {{
-                put("error", "Invalid JSON format");
-            }});
+            return ResponseEntity.badRequest().build();
         }
         String userToken =jwtUtil.extractTokenFromRequest(request);                 jwtUtil.validateToken_isTokenValid(userToken);
         String username = jwtUtil.extractUsername(userToken);
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
-        String gender = member.getGender(); ;
+        String gender = member.getGender();
 
         String diarySummary = diaryService.SummarizeDiary(message);
-        String comicURL = diaryService.DrawComic(message,gender);
+        ImageResult imageResult = diaryService.DrawComic(message,gender);
+        String comicURL = imageResult.imagePath(); // 서버 정적 폴더에 저장된 경로
+        String temporaryURL = imageResult.imageUrl(); // GPT의 2시간 임시 url
         String diaryText = diaryService.SaveDiary(message);
         String diaryEmotion = diaryService.ClassifyEmotion(message);
 
@@ -83,6 +84,7 @@ public class DiaryController {
                 .diaryText(diaryText)
                 .diarySummary(diarySummary)
                 .comicURL(comicURL)
+                .temporaryURL(temporaryURL)
                 .diaryEmotion(diaryEmotion)
                 .weather(weather)
                 .weatherEmoji("null")
@@ -92,7 +94,7 @@ public class DiaryController {
 
         return ResponseEntity.ok().body(new LinkedHashMap<String, String>() {{
             put("diaryText", diaryText);
-            put("comicURL", comicURL);
+            put("comicURL", temporaryURL);
         }});
     }
 
@@ -114,11 +116,20 @@ public class DiaryController {
         Long member_no =member.getMember_no();
 
         Diary diary = diaryService.getDiaryByDate(diaryDate,member_no);
-        if (diary == null) {return ResponseEntity.notFound().build();}
+        if (diary == null)
+            return ResponseEntity.notFound().build();
+
+        // 오늘의 일기 조회시 임시 url 반환, 다른 날의 일기 조회시 정적 이미지 경로 반환
+        String url;
+        if(diaryDate.equals(LocalDate.now())){
+            url = diary.getTemporaryURL();
+        }else{
+            url = diary.getComicURL();
+        }
 
         Map<String, String> response = Map.of(
                 "diaryText", diary.getDiaryText(),
-                "comicURL", diary.getComicURL()
+                "comicURL", url
         );// 응답 데이터 생성
 
         return ResponseEntity.ok().body(response);
