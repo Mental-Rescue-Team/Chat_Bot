@@ -24,7 +24,8 @@ public class ChatbotServiceImpl implements ChatbotService{
         String userMessage = chatBotUtil.extractUserMessageFromJson(message);//Json에서 메시지 파싱
         StringBuilder previousMessagesSummary =chatBotUtil.getPreviousMessagesSummary(username);//이전의 메시지들중 4개 까지만 받아오기
         chatBotUtil.getLogFromFourMessageFromRedis(previousMessagesSummary);//이전 4개의 메시지 로그 확인
-        String response = apiClient.sendData(message);
+        String rawResponse = apiClient.sendData(message);
+        String response = chatBotUtil.extractChatResponse(rawResponse);// 문제의 문자열 정제 로직
         chatBotUtil.getLogFromGeneratedMessage(userMessage,response); //이번에 도출된 메시지 로그 확인
         chatBotUtil.saveMessageInMap(username,userMessage,response); //메모리에 이번 메시지 저장
 
@@ -40,7 +41,8 @@ public class ChatbotServiceImpl implements ChatbotService{
         chatBotUtil.getLogFromFourMessageFromRedis(previousMessagesSummary);//이전 4개의 메시지 로그 확인
         String prompt = chatBotUtil.getPromptMessage("친근한 친구 모드",previousMessagesSummary); //모드에 따른 프롬프팅
         String fullMessage = prompt + userMessage;
-        String response = chatClient.call(fullMessage);
+        String rawResponse = chatClient.call(fullMessage);
+        String response = chatBotUtil.extractChatResponse(rawResponse); // 문제의 문자열 정제 로직
         chatBotUtil.getLogFromGeneratedMessage(userMessage,response); //이번에 도출된 메시지 로그 확인
         chatBotUtil.saveMessageInMap(username,userMessage,response); //메모리에 이번 메시지 저장
 
@@ -56,7 +58,8 @@ public class ChatbotServiceImpl implements ChatbotService{
         chatBotUtil.getLogFromFourMessageFromRedis(previousMessagesSummary);//이전 4개의 메시지 로그 확인
         String prompt = chatBotUtil.getPromptMessage("T 모드",previousMessagesSummary); //모드에 따른 프롬프팅
         String fullMessage = prompt + userMessage;
-        String response = chatClient.call(fullMessage);
+        String rawResponse = chatClient.call(fullMessage);
+        String response = chatBotUtil.extractChatResponse(rawResponse); // 문제의 문자열 정제 로직
         chatBotUtil.getLogFromGeneratedMessage(userMessage,response); //이번에 도출된 메시지 로그 확인
         chatBotUtil.saveMessageInMap(username,userMessage,response); //메모리에 이번 메시지 저장
 
@@ -72,7 +75,8 @@ public class ChatbotServiceImpl implements ChatbotService{
         chatBotUtil.getLogFromFourMessageFromRedis(previousMessagesSummary);//이전 4개의 메시지 로그 확인
         String prompt = chatBotUtil.getPromptMessage("F 모드",previousMessagesSummary); //모드에 따른 프롬프팅
         String fullMessage = prompt + userMessage;
-        String response = chatClient.call(fullMessage);
+        String rawResponse = chatClient.call(fullMessage);
+        String response = chatBotUtil.extractChatResponse(rawResponse); // 문제의 문자열 정제 로직
         chatBotUtil.getLogFromGeneratedMessage(userMessage,response); //이번에 도출된 메시지 로그 확인
         chatBotUtil.saveMessageInMap(username,userMessage,response); //메모리에 이번 메시지 저장
 

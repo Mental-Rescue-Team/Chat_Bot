@@ -110,6 +110,24 @@ public class ChatBotUtil {
         chattingMemory.saveMessage(username, response, "chatbot");
     }
 
+    // TODO : 이상한 문자열 정제 system: - assistant: -chatbot: - 시스템:
+    public String extractChatResponse(String rawResponse){
+
+        //발견된 "문제의 문자열"리스트
+        String[] problematicStrings ={"system: ","chatbot: ","assistant: ","시스템: "};
+
+        //"타깃 문자열"에서 "문제의 문자열"정제
+        for(String problematicString : problematicStrings ){
+            if(rawResponse.contains(problematicString)){
+                //return rawResponse.replace(problematicString,"");
+                rawResponse = rawResponse.replace(problematicString, "");
+            }
+        }
+        // '['와 ']' 제거
+        rawResponse = rawResponse.replace("[", "").replace("]", "");
+
+        return rawResponse;
+    }
 
     /* Redis Code Below */
 
