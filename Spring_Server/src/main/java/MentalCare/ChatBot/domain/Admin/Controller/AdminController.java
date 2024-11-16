@@ -61,7 +61,7 @@ public class AdminController {
     }
 
     /* 모든 유저 이름 조회 */
-    @Operation(summary = " 모든 유저 이름 조회", description = " 모든 등록된 유저의 이름들을 나열한다 . 이 이름 하나를 클릭 시 해당 인원의 모든 레포트 기록이 표츌이 된다.")
+    @Operation(summary = " 모든 유저 이름 조회", description = " 이 API는 이 페이지가 화면에 로딩됨과 동시에 호출되어야 하는 API 이며, 클라이언트 측에서 서버 측으로 전송할 데이터는 없습니다. 이 이름 하나를 클릭 시 해당 인원의 모든 레포트 기록이 표츌이 된다.")
     @GetMapping("/names")
     public List<String> getEveryNames(){
 
@@ -71,7 +71,7 @@ public class AdminController {
     }
 
     /* 해당 사용자의 모든 AI 레포트 조회 */
-    @Operation(summary = " 해당 사용자의 모든 AI 레포트 조회", description = " 유저의 이름을 클릭시, 해당 유저의 이름을 서버측에 전달하여, 유저의 모든 Report를 로드해욘다.")
+    @Operation(summary = " 해당 사용자의 모든 AI 레포트 조회", description = " 유저의 이름을 클릭시, 클라이언트 측에서 해당 유저의 이름을 서버측에 전송해줘야 합니다, 유저의 모든 Report를 로드해온다.")
     @GetMapping("/reports/{username}")
     public List<ReportDTO> getEveryReports(@PathVariable("username") String username){
 
@@ -83,13 +83,10 @@ public class AdminController {
     }
 
     /* 일기 분석 통계자료 조회 */
-    @Operation(summary = " 일기 분석 통계자료 조회", description = " 서버 측에서 일기 분석 통계자료를 모두 불러온다 ")
+    @Operation(summary = " 일기 분석 통계자료 조회", description = " 클라이언트 측에서는 아무것도 전송할것이 없음 -서버 측에서 일기 분석 통계자료를 모두 불러온다 ")
     @GetMapping("/emotions")
     public Map<String, Long> getEveryEmotion(){
 
-        //기쁨, 평온, 분노, 슬픔, 불안 각각에 대한 숫자를 가져온다.
-        //각 감정에 대해 퍼센테이지를 부여한다.
-        //우선 출력값은 각 감정에 대한 숫자와 전체 감정의 총 합계만 반환한다.
         Map<String, Long> emotionCounts = diaryService.getEmotionCounts();
         emotionCounts.forEach((emotion, count) ->
                 System.out.println("Emotion: " + emotion + ", Count: " + count)
@@ -97,6 +94,5 @@ public class AdminController {
 
         return emotionCounts;
     }
-
 
 }
