@@ -30,7 +30,8 @@ const JoinTabComponent = ({navigation}) =>  {
                     type="password"
                     onChangeText={password => setPassword(password)}
                     placeholder="Password"
-                    mode='outlined'/>
+                    mode='outlined'
+                    secureTextEntry/>
             <TextInput style={styles.textInput}
                     value={birth}
                     onChangeText={birth => setBirth(birth)}

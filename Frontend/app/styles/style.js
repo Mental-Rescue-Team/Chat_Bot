@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     button: {
-        backgroundColor: '#7A5ADB',
+        backgroundColor: '#596AFF',
         paddingVertical: 15,
         paddingHorizontal: 30,
         borderRadius: 10,
@@ -58,8 +58,8 @@ export const styles = StyleSheet.create({
     image: {
         width: 100,
         height: 100,
-        marginBottom: 40,
-        marginTop: 40,
+        // marginBottom: 5,
+        marginTop: 10,
         borderRadius: 100,
         backgroundColor: '#CCCCCC'
     },
@@ -72,8 +72,10 @@ export const styles = StyleSheet.create({
     },
     mainText: {
         fontFamily: 'Paperlogy-7Bold',
-        fontSize: 45,
-        padding: 20,
-        color: '#7A5ADB',
+        fontSize: 30,
+        // padding: 20,
+        // marginTop: 5,
+        marginBottom: 20,
+        color: '#596AFF',
     },
 }); 

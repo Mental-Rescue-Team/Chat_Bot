@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Text, View, TouchableWithoutFeedback, Image, StyleSheet, Alert, ScrollView} from 'react-native';
 import { styles } from '../../styles/style';
 import { TextInput } from 'react-native-paper';
-import Logo from '../../assets/images/logo.png';
+import Logo from '../../../android/app/src/main/assets/images/logo.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 const URL = 'http://ceprj.gachon.ac.kr:60016'
@@ -17,10 +17,6 @@ const ProfileComponent = ({navigation}) => {
     useEffect(() => {
         const fetchProfileData = async () => {
             try {
-                // // AsyncStorage에서 accessToken을 가져옵니다.
-                // const tokens = await AsyncStorage.getItem('Tokens');
-                // const parsedTokens = tokens ? JSON.parse(tokens) : null;
-                // // console.log(tokens);
                 const tokenData = await AsyncStorage.getItem('Tokens');
                 const parsedTokenData = tokenData ? JSON.parse(tokenData) : null;
                 const accessToken = parsedTokenData?.accessToken;
@@ -74,7 +70,7 @@ const ProfileComponent = ({navigation}) => {
 
 
     return (
-        <ScrollView>
+        <ScrollView style={{backgroundColor: 'white'}}>
             <View style = {styles.container}>
                 <Image
                         style={styles.image}
@@ -112,11 +108,6 @@ const ProfileComponent = ({navigation}) => {
                     />
                     
                 </View>
-                {/* <TouchableWithoutFeedback>
-                    <View style={styles.button}>
-                        <Text style={styles.buttext}>개인정보 수정</Text>
-                    </View>
-                </TouchableWithoutFeedback> */}
                 <TouchableWithoutFeedback onPress={handleLogout}>
                     <View style={styles.logoutButton}>
                         <Text style={styles.logoutText}>로그아웃</Text>

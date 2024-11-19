@@ -2,16 +2,18 @@ import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, TextInput, View, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import Sunny from '../../assets/images/sunny.jpg';
-import Normal from '../../assets/images/normal.jpg';
-import Sad from '../../assets/images/sad.jpg';
-import Rain from '../../assets/images/rain.jpg';
-import Angry from '../../assets/images/angry.jpg';
+import Sunny from '../../../android/app/src/main/assets/images/sunny.jpg';
+import Normal from '../../../android/app/src/main/assets/images/normal.jpg';
+import Sad from '../../../android/app/src/main/assets/images/sad.jpg';
+import Rain from '../../../android/app/src/main/assets/images/rain.jpg';
+import Angry from '../../../android/app/src/main/assets/images/angry.jpg';
+import Default from '../../../android/app/src/main/assets/images/default.png';
+
 
 const WeatherTab = () =>  {
 
   const [message, setMessage] = useState('오늘의 기분을 알려주세요.');
-  const [image, setImage] = useState(Sunny); // 기본 이미지 설정
+  const [image, setImage] = useState(Default); // 기본 이미지 설정
 
   useEffect(() => {
     const fetchWeatherData = async () => {
@@ -38,32 +40,32 @@ const WeatherTab = () =>  {
         const weather = response.data; // 날씨 데이터 받아오기
         switch (weather) {
           case 'Sunny':
-            setMessage('오늘은 정말 기쁜 날이군요!');
+            setMessage('오늘 하루는 많이 행복해 보이시네요. 앞으로도 이런 날이 계속되길 응원할게요!');
             setImage(Sunny);
             break;
           case 'Cloudy':
-            setMessage('평온한 하루를 보내고 있군요.');
+            setMessage('평온한 하루를 보내고 있군요. 더 좋아질 수도 있지만 때로는 이런 평온함도 나쁘진 않다고 생각해요.');
             setImage(Normal);
             break;
           case 'Rainy':
-            setMessage('조금 슬픈 하루인 것 같아요.');
-            setImage(Sad);
+            setMessage('오늘은 마음 속에 비가 내리네요. 울고 싶다면 언제든 울어도 괜찮아요. 필요한 일이 있으시다면 언제든 avery를 불러주세요.');
+            setImage(Rain);
             break;
           case 'Stormy':
-            setMessage('화가 나는 하루인가요? 차분해지세요.');
+            setMessage('오늘은 화나는 일이 있으셨군요? 오늘 하루 스트레스가 많이 쌓였다면 그걸 풀어내는 것도 중요해요. 당신이 원하는 자유로운 방식으로 스트레스를 풀어보세요.');
             setImage(Angry);
             break;
           case 'Windy':
-            setMessage('오늘은 불안하군요.');
-            setImage(Rain);
+            setMessage('당장은 불안하시겠지만 때로는 너무 앞선 걱정은 쓸데없는 걱정거리인 경우가 많아요. 앞으로의 일은 아무도 모르는 거니까요.');
+            setImage(Sad);
             break;
           default:
             setMessage('오늘의 기분을 알려주세요.');
-            setImage(Sunny); // 기본 이미지 설정
+            setImage(Default); // 기본 이미지 설정
             break;
         }
       } catch (error) {
-        console.error('서버 요청 오류:', error);
+        // console.error('서버 요청 오류:', error);
       }
     };
 

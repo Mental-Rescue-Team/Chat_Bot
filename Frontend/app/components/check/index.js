@@ -102,7 +102,7 @@ const CheckComponent = () =>  {
 
   return (
       <View style={styles.container}>
-        <Text style={styles.title}>진단검사</Text>
+        {/* <Text style={styles.title}>진단검사</Text> */}
         <View style={styles.testSelector}>
           <Button
           mode="outlined"

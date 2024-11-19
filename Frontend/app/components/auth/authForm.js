@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableWithoutFeedback, Button } from 'react-native';
+import { Text, View, TouchableWithoutFeedback, Button, Image } from 'react-native';
 import { styles } from '../../styles/style';
 import { TextInput } from 'react-native-paper';
 import { getTokens } from '../../utils/tokenUtils';
+import Logo from '../../../android/app/src/main/assets/images/logo.png';
 
 
 const AuthForm = ({navigation}) =>  {
@@ -20,7 +21,12 @@ const AuthForm = ({navigation}) =>  {
 
     return (
         <View style = {styles.container}>
-            <Text style={styles.mainText}>Login</Text>
+            <Image
+                style={styles.image}
+                source={Logo}
+                resizeMode='cover'
+            />
+            <Text style={styles.mainText}>avery.</Text>
                 <View style={styles.mainView}>
                     <TextInput style={styles.textInput}
                             value={username}
@@ -33,6 +39,7 @@ const AuthForm = ({navigation}) =>  {
                             type="password"
                             onChangeText={password => setPassword(password)}
                             placeholder="Password"
+                            secureTextEntry
                             mode='outlined'/>
                 </View>
             <TouchableWithoutFeedback onPress={onPressLoginButton}>

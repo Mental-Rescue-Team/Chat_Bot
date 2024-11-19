@@ -5,9 +5,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthComponent = ({navigation}) => {
 
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        setLoading(true);
         const checkLoginStatus = async () => {
             try {
                 const tokenData = await AsyncStorage.getItem('Tokens');
@@ -16,6 +17,7 @@ const AuthComponent = ({navigation}) => {
                     if (accessToken) {
                         // 액세스 토큰이 유효한 경우, AppTabComponent로 이동
                         navigation.navigate('AppTabComponent');
+                        setLoading(false);
                     } else {
                         // 액세스 토큰이 없는 경우, 로그인 화면 유지
                         setLoading(false);

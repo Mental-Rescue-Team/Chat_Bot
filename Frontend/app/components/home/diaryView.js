@@ -51,7 +51,8 @@ const DiaryView = ({route}) =>  {
         }
 
       } catch (error) {
-        console.error('서버 요청 오류:', error);
+        // console.error('서버 요청 오류:', error);
+        alert("작성된 일기가 없습니다");
         setHasDiary(false)
       } finally {
         setLoading(false);

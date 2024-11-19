@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Alert, ImageBackground } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Logo from '../../assets/images/logo.png';
+// import Logo from '../../assets/images/logo.png';
 
 const ChatbotScreen = ({route, navigation}) => {
   const { mode } = route.params;
@@ -11,6 +11,7 @@ const ChatbotScreen = ({route, navigation}) => {
     { id: '1', text: '안녕하세요. 오늘은 무슨 일이신가요?', isBot: true },
   ]);
   const [inputText, setInputText] = useState('');
+  const [backgroundEmotion, setBackgroundEmotion] = useState('');
 
   const getServerUrl = () => {
     switch (mode) {
@@ -19,6 +20,48 @@ const ChatbotScreen = ({route, navigation}) => {
       case 'T': return 'http://ceprj.gachon.ac.kr:60016/chatbot/T';
       case 'F': return 'http://ceprj.gachon.ac.kr:60016/chatbot/F';
       default: return 'http://ceprj.gachon.ac.kr:60016/chatbot/counselor';
+    }
+  };
+
+  const getBackgroundData = async () => {
+    try {
+      const tokenData = await AsyncStorage.getItem('Tokens');
+      const parsedTokenData = tokenData ? JSON.parse(tokenData) : null;
+      const accessToken = parsedTokenData?.accessToken;
+
+      if (!accessToken) {
+        console.error('Access token이 없습니다. 로그인 후 다시 시도하세요.');
+        alert("로그인이 필요합니다.");
+        return;
+      }
+
+      const serverUrl = 'http://ceprj.gachon.ac.kr:60016/diary/background';
+      const response = await axios.get(serverUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      console.log('Background Data:', response.data);
+      setBackgroundEmotion(response.data);
+    } catch (error) {
+      console.error('Error fetching background data:', error);
+    }
+  };
+
+  // 컴포넌트가 마운트되면 배경 데이터 가져오기
+  useEffect(() => {
+    getBackgroundData();
+  }, []);
+
+  const getBackgroundImage = (emotion) => {
+    switch (emotion) {
+      case '기쁨': return require('../../../android/app/src/main/assets/images/chat_sunny.png');
+      case '슬픔': return require('../../../android/app/src/main/assets/images/chat_rain.png');
+      case '평온': return require('../../../android/app/src/main/assets/images/chat_default.png');
+      case '분노': return require('../../../android/app/src/main/assets/images/chat_angry.png');
+      case '불안': return require('../../../android/app/src/main/assets/images/chat_default.png');
+      default: return require('../../../android/app/src/main/assets/images/chat_default.png');
     }
   };
 
@@ -78,20 +121,28 @@ const ChatbotScreen = ({route, navigation}) => {
   );
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={messages}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-      />
-      {messages.filter(message => !message.isBot).length >= 2 && (
-        <TouchableOpacity 
-          style={styles.reportButton} 
-          onPress={() => navigation.navigate('Report')}
-        >
-          <Text style={styles.reportButtonText}>레포트 화면으로 이동</Text>
-        </TouchableOpacity>
-      )}
+    <View style={{flex: 1}}>
+    <ImageBackground
+      source={getBackgroundImage(backgroundEmotion)}
+      style={styles.backgroundImage}
+      imageStyle={styles.imageStyle}
+    >
+      <View style={styles.container}>
+        <FlatList
+          data={messages}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+        />
+        {messages.filter(message => !message.isBot).length >= 2 && (
+          <TouchableOpacity 
+            style={styles.reportButton} 
+            onPress={() => navigation.navigate('Report')}
+          >
+            <Text style={styles.reportButtonText}>레포트 화면으로 이동</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+      </ImageBackground>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -100,12 +151,12 @@ const ChatbotScreen = ({route, navigation}) => {
           placeholder="Type a message..."
         />
         <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
-          {/* <Text style={styles.sendButtonText}>Send</Text> */}
           <Icon name='send' color='white' size={18}/>
         </TouchableOpacity>
       </View>
-    </View>
+      </View>
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -122,13 +173,15 @@ const styles = StyleSheet.create({
   },
   botMessage: {
     alignSelf: 'flex-start',
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
+    backgroundColor: 'rgba(255, 255, 255, 0.6)', // 흰색, 80% 불투명
     borderColor: '#ccc',
     borderWidth: 1,
   },
   userMessage: {
     alignSelf: 'flex-end',
     backgroundColor: '#E0D1F5',
+    // backgroundColor: 'rgba(224, 209, 245, 0.8)', // 보라색, 80% 불투명
   },
   messageText: {
     color: 'black',
@@ -138,6 +191,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderTopWidth: 1,
     borderColor: '#ccc',
+    backgroundColor: '#fff',
   },
   input: {
     flex: 1,
@@ -160,15 +214,29 @@ const styles = StyleSheet.create({
   },
   reportButton: {
     backgroundColor: '#7A5ADB',
-    padding: 10,
+    padding: 8,
     borderRadius: 5,
     margin: 10,
+    marginBottom: 5,
     alignItems: 'center',
   },
   reportButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover', // 이미지 크기를 화면에 맞춤
+    // justifyContent: 'flex-start',
+  },
+  imageStyle: {
+    resizeMode: 'cover',
+    alignSelf: 'flex-start', // 이미지가 상단 기준으로 맞춰지도록 설정
+  },
+  container: {
+    flex: 1,
+    backgroundColor: 'transparent', // 배경 투명 설정
   },
 });
 
