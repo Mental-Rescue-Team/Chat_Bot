@@ -56,7 +56,7 @@ function UserManagementPage() {
 
   return (
     <div className="user-management">
-      <h1>User Management</h1>
+      <h1>회원 관리</h1>
       
       {error && <p>{error}</p>} {/* 에러 메시지 출력 */}
 

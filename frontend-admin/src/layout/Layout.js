@@ -1,5 +1,5 @@
 // src/components/Layout.js
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import './Layout.css'; // 스타일을 위한 CSS 파일
 

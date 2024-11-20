@@ -64,12 +64,12 @@ function ReportPage() {
       <div className="user-details">
         {userDetails ? (
           <div>
-            <h1>Report List(JSON)</h1>
+            <h1>사용자 레포트 통계</h1>
             <pre>{JSON.stringify(userDetails, null, 2)}</pre>
           </div>
         ) : (
             <div>
-                <h1>Report List(JSON)</h1>
+                <h1>사용자 레포트 통계</h1>
                 <p>사용자 이름을 클릭하여 상세 정보를 확인하세요.</p>
             </div>
           
