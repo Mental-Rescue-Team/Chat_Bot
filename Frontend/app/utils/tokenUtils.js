@@ -89,7 +89,7 @@ export const diaryData = async (message, navigation) => {
 
         console.log('서버 응답:', response.data);
         alert("저장되었습니다");
-        navigation.navigate('DiaryView');
+        // navigation.navigate('DiaryView');
 
     } catch (error) {
       console.error('데이터 전송 실패:', error);

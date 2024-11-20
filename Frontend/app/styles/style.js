@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     button: {
-        backgroundColor: '#596AFF',
+        backgroundColor: '#A08CFF',
         paddingVertical: 15,
         paddingHorizontal: 30,
         borderRadius: 10,
@@ -63,6 +63,14 @@ export const styles = StyleSheet.create({
         borderRadius: 100,
         backgroundColor: '#CCCCCC'
     },
+    loginImage: {
+        width: 150,
+        height: 150,
+        // marginBottom: 5,
+        marginTop: 10,
+        borderRadius: 100,
+        backgroundColor: '#CCCCCC'
+    },
     background: {
         width: '100%',
         height: '100%',
@@ -72,10 +80,10 @@ export const styles = StyleSheet.create({
     },
     mainText: {
         fontFamily: 'Paperlogy-7Bold',
-        fontSize: 30,
+        fontSize: 40,
         // padding: 20,
         // marginTop: 5,
         marginBottom: 20,
-        color: '#596AFF',
+        color: '#A08CFF',
     },
 }); 

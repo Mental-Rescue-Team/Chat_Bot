@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {StyleSheet, Text, View, TextInput, ScrollView, Image} from 'react-native';
 import DateHead from '../diary/dateHead';
-import Logo from '../../assets/images/logo.png';
 import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from '@react-navigation/core';
 
 const DiaryView = ({route}) =>  {
 
@@ -13,56 +13,59 @@ const DiaryView = ({route}) =>  {
   const [loading, setLoading] = useState(false);
   const [hasDiary, setHasDiary] = useState(true); // 일기 여부 상태 추가
 
+  const isFocused = useIsFocused();
   const displayDate = selectedDate ? new Date(selectedDate) : new Date();
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const tokenData = await AsyncStorage.getItem('Tokens');
-        const parsedTokenData = tokenData ? JSON.parse(tokenData) : null;
-        const accessToken = parsedTokenData?.accessToken;
+    if (isFocused) {
+      const fetchData = async () => {
+        setLoading(true);
+        try {
+          const tokenData = await AsyncStorage.getItem('Tokens');
+          const parsedTokenData = tokenData ? JSON.parse(tokenData) : null;
+          const accessToken = parsedTokenData?.accessToken;
 
-        if (!accessToken) {
-          console.error('Access token이 없습니다. 로그인 후 다시 시도하세요.');
-          alert("로그인이 필요합니다.");
-          return;
+          if (!accessToken) {
+            console.error('Access token이 없습니다. 로그인 후 다시 시도하세요.');
+            alert("로그인이 필요합니다.");
+            return;
+          }
+
+          console.log("보낼 데이터:", { selectedDate });
+          console.log("Authorization 헤더:", `Bearer ${accessToken}`);
+          // 서버에 날짜를 기반으로 GET 요청을 보내고 데이터 확인
+          const response = await axios.get('http://ceprj.gachon.ac.kr:60016/diary', {
+            headers: {
+              Authorization: `Bearer ${accessToken}`, // 필요시 accessToken 추가
+            },
+            params: {
+              date: selectedDate, // selectedDate를 쿼리 파라미터로 전달
+            },
+          });
+
+          console.log('서버에서 받은 데이터:', response.data); // 받은 데이터 콘솔에 출력
+          if (!response.data || !response.data.diaryText) {
+            setHasDiary(false); // 일기 데이터가 없으면 '작성한 일기가 없습니다' 텍스트 표시
+          } else {
+            setHasDiary(true);
+            setText(response.data.diaryText); // 서버에서 받은 일기 텍스트로 업데이트
+            setImage(response.data.comicURL); // 서버에서 받은 이미지 URL로 업데이트
+          }
+
+        } catch (error) {
+          // console.error('서버 요청 오류:', error);
+          alert("작성된 일기가 없습니다");
+          setHasDiary(false)
+        } finally {
+          setLoading(false);
         }
+      };
 
-        console.log("보낼 데이터:", { selectedDate });
-        console.log("Authorization 헤더:", `Bearer ${accessToken}`);
-        // 서버에 날짜를 기반으로 GET 요청을 보내고 데이터 확인
-        const response = await axios.get('http://ceprj.gachon.ac.kr:60016/diary', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`, // 필요시 accessToken 추가
-          },
-          params: {
-            date: selectedDate, // selectedDate를 쿼리 파라미터로 전달
-          },
-        });
-
-        console.log('서버에서 받은 데이터:', response.data); // 받은 데이터 콘솔에 출력
-        if (!response.data || !response.data.diaryText) {
-          setHasDiary(false); // 일기 데이터가 없으면 '작성한 일기가 없습니다' 텍스트 표시
-        } else {
-          setHasDiary(true);
-          setText(response.data.diaryText); // 서버에서 받은 일기 텍스트로 업데이트
-          setImage(response.data.comicURL); // 서버에서 받은 이미지 URL로 업데이트
-        }
-
-      } catch (error) {
-        // console.error('서버 요청 오류:', error);
-        alert("작성된 일기가 없습니다");
-        setHasDiary(false)
-      } finally {
-        setLoading(false);
+      if (selectedDate) {
+        fetchData();
       }
-    };
-
-    if (selectedDate) {
-      fetchData();
     }
-  }, [selectedDate]); // selectedDate가 변경될 때마다 호출
+  }, [isFocused, selectedDate]); // selectedDate가 변경될 때마다 호출
 
   const onChangeText = (inputText) => {
     setText(inputText);

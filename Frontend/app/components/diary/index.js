@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import {StyleSheet, Text, View, TextInput, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
 import DateHead from './dateHead';
 import { diaryData } from '../../utils/tokenUtils';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { styles } from '../../styles/style';
 
 const DiaryComponent = ({navigation}) =>  {
 
   const [text, setText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
+  const [refresh, setRefresh] = useState(false); // 새로 고침 상태
 
   const loadingMessages = [
     "힘드실 때 잠시 쉬어가셔도 괜찮습니다.\n충분히 잘하고 계십니다.",
@@ -40,6 +39,7 @@ const DiaryComponent = ({navigation}) =>  {
     setIsLoading(true); // 로딩 시작
     try {
       await diaryData(text, navigation);
+      setRefresh(true);  // 저장 후 새로 고침 트리거
     } catch (error) {
       console.error(error);
       Alert.alert('저장 실패', '일기를 저장하는 중 문제가 발생했습니다.');
@@ -47,6 +47,16 @@ const DiaryComponent = ({navigation}) =>  {
       setIsLoading(false); // 로딩 종료
     }
   };
+
+  useEffect(() => {
+    if (refresh) {
+      // 데이터 저장 후 새로 고침 트리거
+      setTimeout(() => {
+        setRefresh(false);
+        navigation.navigate('Home');
+      }, 500);  // 약간의 지연 후 새로 고침
+    }
+  }, [refresh, navigation]);
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>

@@ -22,11 +22,11 @@ const AuthForm = ({navigation}) =>  {
     return (
         <View style = {styles.container}>
             <Image
-                style={styles.image}
+                style={styles.loginImage}
                 source={Logo}
                 resizeMode='cover'
             />
-            <Text style={styles.mainText}>avery.</Text>
+            <Text style={styles.mainText}>Avery.</Text>
                 <View style={styles.mainView}>
                     <TextInput style={styles.textInput}
                             value={username}
