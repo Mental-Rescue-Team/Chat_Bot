@@ -3,6 +3,7 @@ package MentalCare.ChatBot.domain.Chatbot.Service;
 import MentalCare.ChatBot.domain.Member.Entity.Member;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AiReportService {
 
@@ -13,7 +14,7 @@ public interface AiReportService {
     String getEmotion(String text);
 
     /* 추천 유튜브 링크 전송 -2개 랜덤 */
-    String[] getRandomLink(String emotion);
+    Map<String, String>[] getRandomLink(String emotion);
 
     /* 레포트와 비디오 저장 */
     void saveReport(Member member, String currentDifficulty, String currentEmotion,
