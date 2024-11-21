@@ -106,19 +106,37 @@ public class ChatbotController {
         String currentDifficulty = reportResult[0];                             System.out.println(currentDifficulty);
         String currentEmotion = reportResult[1] ;                               System.out.println(currentEmotion);
         String aiAdvice = reportResult[2];                                      System.out.println(aiAdvice);
-        String[] videoLinks =aiReportService.getRandomLink(emotion);
-        String video_link1= videoLinks[0];                                      System.out.println(video_link1);
-        String video_link2= videoLinks[1];                                      System.out.println(video_link2);
+
+        Map<String, String>[] videoLinks =aiReportService.getRandomLink(emotion);
+
+        String title1 =null;
+        String link1 = null;
+        String title2 =null;
+        String link2 =null;
+
+        Map<String, String> videoMap0 = videoLinks[0];
+        for (Map.Entry<String, String> entry : videoMap0.entrySet()) {
+            title1 = entry.getKey();   // 키 값
+            link1 = entry.getValue(); // 값 값
+        }
+
+        Map<String, String> videoMap1 = videoLinks[1];
+        for (Map.Entry<String, String> entry : videoMap1.entrySet()) {
+            title2 = entry.getKey();   // 키 값
+            link2 = entry.getValue(); // 값 값
+        }
 
         // 실제 DB에 저장 (레포트 + 비디오 링크)
-        aiReportService.saveReport( member, currentDifficulty, currentEmotion, aiAdvice ,video_link1,video_link2);
+        aiReportService.saveReport( member, currentDifficulty, currentEmotion, aiAdvice ,link1,link2);
 
         //Map 형태로 수정하여 클라이언트 측에서 보기 좋게 반환한다.
         response.put("currentDifficulty", currentDifficulty);
         response.put("currentEmotion", currentEmotion);
         response.put("aiAdvice", aiAdvice);
-        response.put("video_link1", video_link1);
-        response.put("video_link2", video_link2);
+        response.put("title1",title1);
+        response.put("video_link1", link1);
+        response.put("title2",title2);
+        response.put("video_link2", link2);
 
         return response;
     }
