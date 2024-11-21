@@ -48,7 +48,8 @@ public class DiaryServiceImpl implements DiaryService {
     public ImageResult DrawComic(String text , String gender) {
         String prompt = " 이 일기의 당사자의 성별은 "+  gender +" 이다. \n "
                 + "이어지는 일기를 분석하여 이 일기 내용을 요약하는 재미있는 4칸짜리 만화를 그려주되,"
-                + "만화를 그려줄때는 색깔을 좀 넣어서 보기 좋게 만들어 주고, 만화에 절대 글자는 넣지 말아줘, \n"
+                + "만화에는 색상을 활용해 보기 좋게 만들어 주세요.\n"
+                + "텍스트 없이 그림만 포함된 만화를 생성하세요.\n\n"
                 + "만화의 주인공의 성별은 " +gender + "로 그려라. \n "
                 + "사용자의 일기는 다음과 같다 : ";
         String fullMessage = prompt + text;
