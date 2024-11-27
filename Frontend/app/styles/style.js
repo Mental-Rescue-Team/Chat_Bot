@@ -19,27 +19,27 @@ export const styles = StyleSheet.create({
     },
     buttext: {
         color: 'white',
-        fontSize: 15,
-        fontWeight: 'bold',
+        fontSize: 16,
+        fontFamily: 'Paperlogy-6SemiBold',
     },
-    text: {
-        fontSize: 15,
-        fontWeight: 'bold',
-        color: 'black',
+    profileText: {
+        fontSize: 16,
+        color: '#7A5ADB',
+        fontFamily: 'Paperlogy-6SemiBold',
     },
     logoutButton: {
-        backgroundColor: '#E31B22',
-        paddingVertical: 15,
+        backgroundColor: '#FF4848',
+        paddingVertical: 7,
         paddingHorizontal: 30,
         borderRadius: 10,
         marginBottom: 20,
-        width: '60%',
+        width: '40%',
         alignItems: 'center',
     },
     logoutText: {
         fontSize: 15,
-        fontWeight: 'bold',
         color: 'white',
+        fontFamily: 'Paperlogy-6SemiBold',
     },
     mainView: {
         marginBottom: 20, 
@@ -52,21 +52,23 @@ export const styles = StyleSheet.create({
         backgroundColor: '#DDDDDD',
         marginBottom: 20,
     },
-    textInput: {
-        marginBottom: 20
+    profileTextInput: {
+        marginBottom: 20,
+        backgroundColor: 'white',
+        paddingHorizontal: 5,
+        height: 40,
     },
     image: {
         width: 100,
         height: 100,
-        // marginBottom: 5,
-        marginTop: 10,
+        marginBottom: 40,
+        marginTop: 40,
         borderRadius: 100,
         backgroundColor: '#CCCCCC'
     },
     loginImage: {
         width: 150,
         height: 150,
-        // marginBottom: 5,
         marginTop: 10,
         borderRadius: 100,
         backgroundColor: '#CCCCCC'
@@ -81,9 +83,21 @@ export const styles = StyleSheet.create({
     mainText: {
         fontFamily: 'Paperlogy-7Bold',
         fontSize: 40,
-        // padding: 20,
-        // marginTop: 5,
         marginBottom: 20,
         color: '#A08CFF',
     },
+    textInput: {
+        marginBottom: 20,
+        backgroundColor: 'white',
+    },
+    text: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: 'black',
+    },
+    joinText: {
+        fontSize: 15,
+        fontFamily: 'Paperlogy-6SemiBold',
+        color: 'black',
+    }
 }); 

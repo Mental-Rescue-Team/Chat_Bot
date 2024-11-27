@@ -1,5 +1,6 @@
 export const questionSets = { 
-    1: [
+    1: {
+      questions: [
     { 
       id: '1', 
       question: "기분이 가라앉거나, 우울하거나, 희망이 없다고 느꼈다.", 
@@ -55,7 +56,10 @@ export const questionSets = {
       scoreMap: { "없음": 0, "2-6일": 1, "7-12일": 2, "거의 매일": 3 }
     },
   ],
-   2: [
+  source: "국립정신건강센터 대한불안의학회지 6, 119-24"
+},
+   2: {
+    questions: [
     { 
         id: '1', 
         question: "나는 걱정 때문에 정말 괴롭다.", 
@@ -140,8 +144,11 @@ export const questionSets = {
         options: ["전혀 그렇지 않다", "가끔 그렇다", "자주 그렇다", "항상 그렇다"], 
         scoreMap: { "전혀 그렇지 않다": 0, "가끔 그렇다": 1, "자주 그렇다": 2, "항상 그렇다": 3 }
       },
-  ],
-   3: [
+    ],
+    source: "국립정신건강센터"
+  },
+   3: {
+    questions: [
     { 
         id: '1', 
         question: "나는 남들만큼 가치있는 사람이다.", 
@@ -203,7 +210,10 @@ export const questionSets = {
         scoreMap: { "매우 그렇지 않다": 1, "대체로 그렇지 않다": 2, "보통이다": 3, "대체로 그렇다": 4, "항상 그렇다": 5 }  
     }
   ],
-  4: [
+  source: "국립정신건강센터 [Society and the adolescent self-imago]"
+},
+  4: {
+    questions: [
     { 
         id: '1', 
         question: " 최근 2주동안 잠들기가 어렵다.", 
@@ -247,4 +257,6 @@ export const questionSets = {
         scoreMap: { "전혀 방해되지 않음": 0, "조금 방해됨": 1, "다소 방해됨": 2, "많이 방해됨": 3, "매우 많이 방해됨": 4 }  
     },
   ],
+  source: "국립정신건강센터"
+},
 };

@@ -74,7 +74,7 @@ const DiaryView = ({route}) =>  {
   return (
     <View style={{flex: 1, backgroundColor: 'white', justifyContent: 'center'}}>
       <ScrollView>
-        <View style={{justifyContent: 'flex-start', padding: 20}}>
+        <View style={{justifyContent: 'flex-start', marginBottom: 10, marginTop: 15}}>
           <DateHead date={displayDate}/>
         </View>
         <View style={{justifyContent: 'center', alignItems: 'center',}}>
@@ -108,7 +108,9 @@ const DiaryView = ({route}) =>  {
 const styles = StyleSheet.create({
   input: {
     width: '90%',
-    height: 400,
+    // height: 350,
+    minHeight: 200,
+    maxHeight: 450, 
     fontSize: 16,
     borderColor: '#999',
     borderWidth: 1,

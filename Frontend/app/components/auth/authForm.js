@@ -26,7 +26,7 @@ const AuthForm = ({navigation}) =>  {
                 source={Logo}
                 resizeMode='cover'
             />
-            <Text style={styles.mainText}>Avery.</Text>
+            <Text style={styles.mainText}>Avery</Text>
                 <View style={styles.mainView}>
                     <TextInput style={styles.textInput}
                             value={username}
@@ -48,10 +48,8 @@ const AuthForm = ({navigation}) =>  {
                 </View>
             </TouchableWithoutFeedback>
             <TouchableWithoutFeedback onPress={onPressJoinButton}>
-                <View 
-                // style={styles.button}
-                >
-                    <Text style={styles.text}>계정이 없으신가요? 가입하기</Text>
+                <View>
+                    <Text style={styles.joinText}>계정이 없으신가요? 가입하기</Text>
                 </View>
             </TouchableWithoutFeedback>
         </View>

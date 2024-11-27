@@ -6,7 +6,7 @@ function DateHead({date}) {
   const month = date.getMonth() + 1;
   const day = date.getDate();
 
-  const formatted = `${month}.${day}, ${year}`;
+  const formatted = `${month}.${day}. ${year}`;
 
   return (
     <View style={styles.backGround}>
@@ -17,13 +17,13 @@ function DateHead({date}) {
 
 const styles = StyleSheet.create({
     backGround: {
-        backgroundColor: '#F5F5F5',
-        paddingVertical: 15,
+        // backgroundColor: '#F5F5F5',
+        paddingVertical: 10,
         paddingHorizontal: 30,
         borderRadius: 10,
         marginBottom: 10,
         width: '70%',
-        alignItems: 'center',
+        alignItems: 'flex-start',
     },
     date: {
         fontFamily: 'Paperlogy-8ExtraBold',

@@ -9,9 +9,10 @@ const ReportScreen = ({ navigation }) => {
     const [aiAdvice, setAiAdvice] = useState('잠시만 기다려주세요...');
     const [videoLink1, setVideoLink1] = useState(null);
     const [videoLink2, setVideoLink2] = useState(null);
+    const [title1, setTitle1] = useState(null);
+    const [title2, setTitle2] = useState(null);
 
     useEffect(() => {
-        // 서버에 GET 요청을 보내는 함수
         const fetchReportData = async () => {
         try {
             const tokenData = await AsyncStorage.getItem('Tokens');
@@ -35,13 +36,17 @@ const ReportScreen = ({ navigation }) => {
             console.log(response.data.currentEmotion);
             console.log(response.data.aiAdvice);
             console.log(response.data.video_link1);
+            console.log(response.data.title1);
             console.log(response.data.video_link2);
+            console.log(response.data.title2);
 
             setCurrentDifficulty(response.data.currentDifficulty || '데이터 없음');
             setCurrentEmotion(response.data.currentEmotion || '데이터 없음');
             setAiAdvice(response.data.aiAdvice || '데이터 없음');
             setVideoLink1(response.data.video_link1);
             setVideoLink2(response.data.video_link2);
+            setTitle1(response.data.title1);
+            setTitle2(response.data.title2);
         } catch (error) {
             console.error('데이터 가져오기 실패:', error);
         }
@@ -50,20 +55,9 @@ const ReportScreen = ({ navigation }) => {
         fetchReportData(); // 화면 진입 시 데이터 요청
     }, []);
 
-    // if (!reportData) {
-    //     // 데이터를 가져오기 전 로딩 상태 표시
-    //     return (
-    //     <View style={styles.loadingContainer}>
-    //         <Text>로딩 중...</Text>
-    //     </View>
-    //     );
-    // } else {
-
-    // }
-
     return (
         <ScrollView style={styles.container}>
-        <Text style={styles.header}>AI 상담사 챗봇의 레포트</Text>
+        <Text style={styles.header}>AI 상담사의 레포트</Text>
 
         <View style={styles.section}>
             <Text style={styles.sectionTitle}>현재의 어려움</Text>
@@ -87,13 +81,14 @@ const ReportScreen = ({ navigation }) => {
         </View>
 
         <Text style={styles.sectionTitle}>AI 상담사 추천 컨텐츠</Text>
+        <Text>* 클릭 시 유튜브 링크로 이동</Text>
         <View style={styles.recommendations}>
             <View style={styles.recommendationCard}>
             <TouchableOpacity
             style={styles.linkButton}
             onPress={() => Linking.openURL(videoLink1)}
             >
-                <Text style={styles.linkText}>{videoLink1}</Text>
+                <Text style={styles.linkText}>{title1}</Text>
             </TouchableOpacity>
             </View>
             <View style={styles.recommendationCard}>
@@ -101,7 +96,7 @@ const ReportScreen = ({ navigation }) => {
             style={styles.linkButton}
             onPress={() => Linking.openURL(videoLink2)}
             >
-                <Text style={styles.linkText}>{videoLink2}</Text>
+                <Text style={styles.linkText}>{title2}</Text>
             </TouchableOpacity>
             </View>
         </View>
@@ -125,7 +120,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   sectionTitle: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#555',
     marginBottom: 4,
@@ -151,14 +146,14 @@ const styles = StyleSheet.create({
   },
   recommendationCard: {
     width: '48%',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#7A5ADB',
     borderRadius: 12,
-    padding: 8,
+    padding: 3,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 1 },
+    // shadowOpacity: 0.1,
+    // shadowRadius: 2,
     elevation: 2,
   },
   avatar: {
@@ -168,7 +163,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   linkButton: {
-    backgroundColor: '#F3E8FF',
+    backgroundColor: '#FFFFFF',
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 8,
@@ -176,7 +171,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   linkText: {
-    color: '#555',
+    color: '#7A5ADB',
     fontWeight: 'bold',
   },
 });

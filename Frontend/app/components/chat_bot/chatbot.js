@@ -3,15 +3,36 @@ import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Alert, I
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
-// import Logo from '../../assets/images/logo.png';
 
 const ChatbotScreen = ({route, navigation}) => {
   const { mode } = route.params;
-  const [messages, setMessages] = useState([
-    { id: '1', text: '안녕하세요. 오늘은 무슨 일이신가요?', isBot: true },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [backgroundEmotion, setBackgroundEmotion] = useState('');
+
+  // 모드에 따라 초기 메시지 설정
+  useEffect(() => {
+    let initialMessage = '안녕하세요. 오늘은 무슨 일이신가요?'; // 기본 메시지
+
+    switch (mode) {
+      case 'counselor':
+        initialMessage = '안녕하세요. 상담사가 도와드리겠습니다.';
+        break;
+      case 'friend':
+        initialMessage = '안녕! 친구처럼 편하게 얘기해 봐! 뭐든 다 들어줄게!';
+        break;
+      case 'T':
+        initialMessage = '안녕하세요. MBTI T 모드입니다. 오늘 하루를 얘기해보세요.';
+        break;
+      case 'F':
+        initialMessage = '반가워요. MBTI F 모드에요. 오늘은 무슨 일인가요?';
+        break;
+      default:
+        initialMessage = '안녕하세요. 어떤 도움을 드릴까요?';
+    }
+
+    setMessages([{ id: '1', text: initialMessage, isBot: true }]);
+  }, [mode]);
 
   const getServerUrl = () => {
     switch (mode) {
@@ -58,9 +79,9 @@ const ChatbotScreen = ({route, navigation}) => {
     switch (emotion) {
       case '기쁨': return require('../../../android/app/src/main/assets/images/chat_sunny.png');
       case '슬픔': return require('../../../android/app/src/main/assets/images/chat_rain.png');
-      case '평온': return require('../../../android/app/src/main/assets/images/chat_default.png');
+      case '평온': return require('../../../android/app/src/main/assets/images/chat_normal.png');
       case '분노': return require('../../../android/app/src/main/assets/images/chat_angry.png');
-      case '불안': return require('../../../android/app/src/main/assets/images/chat_default.png');
+      case '불안': return require('../../../android/app/src/main/assets/images/chat_sad.png');
       default: return require('../../../android/app/src/main/assets/images/chat_default.png');
     }
   };
@@ -173,15 +194,14 @@ const styles = StyleSheet.create({
   },
   botMessage: {
     alignSelf: 'flex-start',
-    // backgroundColor: 'white',
     backgroundColor: 'rgba(255, 255, 255, 0.6)', // 흰색, 80% 불투명
     borderColor: '#ccc',
     borderWidth: 1,
   },
   userMessage: {
     alignSelf: 'flex-end',
-    backgroundColor: '#E0D1F5',
-    // backgroundColor: 'rgba(224, 209, 245, 0.8)', // 보라색, 80% 불투명
+    // backgroundColor: '#E0D1F5',
+    backgroundColor: 'rgba(224, 209, 245, 0.6)', // 보라색, 80% 불투명
   },
   messageText: {
     color: 'black',
@@ -223,7 +243,7 @@ const styles = StyleSheet.create({
   reportButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Paperlogy-6SemiBold',
   },
   backgroundImage: {
     flex: 1,

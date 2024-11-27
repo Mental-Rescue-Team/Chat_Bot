@@ -10,7 +10,7 @@ const CheckComponent = () =>  {
   const [selectedTestType, setSelectedTestType] = useState(1); // 기본 검사 종류 설정
   const [answers, setAnswers] = useState([]);
 
-  const questions = questionSets[selectedTestType];
+  const {questions, source} = questionSets[selectedTestType];
 
   // 응답을 처리
   const handleSelectOption = (questionId, option) => {
@@ -102,29 +102,40 @@ const CheckComponent = () =>  {
 
   return (
       <View style={styles.container}>
-        {/* <Text style={styles.title}>진단검사</Text> */}
         <View style={styles.testSelector}>
           <Button
-          mode="outlined"
-          style={styles.selectButton}
+          mode={selectedTestType === 1 ? 'contained' : 'outlined'}
+          style={[
+            styles.selectButton,
+            selectedTestType === 1 && styles.selectedButton,
+          ]}
           labelStyle={styles.selectButText}
           onPress={() => setSelectedTestType(1)} >
           우울증(PHQ-9)</Button>
           <Button
-          mode="outlined"
-          style={styles.selectButton}
+          mode={selectedTestType === 2 ? 'contained' : 'outlined'}
+          style={[
+            styles.selectButton,
+            selectedTestType === 2 && styles.selectedButton,
+          ]}
           labelStyle={styles.selectButText} 
           onPress={() => setSelectedTestType(2)} >
           불안(PSWQ-CK)</Button>
           <Button
-          mode="outlined"
-          style={styles.selectButton}
+          mode={selectedTestType === 3 ? 'contained' : 'outlined'}
+          style={[
+            styles.selectButton,
+            selectedTestType === 3 && styles.selectedButton,
+          ]}
           labelStyle={styles.selectButText} 
           onPress={() => setSelectedTestType(3)}>
           자존감(RSES)</Button>
           <Button
-          mode="outlined"
-          style={styles.selectButton}
+          mode={selectedTestType === 4 ? 'contained' : 'outlined'}
+          style={[
+            styles.selectButton,
+            selectedTestType === 4 && styles.selectedButton,
+          ]}
           labelStyle={styles.selectButText}
           onPress={() => setSelectedTestType(4)}>
           불면증(ISI-K)</Button>
@@ -136,6 +147,9 @@ const CheckComponent = () =>  {
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.flatListContainer}
         />
+        {source ? (
+  <Text style={styles.sourceText}>출처: {source}</Text>
+) : null}
         <TouchableWithoutFeedback onPress={submitResults}>
             <View style={styles.button}>
                 <Text style={styles.buttext}>검사결과 확인</Text>
@@ -202,10 +216,20 @@ const styles = StyleSheet.create({
   buttext: {
     color: 'white',
     fontSize: 15,
-    fontWeight: 'bold',
+    fontFamily: 'Paperlogy-6SemiBold',
   },
   selectButText: {
-    fontSize: 16,
+    fontSize: 15,
+    fontFamily: 'Paperlogy-5Medium',
+  },
+  sourceText: {
+    fontSize: 14,
+    color: 'gray',
+    margin: 10,
+  },
+  selectedButton: {
+    backgroundColor: '#7A5ADB', // 선택된 버튼의 배경색
+    borderColor: '#7A5ADB', // 선택된 버튼의 테두리 색
   },
 
 });

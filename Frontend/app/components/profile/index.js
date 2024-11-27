@@ -78,32 +78,36 @@ const ProfileComponent = ({navigation}) => {
                         resizeMode='cover'
                     />
                 <View style={styles.mainView}>
-                    <Text style={styles.text}>Username</Text>
-                    <TextInput style={styles.textInput}
+                    <Text style={styles.profileText}>Username</Text>
+                    <TextInput style={styles.profileTextInput}
                         value={user}
                         onChangeText={user => setUser(user)}
                         mode='flat'
+                        underlineColor="#7A5ADB"
                         editable={false}
                     />
-                    <Text style={styles.text}>E-mail</Text>
-                    <TextInput style={styles.textInput}
+                    <Text style={styles.profileText}>E-mail</Text>
+                    <TextInput style={styles.profileTextInput}
                         value={email}
-                        onChangeText={mail => setMail(mail)}
+                        onChangeText={mail => setEmail(mail)}
                         mode='flat'
+                        underlineColor="#7A5ADB"
                         editable={false}
                     />
-                    <Text style={styles.text}>Birth</Text>
-                    <TextInput style={styles.textInput}
+                    <Text style={styles.profileText}>Birth</Text>
+                    <TextInput style={styles.profileTextInput}
                         value={birth}
                         onChangeText={birth => setBirth(birth)}
                         mode='flat'
+                        underlineColor="#7A5ADB"
                         editable={false}
                     />
-                    <Text style={styles.text}>Gender</Text>
-                    <TextInput style={styles.textInput}
+                    <Text style={styles.profileText}>Gender</Text>
+                    <TextInput style={styles.profileTextInput}
                         value={gender}
                         onChangeText={gender => setGender(gender)}
                         mode='flat'
+                        underlineColor="#7A5ADB"
                         editable={false}
                     />
                     
@@ -118,10 +122,5 @@ const ProfileComponent = ({navigation}) => {
         </ScrollView>
     )
 }
-
-
-
-
-
 
 export default ProfileComponent;

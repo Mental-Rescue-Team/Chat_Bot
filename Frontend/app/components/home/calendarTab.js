@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { format } from "date-fns";
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import { Calendar, LocaleConfig } from 'react-native-calendars';
-import { loadDiaryData } from '../../utils/tokenUtils';
+import { Calendar } from 'react-native-calendars';
+import { useFocusEffect } from '@react-navigation/native'; // useFocusEffect 추가
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-// const URL = 'https://a04db67f-68f0-4131-a8bd-0504a248a1ca.mock.pstmn.io'
+
 const URL = 'http://ceprj.gachon.ac.kr:60016'
 
 function CalendarTab({navigation}) {
@@ -16,14 +16,6 @@ function CalendarTab({navigation}) {
   const [emotionData, setEmotionData] = useState({});
   const [lastClickedDate, setLastClickedDate] = useState(null);
 
-  // const emotionToEmoji = {
-  //   "Sunny": "☀",
-  //   "Rainy": "🌧",
-  //   "Stormy": "🌩",
-  //   "Cloudy": "☁",
-  //   "Windy": "🌬",
-  // };
-
   const emotionToEmoji = {
     "Sunny": "🌞",    // 기쁨
     "Rainy": "🌧️",   // 슬픔
@@ -32,7 +24,7 @@ function CalendarTab({navigation}) {
     "Windy": "🌬️",   // 불안
   };
 
-  useEffect(() => {
+ 
     const fetchData = async () => {
       try {
         
@@ -64,7 +56,6 @@ function CalendarTab({navigation}) {
 
         // **emotionData 상태 설정** (각 날짜에 맞는 이모지 저장)
         const emotionMap = data.reduce((acc, entry) => {
-          // acc[entry.diaryDate] = { emoji: entry.weather };
           const emoji = emotionToEmoji[entry.weather] || "❓";  // 변환된 이모지 또는 기본값
           acc[entry.diaryDate] = { emoji };
           return acc;
@@ -76,8 +67,12 @@ function CalendarTab({navigation}) {
       }
     };
 
-    fetchData();
-  }, []);
+    useFocusEffect(
+      useCallback(() => {
+        fetchData();
+      }, [])
+    );
+
 
   const handleDayPress = (day) => {
     if (lastClickedDate === day.dateString) {
@@ -86,7 +81,6 @@ function CalendarTab({navigation}) {
       setLastClickedDate(day.dateString); 
       setSelectedDate(day.dateString);
     }
-    // setSelectedDate(day.dateString);
   };
 
   const getEmojiForDate = (date) => {

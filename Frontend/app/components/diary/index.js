@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, Text, View, TextInput, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
+import {StyleSheet, Text, View, TextInput, TouchableWithoutFeedback, ActivityIndicator, ImageBackground, } from 'react-native';
 import DateHead from './dateHead';
 import { diaryData } from '../../utils/tokenUtils';
+import FastImage from 'react-native-fast-image';
 
 const DiaryComponent = ({navigation}) =>  {
 
@@ -24,13 +25,26 @@ const DiaryComponent = ({navigation}) =>  {
   ];
 
   useEffect(() => {
+    let interval = null;
+
     if (isLoading) {
-      // 로딩 중일 때 무작위 메시지 선택
-      const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
-      setLoadingMessage(randomMessage);
+      // 로딩 중일 때 무작위 메시지 선택 및 주기적 변경
+      const changeMessage = () => {
+        const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+        setLoadingMessage(randomMessage);
+      };
+
+      changeMessage(); // 첫 메시지 설정
+      interval = setInterval(changeMessage, 3000); // 3초마다 변경
     } else {
       setLoadingMessage('');
     }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval); // 로딩 종료 시 타이머 정리
+      }
+    };
   }, [isLoading]);
 
   const today = new Date();
@@ -61,13 +75,24 @@ const DiaryComponent = ({navigation}) =>  {
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       {isLoading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#7A5ADB" />
-          <Text style={styles.loadingText}>{loadingMessage}</Text>
-        </View>
+        <ImageBackground
+        source={require('../../../android/app/src/main/assets/images/chat_default.png')} // 배경 이미지 경로
+        style={styles.backgroundImage}
+        resizeMode="cover" // 이미지 크기 조정
+      >
+        <View style={styles.overlay} />
+          <View style={styles.loadingContainer}>
+            <FastImage
+              source={require('../../../android/app/src/main/assets/images/default-unscreen.gif')}  // 로컬 GIF 파일 경로
+              style={styles.loadingLogo}
+            />
+            {/* <ActivityIndicator size="small" color="#7A5ADB" /> */}
+            <Text style={styles.loadingText}>{loadingMessage}</Text>
+          </View>
+        </ImageBackground>
         ) : (
           <>
-      <View style={{justifyContent: 'flex-start', padding: 20}}>
+      <View style={{justifyContent: 'flex-start', marginBottom: 10, marginTop: 15}}>
         <DateHead date={today}/>
       </View>
       <View style={{justifyContent: 'center', alignItems: 'center',}}>
@@ -92,9 +117,20 @@ const DiaryComponent = ({navigation}) =>  {
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject, // 부모 View 크기 채우기
+    backgroundColor: 'rgba(255, 255, 255, 0.6)', // 반투명 검정색
+  },
   input: {
     width: '90%',
-    height: 300,
+    // height: 300,
+    minHeight: 300,
+    maxHeight: 450, 
     fontSize: 16,
     borderColor: '#999',
     borderWidth: 1,
@@ -114,13 +150,17 @@ const styles = StyleSheet.create({
   },
   buttext: {
     color: 'white',
-    fontSize: 15,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontFamily: 'Paperlogy-6SemiBold',
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  loadingLogo: {
+    width: 150,
+    height: 150,
   },
   loadingText: {
     margin: 10,
@@ -128,6 +168,7 @@ const styles = StyleSheet.create({
     color: '#7A5ADB',
     textAlign: 'center',
     lineHeight: 24,
+    fontFamily: 'Paperlogy-5Medium'
   },
 });
 

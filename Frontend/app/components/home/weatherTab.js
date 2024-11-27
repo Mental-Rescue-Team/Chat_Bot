@@ -1,13 +1,15 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, TextInput, View, Image} from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import {StyleSheet, Text, View, Image} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native'; // useFocusEffect 추가
+import FastImage from 'react-native-fast-image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import Sunny from '../../../android/app/src/main/assets/images/sunny.jpg';
-import Normal from '../../../android/app/src/main/assets/images/normal.jpg';
-import Sad from '../../../android/app/src/main/assets/images/sad.jpg';
-import Rain from '../../../android/app/src/main/assets/images/rain.jpg';
-import Angry from '../../../android/app/src/main/assets/images/angry.jpg';
-import Default from '../../../android/app/src/main/assets/images/default.png';
+import Sunny from '../../../android/app/src/main/assets/images/sunny.gif';
+import Normal from '../../../android/app/src/main/assets/images/normal.gif';
+import Sad from '../../../android/app/src/main/assets/images/sad.gif';
+import Rain from '../../../android/app/src/main/assets/images/rain.gif';
+import Angry from '../../../android/app/src/main/assets/images/angry.gif';
+import Default from '../../../android/app/src/main/assets/images/sample.gif';
 
 
 const WeatherTab = () =>  {
@@ -15,7 +17,7 @@ const WeatherTab = () =>  {
   const [message, setMessage] = useState('오늘의 기분을 알려주세요.');
   const [image, setImage] = useState(Default); // 기본 이미지 설정
 
-  useEffect(() => {
+
     const fetchWeatherData = async () => {
       try {
         const tokenData = await AsyncStorage.getItem('Tokens');
@@ -69,8 +71,11 @@ const WeatherTab = () =>  {
       }
     };
 
-    fetchWeatherData();
-  }, []);
+    useFocusEffect(
+      useCallback(() => {
+        fetchWeatherData();
+      }, [])
+    );
 
   return (
     <View style={{flex: 1, flexDirection: 'row', backgroundColor: 'white'}}>
@@ -79,12 +84,10 @@ const WeatherTab = () =>  {
         <Text style={styles.subText}>{message}</Text>
       </View>
       <View style={styles.image}>
-        <Image
-            source={image}
-            resizeMode={'contain'}
-            style={{
-                width: 150
-            }}
+        <FastImage
+          source={image}
+          style={{ width: 150, height: 150 }}
+          resizeMode={FastImage.resizeMode.contain}
         />      
       </View>
     </View>
