@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Doughnut } from 'react-chartjs-2';
-import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale } from 'chart.js';
+import { Doughnut, Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, LinearScale } from 'chart.js';
 
-ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale);
+ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, LinearScale);
 
 function StatisticsPage() {
   const [statistics, setStatistics] = useState({});  // 서버에서 받은 통계 데이터를 저장
   const [error, setError] = useState(null);  // 에러 상태
-//   const [totalScore, setTotalScore] = useState(5);
 
   useEffect(() => {
     // localStorage에서 accessToken 가져오기
@@ -60,7 +59,7 @@ function StatisticsPage() {
     labels: ['기쁨', '분노', '불안', '슬픔', '평온'],
     datasets: [
       {
-        label: '감정 통계',
+        label: '감정 수',
         data: [
           statistics?.['기쁨'] || 0,
           statistics?.['분노'] || 0,
@@ -96,14 +95,84 @@ function StatisticsPage() {
     cutout: '50%', // 도넛의 너비 조절 (숫자를 조정해 너비 변경 가능)
   };
 
+  // 막대 그래프 데이터
+  const barChartData = {
+    labels: ['기쁨', '분노', '불안', '슬픔', '평온'],
+    datasets: [
+      {
+        label: 'value of emotions',
+        data: [
+          statistics?.['기쁨'] || 0,
+          statistics?.['분노'] || 0,
+          statistics?.['불안'] || 0,
+          statistics?.['슬픔'] || 0,
+          statistics?.['평온'] || 0,
+        ],
+        backgroundColor: [
+          '#FDFF27', // 기쁨: 노랑
+          '#e74c3c', // 분노: 빨강
+          '#e67e22', // 불안: 주황
+          '#3498db', // 슬픔: 파랑
+          '#2ecc71', // 평온: 초록
+        ],
+      },
+    ],
+  };
+
+  // 막대 그래프 옵션
+  const barChartOptions = {
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+      },
+    },
+    responsive: true,
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: '감정',
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: '값',
+        },
+        beginAtZero: true,
+      },
+    },
+  };
+
+  const chartContainerStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '50px',
+    justifyContent: 'center',
+  };
+
+  const chartRowStyle = {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: '50px',
+  };
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', justifyContent: 'center' }}>
+    <div style={chartContainerStyle}>
       <h1>감정 통계</h1>
       {statistics ? (
-        <div style={{ textAlign: 'center' }}>
-          <p style={{fontSize: 20}}>감정 결과 수: {totalScore}</p>
-          <div style={{ width: '500px', height: '500px' }}>
-            <Doughnut data={chartData} options={chartOptions} />
+        <div>
+          <p style={{fontSize: 20, textAlign: 'center'}}>감정 결과 총합: {totalScore}</p>
+          <div style={chartRowStyle}>
+            <div style={{ width: '500px', height: '500px' }}>
+              <Doughnut data={chartData} options={chartOptions} />
+            </div>
+            <div style={{ width: '600px', height: '400px' }}>
+              <Bar data={barChartData} options={barChartOptions} />
+            </div>
           </div>
         </div>
       ) : (
