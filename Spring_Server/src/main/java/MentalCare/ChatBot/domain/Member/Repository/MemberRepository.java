@@ -24,9 +24,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     //사용자 아이디로 사용자 찾기
     Optional<Member> findById(Long id);
 
-    // username으로 member_no를 찾는 메서드 추가
-    //@Query("SELECT m.member_no FROM Member m WHERE m.username = :username")
-    //Optional<Long> findMemberNoByUsername(@Param("username") String username);
-
-
 }
