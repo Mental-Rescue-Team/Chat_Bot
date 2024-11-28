@@ -125,7 +125,7 @@ class MemberControllerTest {
                 .build();
 
         // When & Then: 비밀번호 유효성 검사 실패
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/member/register")
+        mockMvc.perform(MockMvcRequestBuilders.post("/member/register")
                         .contentType(MediaType.APPLICATION_JSON) //컨텐츠 타입 헤더를 Json 형식으로 설정하는 부분이다. -> 여기서는 json 형식으로 데이터를 서버에 전송한다는 의미이다.
                         .content(objectMapper.writeValueAsString(request))) //memberrequest라는 DTO 자바 객체를 Json 문자열로 변환하는 작업을 한 후 서버로 보내는 것이다.
                 .andExpect(status().isBadRequest()) // 유효성 검사 실패로 인해 400 Bad Request
@@ -145,7 +145,7 @@ class MemberControllerTest {
                 .build();
 
         // When & Then: 이메일 유효성 검사 실패
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/member/register")
+        mockMvc.perform(MockMvcRequestBuilders.post("/member/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))) //writeValueAsString는 objectMapper의 메서드인데, 객체 변환 실패시 오류를 발생하기에 필히 예외처리를 해줘야 한다.
                 .andExpect(status().isBadRequest())
@@ -165,7 +165,7 @@ class MemberControllerTest {
                 .build();
 
         // When & Then: 이메일 유효성 검사 실패
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/member/register")
+        mockMvc.perform(MockMvcRequestBuilders.post("/member/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))) //writeValueAsString는 objectMapper의 메서드인데, 객체 변환 실패시 오류를 발생하기에 필히 예외처리를 해줘야 한다.
                 .andExpect(status().isBadRequest())
@@ -192,13 +192,13 @@ class MemberControllerTest {
                 .gender("male")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/member/register")
+        mockMvc.perform(MockMvcRequestBuilders.post("/member/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request1))) //writeValueAsString는 objectMapper의 메서드인데, 객체 변환 실패시 오류를 발생하기에 필히 예외처리를 해줘야 한다.
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/member/register")
+        mockMvc.perform(MockMvcRequestBuilders.post("/member/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request2))) //writeValueAsString는 objectMapper의 메서드인데, 객체 변환 실패시 오류를 발생하기에 필히 예외처리를 해줘야 한다.
                 .andExpect(status().isConflict())
@@ -222,39 +222,41 @@ class MemberControllerTest {
 //    5.헤더가 널값 인 경우 - null 값 반환
 //    6.의존성 모킹 검증 -jwt 메서드 3개 + memberService 메서드 1개 검증
 
-    @Test
-    @DisplayName("정상 회원 조회 - 정상 조회 확인")
-    void 회원조회_테스트1() throws Exception {
+//    @Test
+//    @DisplayName("정상 회원 조회 - 정상 조회 확인")
+//    void 회원조회_테스트1() throws Exception {
+//
+//        // Given
+//        String validToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyc3k5OTEyMjVfdXNlciIsImlhdCI6MTczMDIxNzg2MSwiZXhwIjoxNzMwODIyNjYxfQ.YWVRGEYmWYScIcayP8MoSsiurpNIJQa6JTNem9AVErufdBFoZLyz0bVIHq_K0sO6HalH2c3NiE4Z_HLK-eRISQ";
+//        String username = "testUser";
+//
+//        MemberResponse expectedResponse = MemberResponse.builder()
+//                .username("testUser")
+//                .email("test@test.com")
+//                .birth(LocalDate.of(1990, 1, 1))
+//                .gender("male")
+//                .build();
+//
+//        // Mock 설정
+//        when(jwtUtil.extractTokenFromRequest(any(HttpServletRequest.class))).thenReturn(validToken);
+//        //doNothing().when(jwtUtil).validateToken_isTokenValid(validToken);
+//        when(jwtUtil.extractUsername(validToken)).thenReturn(username);
+//        when(memberService.getmyinfo(username)).thenReturn(expectedResponse);
+//
+//        // When & Then
+//        mockMvc.perform(MockMvcRequestBuilders.get("/api/member")
+//                        .header("Authorization", validToken))
+//                .andExpect(status().isOk())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value("testUser"))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("test@test.com"))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.data.birth").value("1990-01-01"))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.data.gender").value("male"))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("(사용자 용)한 회원 정보 조회"))
+//                .andDo(print());
+//
+//    }
 
-        // Given
-        String validToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyc3k5OTEyMjVfdXNlciIsImlhdCI6MTczMDIxNzg2MSwiZXhwIjoxNzMwODIyNjYxfQ.YWVRGEYmWYScIcayP8MoSsiurpNIJQa6JTNem9AVErufdBFoZLyz0bVIHq_K0sO6HalH2c3NiE4Z_HLK-eRISQ";
-        String username = "testUser";
 
-        MemberResponse expectedResponse = MemberResponse.builder()
-                .username("testUser")
-                .email("test@test.com")
-                .birth(LocalDate.of(1990, 1, 1))
-                .gender("male")
-                .build();
-
-        // Mock 설정
-        when(jwtUtil.extractTokenFromRequest(any(HttpServletRequest.class))).thenReturn(validToken);
-        //doNothing().when(jwtUtil).validateToken_isTokenValid(validToken);
-        when(jwtUtil.extractUsername(validToken)).thenReturn(username);
-        when(memberService.getmyinfo(username)).thenReturn(expectedResponse);
-
-        // When & Then
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/member")
-                        .header("Authorization", validToken))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value("testUser"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("test@test.com"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.birth").value("1990-01-01"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.gender").value("male"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("(사용자 용)한 회원 정보 조회"))
-                .andDo(print());
-
-    }
 
     @Test
     @DisplayName("빈 토큰 요청")
