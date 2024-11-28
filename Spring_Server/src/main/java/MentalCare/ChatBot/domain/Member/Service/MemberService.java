@@ -8,14 +8,25 @@ import org.springframework.stereotype.Service;
 @Service
 public interface MemberService {
 
-    /*회원 가입 메서드*/
+    /**
+     * 회원 가입 메서드
+     * @param request
+     * @return member_no 가입된 회원의 고유번호
+     */
     Long register(MemberRequest request);
 
-    /*한명의 회원 정보 조회 메서드 -  사용자 마이페이지 용*/
-    MemberResponse getmyinfo(String username);/*사용자 이름으로 본인의 회원 정보를 조회할 시 동명이인의 경우 예외사항이 발생한다, 즉 이 메서드는 파라매터를 member_no를 받는 로직으로 추후 수정하여야 한다.*/
+    /**
+     * 내 정보 조회 메서드
+     * @param username
+     * @return memberResponse 회원 가입 정보 객체
+     */
+    MemberResponse getmyinfo(String username);
 
-    /*회원 정보 수정 메서드*/
+    /**
+     * 회원 정보 수정
+     * @param username
+     * @param updateMemberDTO
+     */
     void updateMember(String username , UpdateMemberDTO updateMemberDTO);
-
 
 }

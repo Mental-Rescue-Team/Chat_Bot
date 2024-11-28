@@ -30,21 +30,38 @@ public class AuthController {
     private final AuthenticateAndGenerateToken authenticateAndGenerateToken;
     private final MemberRepository memberRepository;
 
-    @Operation(summary = "로그인 ", description = " username과 password 입력 시 JWT(엑세스 토큰, 리프레시 토큰) 토큰을 클라이언트 측으로 발급한다.")
+    /**
+     * 로그인 API
+     * @param authRequest 로그인 시 필요한 정보
+     * @return JWT Token (AcT+ReT)
+     */
+    @Operation(summary = "로그인 API", description = " username과 password 입력 시 JWT(엑세스 토큰, 리프레시 토큰) 토큰을 클라이언트 측으로 발급한다.")
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
 
-        JwtTokenDto token = authenticateAndGenerateToken.authenticateAndGenerateToken(authRequest.username(), authRequest.password()); //인증이 성공하면 JWT 생성
-        return ResponseEntity.ok(new AuthResponse(token)); //jwt를 클라이언트에게 반환
+        String username = authRequest.username();
+        String password = authRequest.password();
+        JwtTokenDto token = authenticateAndGenerateToken.authenticateAndGenerateToken(username,password);
+
+        return ResponseEntity.ok(new AuthResponse(token));
     }
 
-    @Operation(summary = "로그아웃 ", description = "백엔드 측에서는 로그아웃기능을 않았습니다. 클라이언트 측에서 엑세스 토큰과 리프레시 토큰을 삭제해 주는 방식으로 로그아웃이 가능할까요?")
+    /**
+     * 로그 아웃 API
+     * @return null
+     */
+    @Operation(summary = "로그아웃 API", description = "로그아웃 API")
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
-        return ResponseEntity.ok("클라이언트 측에서 엑세스 토큰과 리프레시 토큰을 모두 삭제해 주세요"); //클라이언트 주도 jwt 삭제이므로 서버 측에서는 특별한 처리 x
+
+        return ResponseEntity.ok("로그아웃");
     }
 
-    //FIXME : 언제 호풀되어서 토큰이 발급되는지 명시할 것
+    /**
+     * JWT 토큰 리프레시 API
+     * @param request HTTP 요청
+     * @return JWT (AcT+ReT)
+     */
     @Operation(summary = "엑세스 토큰 만료시 자동 (엑세스 / 리프레시)토큰 재발급 API ", description = "엑세스 토큰 만료시 자동 리프레시/엑세스 토큰 발급 API")
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(HttpServletRequest request) {
@@ -66,7 +83,7 @@ public class AuthController {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
 
-        String newAccessToken = jwtUtil.generateAccessToken(username);
+        String newAccessToken = jwtUtil.generateAccessToken(username,member.getEmail(),member.getRole());
         String newRefreshToken = jwtUtil.generateRefreshToken(username);
 
         JwtTokenDto token = new JwtTokenDto(newAccessToken, newRefreshToken);

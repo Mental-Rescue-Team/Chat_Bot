@@ -1,6 +1,8 @@
 package MentalCare.ChatBot.global.auth.JWt;
 
 import MentalCare.ChatBot.domain.Member.Repository.MemberRepository;
+import MentalCare.ChatBot.global.Exception.ErrorCode;
+import MentalCare.ChatBot.global.Exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,16 +15,21 @@ public class AuthenticateAndGenerateToken {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    /*로그인시 사용될 인증 + 토큰 생성 메서드 */
-    // FIXME : 예외 처리 코드는 차후 customizing 할것
+    /**
+     * 로그인 인증 + JWT 반환 메서드
+     * @param username 사용자 이름
+     * @param password 비밀 번호
+     * @return JWT (AcT+ReT)
+     */
     public JwtTokenDto authenticateAndGenerateToken(String username, String password) {
+
         return memberRepository.findByUsername(username)
                 .filter(member -> passwordEncoder.matches(password, member.getPassword()))
                 .map(member -> {
-                    String accessToken = jwtUtil.generateAccessToken(username);
+                    String accessToken = jwtUtil.generateAccessToken(username,member.getEmail(),member.getRole());
                     String refreshToken = jwtUtil.generateRefreshToken(username);
                     return new JwtTokenDto(accessToken, refreshToken);
                 })
-                .orElseThrow(() -> new RuntimeException("Invalid credentials")); // 인증 실패 시 예외 처리
+                .orElseThrow(() -> new MemberException(ErrorCode.FAILED_TO_LOGIN));
     }
 }
