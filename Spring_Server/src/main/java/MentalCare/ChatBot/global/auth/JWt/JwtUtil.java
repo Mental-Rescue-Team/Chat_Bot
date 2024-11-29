@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
 
 @Slf4j
@@ -74,6 +73,7 @@ public class JwtUtil {
      * @see #isTokenExpired(String) 토큰 만료여부 확인 메서드
      */
     public Claims extractClaims(String token) {
+
         return Jwts.parser()// JWT 파서 객체 생성
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
@@ -86,6 +86,7 @@ public class JwtUtil {
      * @return
      */
     public String extractUsername(String token) {
+
         return extractClaims(token).getSubject();
     }
 
@@ -95,11 +96,13 @@ public class JwtUtil {
      * @return
      */
     public String extractTokenFromRequest(HttpServletRequest request) {
+
         String header = request.getHeader("Authorization");
         log.info("header from method extractTokenFromRequest : {} ",header);
         if (header != null && header.startsWith("Bearer ")) {
             return header.substring(7);
         }
+
         return null;
     }
 
@@ -128,14 +131,6 @@ public class JwtUtil {
     }
 
     /**
-     * 사용자 HTTP 요청에서 이름 추출 메서드
-     */
-    public String extractNameByRequest(){
-
-        return null;
-    }
-
-    /**
      * 토큰의 유효성을 검증 메서드 - 사용자 이름과 일치하는지 확인
      * @param token JWT 토큰
      * @param username 사용자 이름
@@ -158,7 +153,17 @@ public class JwtUtil {
         }
     }
 
-    //TODO :jwtutil 에서 extractNameByRequest 메서드를 만들어서
-    // memberController의 getinfo 메서드의 컨트롤러 코드를 간소화 하려 했음
-    // by 2024.11.13
+    /**
+     * 요청에서 사용자 이름을 추출
+     * @param request 사용자 요청
+     * @return 요청하는 사용자의 이름
+     */
+    public String extractNameByRequest(HttpServletRequest request){
+
+        String userToken = extractTokenFromRequest(request);
+        validateToken_isTokenValid(userToken);
+
+        return extractUsername(userToken);
+    }
+
 }
