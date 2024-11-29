@@ -47,17 +47,7 @@ public class MemberController {
     @GetMapping("")
     public ResponseEntity<ResponseVO<MemberResponse>> getInfo(HttpServletRequest request){
 
-        /*
-        * jwt util에서 메서드 추가해서 간소화 하기
-        * 요청에서 토큰을 추출
-        * 토큰 유효성 검사
-        * 토큰에서 이름 추출
-        * */
-        String userToken =jwtutil.extractTokenFromRequest(request);
-        jwtutil.validateToken_isTokenValid(userToken);
-        String username = jwtutil.extractUsername(userToken);
-
-
+        String username = jwtutil.extractNameByRequest(request);
         MemberResponse response = memberService.getmyinfo(username);
 
         return ResponseEntity.ok(new ResponseVO<>(response,"(사용자 용)한 회원 정보 조회"));
