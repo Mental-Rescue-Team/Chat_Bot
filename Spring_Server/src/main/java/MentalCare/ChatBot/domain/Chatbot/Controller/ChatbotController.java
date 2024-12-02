@@ -12,11 +12,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Tag(name = "ChatBot", description = "챗봇 기능 API")
 @RestController
 @RequiredArgsConstructor
@@ -29,46 +31,68 @@ public class ChatbotController {
     private final AiReportService aiReportService;
     private final ChattingMemory chattingMemory;
 
-    /* 상담사 모드 - AI Model */
+    /**
+     * 챗봇 - 일반 상담사 모드
+     * @param message 사용자 메시지
+     * @param request 챗봇 답변
+     * @return 챗봇 답변
+     */
     @Operation(summary = " 챗봇 - 일반 상담사 모드 ", description = " 채팅 화면에서 전송 버튼을 누르면 호출되는 API이다. 일반 상담사 모드를 지원한다.")
     @PostMapping("/counselor")
     public String counselorChatBot(@RequestBody String message , HttpServletRequest request ){
 
-        String userToken =jwtUtil.extractTokenFromRequest(request);             jwtUtil.validateToken_isTokenValid(userToken);
-        String username = jwtUtil.extractUsername(userToken);                   System.out.println("username : " +username);
+        String username = jwtUtil.extractNameByRequest(request);
+        log.info(" Counselor & {}",username);
 
         return chatbotService.counselorChatting(username, message);
     }
 
-    /* 친근한 친구 모드 - GPT */
+    /**
+     * 챗봇 - 친근한 친구 모드
+     * @param message 사용자 메시지
+     * @param request 챗봇 답변
+     * @return 챗봇 답변
+     */
     @Operation(summary = " 챗봇 - 친근한 친구 모드 ", description = " 채팅 화면에서 전송 버튼을 누르면 호출되는 API이다. GPT 챗봇 기능을 한다. ")
     @PostMapping("/friend")
     public String friendChatBot(@RequestBody String message, HttpServletRequest request){
 
-        String userToken =jwtUtil.extractTokenFromRequest(request);             jwtUtil.validateToken_isTokenValid(userToken);
-        String username = jwtUtil.extractUsername(userToken);                   System.out.println("username : " +username);
+        String username = jwtUtil.extractNameByRequest(request);
+        log.info(" Friend & {}",username);
 
         return chatbotService.gptChatting(username,message);
     }
 
-    /* MBTI - T 모드 - GPT */
+    /**
+     * 챗봇 - MBTI - T 모드
+     * @param message 사용자 메시지
+     * @param request 챗봇 답변
+     * @return 챗봇 답변
+     */
     @Operation(summary = " 챗봇 - MBTI - T 모드 ", description = " 채팅 화면에서 전송 버튼을 누르면 호출되는 API이다. GPT 챗봇 기능을 한다. ")
     @PostMapping("/T")
     public String MBTI_T_ChatBot(@RequestBody String message, HttpServletRequest request){
 
-        String userToken =jwtUtil.extractTokenFromRequest(request);             jwtUtil.validateToken_isTokenValid(userToken);
-        String username = jwtUtil.extractUsername(userToken);                   System.out.println("username : " +username);
+        String username = jwtUtil.extractNameByRequest(request);
+        log.info(" MBTI-T & {}",username);
+
 
         return chatbotService.MBTI_T_Chatting(username,message);
     }
 
-    /* MBTI - F 모드 - GPT */
+    /**
+     * 챗봇 - MBTI - F 모드
+     * @param message 사용자 메시지
+     * @param request 챗봇 답변
+     * @return 챗봇 답변
+     */
     @Operation(summary = " 챗봇 - MBTI - F 모드 ", description = " 채팅 화면에서 전송 버튼을 누르면 호출되는 API이다. GPT 챗봇 기능을 한다. ")
     @PostMapping("/F")
     public String MBTI_F_ChatBot(@RequestBody String message, HttpServletRequest request){
 
-        String userToken =jwtUtil.extractTokenFromRequest(request);             jwtUtil.validateToken_isTokenValid(userToken);
-        String username = jwtUtil.extractUsername(userToken);                   System.out.println("username : " +username);
+        String username = jwtUtil.extractNameByRequest(request);
+        log.info(" MBTI-F & {}",username);
+
 
         return chatbotService.MBTI_F_Chatting(username,message);
     }
@@ -80,8 +104,10 @@ public class ChatbotController {
 
         Map<String, Object> response = new LinkedHashMap<>(); //순서가 보장이 되는 LinkedHashMap<> 자료구조를 선택
 
-        String userToken =jwtUtil.extractTokenFromRequest(request);             jwtUtil.validateToken_isTokenValid(userToken); //트콘 유효성 검사
-        String username = jwtUtil.extractUsername(userToken);                   System.out.println("username : " + username);
+        String userToken =jwtUtil.extractTokenFromRequest(request);
+        jwtUtil.validateToken_isTokenValid(userToken); //트콘 유효성 검사
+        String username = jwtUtil.extractUsername(userToken);
+        System.out.println("username : " + username);
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(()-> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
 
@@ -103,9 +129,12 @@ public class ChatbotController {
         * 3. 감정 값에 맞추어 비디오 링크 2개 랜덤 반환
         */
 
-        String currentDifficulty = reportResult[0];                             System.out.println(currentDifficulty);
-        String currentEmotion = reportResult[1] ;                               System.out.println(currentEmotion);
-        String aiAdvice = reportResult[2];                                      System.out.println(aiAdvice);
+        String currentDifficulty = reportResult[0];
+        System.out.println(currentDifficulty);
+        String currentEmotion = reportResult[1] ;
+        System.out.println(currentEmotion);
+        String aiAdvice = reportResult[2];
+        System.out.println(aiAdvice);
 
         Map<String, String>[] videoLinks =aiReportService.getRandomLink(emotion);
 
