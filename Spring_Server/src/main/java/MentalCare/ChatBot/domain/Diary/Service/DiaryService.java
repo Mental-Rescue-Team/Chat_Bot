@@ -11,6 +11,8 @@ import java.util.Map;
 
 public interface DiaryService {
 
+    /* */
+    Diary DiaryDaveButton(String message, String gender,Member member);
     /*일기 요약*/
     String SummarizeDiary(String text);
 
