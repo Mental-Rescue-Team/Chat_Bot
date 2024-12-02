@@ -2,8 +2,6 @@ package MentalCare.ChatBot.global.auth.Controller;
 
 import MentalCare.ChatBot.domain.Member.Entity.Member;
 import MentalCare.ChatBot.domain.Member.Repository.MemberRepository;
-import MentalCare.ChatBot.global.Exception.ErrorCode;
-import MentalCare.ChatBot.global.Exception.MemberException;
 import MentalCare.ChatBot.global.auth.DTO.Request.AuthRequest;
 import MentalCare.ChatBot.global.auth.DTO.Response.AuthResponse;
 import MentalCare.ChatBot.global.auth.JWt.AuthenticateAndGenerateToken;
@@ -13,7 +11,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +25,6 @@ public class AuthController {
 
     private final JwtUtil jwtUtil;
     private final AuthenticateAndGenerateToken authenticateAndGenerateToken;
-    private final MemberRepository memberRepository;
 
     /**
      * 로그인 API
@@ -62,26 +58,16 @@ public class AuthController {
      * @param request HTTP 요청
      * @return JWT (AcT+ReT)
      */
+
+    // TODO :  더욱 간략하게 컨트롤러 코드 바꾸기
     @Operation(summary = "엑세스 토큰 만료시 자동 (엑세스 / 리프레시)토큰 재발급 API ", description = "엑세스 토큰 만료시 자동 리프레시/엑세스 토큰 발급 API")
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(HttpServletRequest request) {
 
         String refreshToken =jwtUtil.extractTokenFromRequest(request);
+        String username = jwtUtil.extractNameByRequest(request);
         jwtUtil.validateToken_isTokenValid(refreshToken);
-
-        if (refreshToken == null || !jwtUtil.validateRefreshToken(refreshToken)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(null);
-        }
-
-        String username = jwtUtil.extractUsername(refreshToken);
-        if (username == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(null);
-        }
-
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+        Member member = jwtUtil.extractMemberByRefreshToken(refreshToken);
 
         String newAccessToken = jwtUtil.generateAccessToken(username,member.getEmail(),member.getRole());
         String newRefreshToken = jwtUtil.generateRefreshToken(username);
