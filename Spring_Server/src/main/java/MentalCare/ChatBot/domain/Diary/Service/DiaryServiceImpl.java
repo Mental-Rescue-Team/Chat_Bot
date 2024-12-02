@@ -15,6 +15,7 @@ import org.springframework.ai.image.Image;
 import org.springframework.ai.image.ImageClient;
 import org.springframework.ai.image.ImagePrompt;
 import org.springframework.ai.openai.OpenAiImageOptions;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -28,10 +29,47 @@ import java.io.IOException;
 public class DiaryServiceImpl implements DiaryService {
 
     private final DiaryRepository diaryRepository;
+    private final DiaryService diaryService;
     private final ChatClient chatClient;
     private final ImageClient imageClient;
     private final ApiClient apiClient;
     private final SetImagePath setImagePath;
+
+    /**
+     * 저장 버튼 누를 시 실행되는 API
+     * @param message 일기 텍스트
+     * @param gender 사용자의 성별
+     * @param member 멤버 객체
+     * @return 다이어리 객체 반환
+     */
+    @Override
+    public Diary DiaryDaveButton(String message, String gender,Member member){
+
+        String diarySummary = diaryService.SummarizeDiary(message);
+        ImageResult imageResult = diaryService.DrawComic(message,gender);
+        String comicURL = imageResult.imagePath(); // 서버 정적 폴더에 저장된 경로
+        String temporaryURL = imageResult.imageUrl(); // GPT의 2시간 임시 url
+        String diaryText = diaryService.SaveDiary(message);
+        String diaryEmotion = diaryService.ClassifyEmotion(message);
+        Map<String,String> weatherMatch = diaryService.WeatherMatch(diaryEmotion);
+        String weather = weatherMatch.get("weather");
+        String weatherEmoji = weatherMatch.get("weatherEmoji"); //날씨 이모지는 클라이언트 측에서 준비하기로 함
+
+        Diary diary = Diary.builder()
+                .member(member)
+                .diaryText(diaryText)
+                .diarySummary(diarySummary)
+                .comicURL(comicURL)
+                .temporaryURL(temporaryURL)
+                .diaryEmotion(diaryEmotion)
+                .weather(weather)
+                .weatherEmoji("null")
+                .diaryDate(LocalDate.now())
+                .build();
+        diaryService.saveDiary(diary);
+
+        return diary;
+    }
 
     /*일기 요약 메서드 */
     @Override
@@ -42,7 +80,6 @@ public class DiaryServiceImpl implements DiaryService {
         return chatClient.call(fullMessage);
     }
 
-    // TODO : 4컷 만화 생성 후 어떻게 저장하고 전송할지 확인
     /*4칸 만화 생성 메서드 */
     @Override
     public ImageResult DrawComic(String text , String gender) {
@@ -141,9 +178,6 @@ public class DiaryServiceImpl implements DiaryService {
 
         return diaryRepository.findByDiaryDateAndMemberNo(date, member_no);
     }
-
-
-    // FIXME : 이모지가 아닌 날씨 이름 보내주기 -완료
 
     @Override
     public List<DateEmoji> getEveryDateEmoji(int month, Member member) {
