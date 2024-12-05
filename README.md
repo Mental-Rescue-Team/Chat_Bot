@@ -22,6 +22,13 @@ Avery는 "상담사"라는 의미를 가진 영미권 이름이며,
 
 ## 📘 서비스 구성
 
+## 메인 페이지 
+
+https://github.com/user-attachments/assets/1b545e1f-5ff3-48f2-8452-0199243ca6f2
+
+설명 :  오늘의 날씨가 상단에 표시되며, 캘린더에는 사용자의 월간 날씨(감정)이 표시되고 캘린더의 날짜를 클릭하면 해당 날짜에 생성된 일기와 AI 만화를 조회가 가능한 메인 페이지에다.
+
+
 ## 1. AI 다이어리 기능 
 
 https://github.com/user-attachments/assets/77ac3919-4bdb-4687-84cb-11b5ca1ba241
