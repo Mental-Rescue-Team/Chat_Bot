@@ -10,9 +10,9 @@ https://github.com/user-attachments/assets/4d89ebc0-dbdf-4d03-bcad-c965ef8e776c
 
 ## 📌 프로젝트 소개
 
-본 Avery AI ChatBot 앱은 가천대학교 졸업프로젝트를 위해 구성된 "멘탈구조대"가 기획/개발한 통합 AI 멘탈케어 통합 서비스이다.
-Avery는 "상담사"라는 의미를 가진 영미권 이름이며, 
-본 어플리케이션은 다음과 같은 기능들을 포함한 AI 프로젝트의 결과물이다. 
+본 Avery AI ChatBot 앱은 가천대학교 졸업프로젝트를 위해 구성된 "멘탈구조대"가 기획/개발한 통합 AI 멘탈케어 통합 서비스이다.   
+Avery는 "상담사"라는 의미를 가진 영미권 이름이며,    
+본 어플리케이션은 다음과 같은 기능들을 포함한 AI 프로젝트의 결과물이다.    
 
 1. AI 다이어리 기능  
 2. AI 심리상담 챗봇 기능 (일반 상담사 ver, 친근한 친구 ver, MBTI-T ver, MBTI-F ver)  
@@ -22,7 +22,21 @@ Avery는 "상담사"라는 의미를 가진 영미권 이름이며,
 
 ## 📘 서비스 구성
 
+## 1. AI 다이어리 기능 
 
+https://github.com/user-attachments/assets/77ac3919-4bdb-4687-84cb-11b5ca1ba241
+
+## 2. AI 심리상담 챗봇 기능 
+
+https://github.com/user-attachments/assets/c508d7e0-ea8f-4c8a-96a2-c98ec908aebc
+
+## 3. AI 레포트 기능 
+
+https://github.com/user-attachments/assets/2dcb3f0e-2076-4097-b6ed-efeeeb46fc30
+
+## 4. 정긴질환 자가진단 검사 
+
+https://github.com/user-attachments/assets/793b0b44-6d83-47af-b3ba-760e0a28d5a1
 
 
 ## ⚡ Team Mental Rescue (멘탈구조대 팀)
