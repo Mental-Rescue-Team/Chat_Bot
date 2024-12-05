@@ -76,7 +76,6 @@ public class ChatbotController {
         String username = jwtUtil.extractNameByRequest(request);
         log.info(" MBTI-T & {}",username);
 
-
         return chatbotService.MBTI_T_Chatting(username,message);
     }
 
@@ -92,7 +91,6 @@ public class ChatbotController {
 
         String username = jwtUtil.extractNameByRequest(request);
         log.info(" MBTI-F & {}",username);
-
 
         return chatbotService.MBTI_F_Chatting(username,message);
     }

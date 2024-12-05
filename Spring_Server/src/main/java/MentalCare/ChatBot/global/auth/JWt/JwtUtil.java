@@ -21,7 +21,6 @@ import java.util.Date;
 public class JwtUtil {
 
     private final MemberRepository memberRepository;
-    private final JwtUtil jwtUtil;
 
     @Value("${jwt.secret}")
     private String SECRET_KEY;
@@ -130,9 +129,9 @@ public class JwtUtil {
      */
     public Member extractMemberByRequest(HttpServletRequest request){
 
-        String userToken =jwtUtil.extractTokenFromRequest(request);
-        jwtUtil.validateToken_isTokenValid(userToken);
-        String username = jwtUtil.extractUsername(userToken);
+        String userToken =extractTokenFromRequest(request);
+        validateToken_isTokenValid(userToken);
+        String username = extractUsername(userToken);
 
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
@@ -206,6 +205,4 @@ public class JwtUtil {
             throw new MemberException(ErrorCode.TOKEN_MUST_FILLED);
         }
     }
-
-
 }
