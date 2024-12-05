@@ -2,6 +2,7 @@
   생성형 AI 기반 개인 맞춤형 챗봇 서비스
 </h1>
 
+## 서비스 설명 영상 
 https://github.com/user-attachments/assets/4d89ebc0-dbdf-4d03-bcad-c965ef8e776c
 
 
@@ -10,7 +11,6 @@ https://github.com/user-attachments/assets/4d89ebc0-dbdf-4d03-bcad-c965ef8e776c
 
 ## 📘 서비스 구성
 
-<img src="https://github.com/user-attachments/assets/2b54b239-9b86-4aa5-8c32-109018b9080a" width="250"/>
 
 - **회원가입**
   
@@ -18,10 +18,6 @@ https://github.com/user-attachments/assets/4d89ebc0-dbdf-4d03-bcad-c965ef8e776c
   - 입력 정보: E-mail, 패스워드, 생일 등
   - 가입 후 회원정보 수정도 가능
 
-<p>
-  <img src="https://github.com/user-attachments/assets/901ac321-dbfc-48ee-8656-cdf1f7e23e34" width="250"/>
-  <img src="https://github.com/user-attachments/assets/1872d1c5-7980-44fd-95a1-9ff03454b3a0" width="250"/>
-</p>
 
 - **챗봇 서비스**
 
