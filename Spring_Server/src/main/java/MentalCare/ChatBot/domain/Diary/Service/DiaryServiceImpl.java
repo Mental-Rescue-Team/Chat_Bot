@@ -29,7 +29,6 @@ import java.io.IOException;
 public class DiaryServiceImpl implements DiaryService {
 
     private final DiaryRepository diaryRepository;
-    private final DiaryService diaryService;
     private final ChatClient chatClient;
     private final ImageClient imageClient;
     private final ApiClient apiClient;
@@ -45,13 +44,13 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     public Diary DiaryDaveButton(String message, String gender,Member member){
 
-        String diarySummary = diaryService.SummarizeDiary(message);
-        ImageResult imageResult = diaryService.DrawComic(message,gender);
+        String diarySummary = SummarizeDiary(message);
+        ImageResult imageResult = DrawComic(message,gender);
         String comicURL = imageResult.imagePath(); // 서버 정적 폴더에 저장된 경로
         String temporaryURL = imageResult.imageUrl(); // GPT의 2시간 임시 url
-        String diaryText = diaryService.SaveDiary(message);
-        String diaryEmotion = diaryService.ClassifyEmotion(message);
-        Map<String,String> weatherMatch = diaryService.WeatherMatch(diaryEmotion);
+        String diaryText = SaveDiary(message);
+        String diaryEmotion = ClassifyEmotion(message);
+        Map<String,String> weatherMatch = WeatherMatch(diaryEmotion);
         String weather = weatherMatch.get("weather");
         String weatherEmoji = weatherMatch.get("weatherEmoji"); //날씨 이모지는 클라이언트 측에서 준비하기로 함
 
@@ -66,7 +65,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .weatherEmoji("null")
                 .diaryDate(LocalDate.now())
                 .build();
-        diaryService.saveDiary(diary);
+        saveDiary(diary);
 
         return diary;
     }
