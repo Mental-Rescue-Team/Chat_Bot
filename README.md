@@ -26,17 +26,35 @@ Avery는 "상담사"라는 의미를 가진 영미권 이름이며,
 
 https://github.com/user-attachments/assets/77ac3919-4bdb-4687-84cb-11b5ca1ba241
 
+설명 : 일기를 작성 후 저장시, AI 가 일기를 분석하여 감정분류,도출된 감정을 날씨로 매칭 후 캘린더에 기록, 일기를 기반으로 4컷 만화 생성
+
 ## 2. AI 심리상담 챗봇 기능 
 
 https://github.com/user-attachments/assets/c508d7e0-ea8f-4c8a-96a2-c98ec908aebc
+
+설명 : 사용자는 4가지 모드의 심리상담사를 선택할 수 있으며, 각 심리 상담사는 다음과 같은 특징을 가지고 있음.  
+1.일반 상담사 : 평범한 심리 상담사의 특징을 가짐 
+2.친근한 친구 모드  :  친근한 어투의 상담 화법을 사용하며, 반말 및 친근한 이모티콘등을 사용.
+3.MBTI-T 모드 : 공감보다는 문제분석 및 해결방안 및 조언을 위주로 대화함. 공감보다는 문제 해결이 필요한 사용자들에게 적합 
+3.MBTI-F 모드 : 따뜻한 언어와 이모티콘을 사용하여 공감을 위주로 대화함. 문제 해결보다는 공감이 필요한 사용자들에게 적합
 
 ## 3. AI 레포트 기능 
 
 https://github.com/user-attachments/assets/2dcb3f0e-2076-4097-b6ed-efeeeb46fc30
 
+설명 : 사용자의 채팅 내용을 AI가 분석하여, 사용자에 대한 AI레포트를 생성해주고, 마지막에는 사용자에게 어울리는 유튜브 컨텐츠 2개를 추천
+
 ## 4. 정긴질환 자가진단 검사 
 
 https://github.com/user-attachments/assets/793b0b44-6d83-47af-b3ba-760e0a28d5a1
+
+설명 : 정신건강 검진도구 및 사용지침 2020 표준을 참고하여 4가지 정신질환 자가진단 검사를 제공
+1.불안증 검사 
+2.우울증 검사 
+3.자존감 검사
+4.불면증 검사 
+
+검사 결과는 점수/결과 해석/조언 및 해결방안 등이 조회된다.
 
 
 ## ⚡ Team Mental Rescue (멘탈구조대 팀)
@@ -57,15 +75,15 @@ https://github.com/user-attachments/assets/793b0b44-6d83-47af-b3ba-760e0a28d5a1
     </tr>
     <tr>
       <td> 문영균 </td>
-      <td> AI </td>
+      <td> AI(챗봇 모델) </td>
     </tr>
     <tr>
       <td> 석민재 </td>
-      <td> AI </td>
+      <td> AI(감정 분류 모델) </td>
     </tr>
     <tr>
       <td> 정승준 </td>
-      <td> 프론트엔드 </td>
+      <td> 프론트엔드</td>
     </tr>
   </tbody>  
 </table>
