@@ -1,50 +1,29 @@
 <h1 align="center"> 
-  생성형 AI 기반 개인 맞춤형 챗봇 서비스
+  Avery AI ChatBot Application
 </h1>
+
+![image](https://github.com/user-attachments/assets/4551a1c0-455a-4403-aaf6-8d7978663e09)
 
 ## 서비스 설명 영상 
 https://github.com/user-attachments/assets/4d89ebc0-dbdf-4d03-bcad-c965ef8e776c
 
 
 ## 📌 프로젝트 소개
-이 챗봇 서비스는 사용자가 작성한 일기, 챗봇 간의 대화 내용 및 이를 토대로 나온 그날의 상태 분석결과 등을 바탕으로 컨텐츠를 추천해주고 조언을 해주는 등 사용자의 심리를 안정시켜주는 멘탈케어 서비스입니다. 
+
+본 Avery AI ChatBot 앱은 가천대학교 졸업프로젝트를 위해 구성된 "멘탈구조대"가 기획/개발한 통합 AI 멘탈케어 통합 서비스이다.
+Avery는 "상담사"라는 의미를 가진 영미권 이름이며, 
+본 어플리케이션은 다음과 같은 기능들을 포함한 AI 프로젝트의 결과물이다. 
+
+1. AI 다이어리 기능  
+2. AI 심리상담 챗봇 기능 (일반 상담사 ver, 친근한 친구 ver, MBTI-T ver, MBTI-F ver)  
+3. AI 레포트 기능
+4. 정신질환 자가진단 검사(우울,불안,자존감,불면증 검사 지원)
+
 
 ## 📘 서비스 구성
 
 
-- **회원가입**
-  
-  - 앱을 시작하기 전에 회원가입을 해야만 이용이 가능
-  - 입력 정보: E-mail, 패스워드, 생일 등
-  - 가입 후 회원정보 수정도 가능
 
-
-- **챗봇 서비스**
-
-  - 챗봇과 대화를 시작하면 서용자는 오늘 하루 있었던 일에 대해 이야기하고, 일정 대화량에 도달하면 AI 모델이 대화 내용을 분석하여 레포트로 출력
-  - 레포트 내용: 현재의 어려움, 조언, 추천 컨텐츠 등
-  - 추천 컨텐츠 구성: 영상(유튜브 링크), 음악(플레이리스트), 칼럼 등
- 
-<p>
-  <img src="https://github.com/user-attachments/assets/b8176cb0-bb59-46ff-b75d-a5e0dc2fdf49" width="250"/>
-  <img src="https://github.com/user-attachments/assets/5a1bd9d3-e96d-45c5-9f49-da4eddb04862" width="250"/>
-</p>
-   
-- **일기**
-  
-  - 일기 화면으로 넘어가면 사용자는 금일 있었던 일에 대한 일기를 작성할 수 있다.
-  - 작성한 일기는 후에 챗봇 기능 사용 시 AI의 다양한 분석 및 폭넓은 대화 가능
-  - 작성을 완료하고 저장하면 메인 화면에 오늘의 기분을 일기예보 형식으로 보여준다.
-  - 메인 화면의 캘린더에는 작성한 일기 목록들이 보여지고, 해당 날짜를 클릭하면 작성한 일기를 읽기 모드로 볼 수 있다(편집 X).   
- 
-<p>
-  <img src="https://github.com/user-attachments/assets/719beed1-7718-450f-a81a-05688f19b28e" width="250"/>
-  <img src="https://github.com/user-attachments/assets/d37bf774-25fe-4c4c-8a87-dc092f38ad4b" width="250"/>
-</p>
-
-- **진단검사**
-  
-  - 진단검사 버튼을 클릭하면 진단검사표가 나오고, 원하는 유형의 검사를 실시하면 해당 검사결과를 팝업 형식으로 보여준다.
 
 ## ⚡ Team Mental Rescue (멘탈구조대 팀)
 
