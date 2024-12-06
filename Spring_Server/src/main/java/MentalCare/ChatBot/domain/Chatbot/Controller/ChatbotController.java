@@ -5,8 +5,6 @@ import MentalCare.ChatBot.domain.Chatbot.Service.ChatbotService;
 import MentalCare.ChatBot.domain.Chatbot.Service.ChattingMemory;
 import MentalCare.ChatBot.domain.Member.Entity.Member;
 import MentalCare.ChatBot.domain.Member.Repository.MemberRepository;
-import MentalCare.ChatBot.global.Exception.ErrorCode;
-import MentalCare.ChatBot.global.Exception.MemberException;
 import MentalCare.ChatBot.global.auth.JWt.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -95,19 +93,18 @@ public class ChatbotController {
         return chatbotService.MBTI_F_Chatting(username,message);
     }
 
-    /* 채팅 종료 + AI 레포트 생성 */
+    /**
+     * AI 레포트 생성
+     * @param request 사용자 요청
+     * @return AI 레포트 반환
+     */
     @Operation(summary = "채팅 종료 + AI 레포트 생성 API", description =" 채팅화면에서 채팅 종료 버튼을 누르면 호출되는 API 이다. 채팅을 종료함과 동시에 AI 레포트를 생성해준다")
     @GetMapping("/finish")
     public Map<String, Object> finishFriendChatBot(HttpServletRequest request){
 
         Map<String, Object> response = new LinkedHashMap<>(); //순서가 보장이 되는 LinkedHashMap<> 자료구조를 선택
 
-        String userToken =jwtUtil.extractTokenFromRequest(request);
-        jwtUtil.validateToken_isTokenValid(userToken); //트콘 유효성 검사
-        String username = jwtUtil.extractUsername(userToken);
-        System.out.println("username : " + username);
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(()-> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+        Member member = jwtUtil.extractMemberByRequest(request);
 
         /*
         * 1. 메모리에서 모든 메시지 호출
@@ -116,8 +113,8 @@ public class ChatbotController {
         * 4. 사용자의 현재 감정을 추출
         */
 
-        List<String> everyMessage= chatbotService.finishChatting(username);
-        chattingMemory.clearMessages(username);
+        List<String> everyMessage= chatbotService.finishChatting(member.getUsername());
+        chattingMemory.clearMessages(member.getUsername());
         String[] reportResult = aiReportService.report(everyMessage);
         String emotion =  aiReportService.getEmotion(reportResult[1]);
 
@@ -128,11 +125,8 @@ public class ChatbotController {
         */
 
         String currentDifficulty = reportResult[0];
-        System.out.println(currentDifficulty);
         String currentEmotion = reportResult[1] ;
-        System.out.println(currentEmotion);
         String aiAdvice = reportResult[2];
-        System.out.println(aiAdvice);
 
         Map<String, String>[] videoLinks =aiReportService.getRandomLink(emotion);
 

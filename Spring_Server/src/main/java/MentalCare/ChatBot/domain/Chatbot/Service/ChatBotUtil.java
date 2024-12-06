@@ -2,11 +2,13 @@ package MentalCare.ChatBot.domain.Chatbot.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChatBotUtil {
@@ -16,15 +18,16 @@ public class ChatBotUtil {
 
     /* 이전의 대화 내용 로그 출력 */
     public void getLogFromFourMessageFromRedis(StringBuilder previousMessagesSummary){
-        System.out.println("--- 이전의 대화 내용(최대4개) ---" );
-        System.out.println( previousMessagesSummary.toString());
+        log.info("--- 이전의 대화 내용(최대4개) ---");
+        log.info(previousMessagesSummary.toString());
+
     }
 
     /* 이번에 도출된 메시지 로그 출력 */
     public void getLogFromGeneratedMessage(String userMessage ,String response){
-        System.out.println("---이번에 도출된 메시지---");
-        System.out.println("message = " + userMessage);
-        System.out.println("response = " + response);
+        log.info("---이번에 도출된 메시지---");
+        log.info("message = {}",userMessage);
+        log.info("response = {}",response);
     }
 
     /* Prompt Message - 선택한 모드에 따라 프롬프트 메시지 변환*/
