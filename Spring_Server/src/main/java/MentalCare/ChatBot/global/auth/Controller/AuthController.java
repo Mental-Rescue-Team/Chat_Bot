@@ -59,14 +59,12 @@ public class AuthController {
      * @return JWT (AcT+ReT)
      */
 
-    // TODO :  더욱 간략하게 컨트롤러 코드 바꾸기
     @Operation(summary = "엑세스 토큰 만료시 자동 (엑세스 / 리프레시)토큰 재발급 API ", description = "엑세스 토큰 만료시 자동 리프레시/엑세스 토큰 발급 API")
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(HttpServletRequest request) {
 
         String refreshToken =jwtUtil.extractTokenFromRequest(request);
         String username = jwtUtil.extractNameByRequest(request);
-        jwtUtil.validateToken_isTokenValid(refreshToken);
         Member member = jwtUtil.extractMemberByRefreshToken(refreshToken);
 
         String newAccessToken = jwtUtil.generateAccessToken(username,member.getEmail(),member.getRole());
